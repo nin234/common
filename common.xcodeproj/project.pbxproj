@@ -31,6 +31,9 @@
 		DB00E5271C7C912000E898F7 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E5261C7C912000E898F7 /* Photo.m */; };
 		DB00E5331C7D24C300E898F7 /* AddressAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E5321C7D24C300E898F7 /* AddressAnnotation.m */; };
 		DB00E53E1C7D27F600E898F7 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E53D1C7D27F600E898F7 /* KeychainItemWrapper.m */; };
+		DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E5481C7DD6F300E898F7 /* MapViewController.m */; };
+		DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */; };
+		DB00E57C1C81111000E898F7 /* InAppPurchase.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E57B1C81111000E898F7 /* InAppPurchase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -67,6 +70,15 @@
 		DB00E5321C7D24C300E898F7 /* AddressAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressAnnotation.m; sourceTree = "<group>"; };
 		DB00E53C1C7D27F600E898F7 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		DB00E53D1C7D27F600E898F7 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		DB00E5471C7DD6E000E898F7 /* MapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapViewController.xib; sourceTree = "<group>"; };
+		DB00E5481C7DD6F300E898F7 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		DB00E54A1C7DD70E00E898F7 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		DB00E5551C7DDB2600E898F7 /* textdefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textdefs.h; sourceTree = "<group>"; };
+		DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumContentsTableViewCell.m; sourceTree = "<group>"; };
+		DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumContentsTableViewCell.h; sourceTree = "<group>"; };
+		DB00E5631C7DE1FC00E898F7 /* AlbumContentsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumContentsTableViewCell.xib; sourceTree = "<group>"; };
+		DB00E57B1C81111000E898F7 /* InAppPurchase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InAppPurchase.m; sourceTree = "<group>"; };
+		DB00E57D1C81112700E898F7 /* InAppPurchase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InAppPurchase.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +120,15 @@
 				DB00E50C1C7C85FB00E898F7 /* NotesViewController.xib */,
 				DB00E51B1C7C8ED600E898F7 /* MySlider.h */,
 				DB00E51C1C7C8ED600E898F7 /* MySlider.m */,
+				DB00E5551C7DDB2600E898F7 /* textdefs.h */,
+				DB00E5631C7DE1FC00E898F7 /* AlbumContentsTableViewCell.xib */,
+				DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */,
+				DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */,
+				DB00E57D1C81112700E898F7 /* InAppPurchase.h */,
+				DB00E57B1C81111000E898F7 /* InAppPurchase.m */,
+				DB00E54A1C7DD70E00E898F7 /* MapViewController.h */,
+				DB00E5481C7DD6F300E898F7 /* MapViewController.m */,
+				DB00E5471C7DD6E000E898F7 /* MapViewController.xib */,
 				DB00E53C1C7D27F600E898F7 /* KeychainItemWrapper.h */,
 				DB00E53D1C7D27F600E898F7 /* KeychainItemWrapper.m */,
 				DB00E5311C7D24C300E898F7 /* AddressAnnotation.h */,
@@ -198,6 +219,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,
 				DB00E5271C7C912000E898F7 /* Photo.m in Sources */,
 				DB00E5091C7BF96100E898F7 /* NotesViewController.m in Sources */,
 				DB00E4F91C7BCC8300E898F7 /* TapDetectingImageView.m in Sources */,
@@ -205,6 +227,8 @@
 				DB00E4B71C7A9FF700E898F7 /* common.m in Sources */,
 				DB00E4EF1C7BC9E300E898F7 /* SlideScrollView.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
+				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
+				DB00E57C1C81111000E898F7 /* InAppPurchase.m in Sources */,
 				DB00E5331C7D24C300E898F7 /* AddressAnnotation.m in Sources */,
 				DB00E53E1C7D27F600E898F7 /* KeychainItemWrapper.m in Sources */,
 			);
