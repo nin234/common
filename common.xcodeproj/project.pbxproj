@@ -36,6 +36,8 @@
 		DB00E57C1C81111000E898F7 /* InAppPurchase.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E57B1C81111000E898F7 /* InAppPurchase.m */; };
 		DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16A9A1C830F7900052A03 /* AlbumContentsViewController.m */; };
 		DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */; };
+		DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AB71C844E6F00052A03 /* MainViewController.m */; };
+		DBD16ABD1C844EBE00052A03 /* MainListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16ABC1C844EBE00052A03 /* MainListViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -87,6 +89,12 @@
 		DBD16A9F1C830FA000052A03 /* PhotoDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoDisplayViewController.h; sourceTree = "<group>"; };
 		DBD16AA01C830FC300052A03 /* AlbumContentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumContentsViewController.xib; sourceTree = "<group>"; };
 		DBD16AA11C830FF600052A03 /* PhotoDisplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoDisplayViewController.xib; sourceTree = "<group>"; };
+		DBD16AB61C844E6F00052A03 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		DBD16AB71C844E6F00052A03 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		DBD16AB81C844E6F00052A03 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
+		DBD16ABA1C844E8600052A03 /* MainListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainListViewController.h; sourceTree = "<group>"; };
+		DBD16ABB1C844E9700052A03 /* MainListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainListViewController.xib; sourceTree = "<group>"; };
+		DBD16ABC1C844EBE00052A03 /* MainListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainListViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +150,12 @@
 				DBD16A9B1C830F7900052A03 /* AlbumContentsViewController.h */,
 				DB00E54A1C7DD70E00E898F7 /* MapViewController.h */,
 				DB00E5481C7DD6F300E898F7 /* MapViewController.m */,
+				DBD16ABA1C844E8600052A03 /* MainListViewController.h */,
+				DBD16ABC1C844EBE00052A03 /* MainListViewController.m */,
+				DBD16ABB1C844E9700052A03 /* MainListViewController.xib */,
+				DBD16AB61C844E6F00052A03 /* MainViewController.h */,
+				DBD16AB71C844E6F00052A03 /* MainViewController.m */,
+				DBD16AB81C844E6F00052A03 /* MainViewController.xib */,
 				DB00E5471C7DD6E000E898F7 /* MapViewController.xib */,
 				DB00E53C1C7D27F600E898F7 /* KeychainItemWrapper.h */,
 				DB00E53D1C7D27F600E898F7 /* KeychainItemWrapper.m */,
@@ -236,6 +250,7 @@
 				DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */,
 				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,
 				DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */,
+				DBD16ABD1C844EBE00052A03 /* MainListViewController.m in Sources */,
 				DB00E5271C7C912000E898F7 /* Photo.m in Sources */,
 				DB00E5091C7BF96100E898F7 /* NotesViewController.m in Sources */,
 				DB00E4F91C7BCC8300E898F7 /* TapDetectingImageView.m in Sources */,
@@ -246,6 +261,7 @@
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
 				DB00E57C1C81111000E898F7 /* InAppPurchase.m in Sources */,
 				DB00E5331C7D24C300E898F7 /* AddressAnnotation.m in Sources */,
+				DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */,
 				DB00E53E1C7D27F600E898F7 /* KeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
