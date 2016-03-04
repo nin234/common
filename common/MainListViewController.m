@@ -544,7 +544,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
    
    //  pDlg.selectedItem = [itemNames objectAtIndex:indexPath.row-1];
     
-    [delegate pushDisplayViewController:[itemNames objectAtIndex:[[indexes objectAtIndex:indexPath.row-1] intValue]]];
+    [delegate pushDisplayViewController:[itemNames objectAtIndex:[[indexes objectAtIndex:indexPath.row-1] intValue]] indx:(int)indexPath.row-1];
 }
 
 @end

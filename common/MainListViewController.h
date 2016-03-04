@@ -15,7 +15,7 @@
 -(void) photoActions:(int) source;
 -(NSString *) getLabelTxt:(id) item;
 -(void) pushSortOptionViewController;
--(void) pushDisplayViewController:(id) item;
+-(void) pushDisplayViewController:(id) item indx:(int) Indx;
 
 
 @end

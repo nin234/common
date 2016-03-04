@@ -32,6 +32,7 @@
 @property bool fbAction;
 
 @property (nonatomic, weak) id<MainViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<MainListViewControllerDelegate> delegate_1;
 
 @end
 

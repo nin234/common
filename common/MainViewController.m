@@ -15,6 +15,7 @@
 @synthesize emailAction;
 @synthesize fbAction;
 @synthesize delegate;
+@synthesize delegate_1;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +58,8 @@
     [self.view addSubview:self.pSearchBar];
     self.pAllItms = [[MainListViewController alloc]
                      initWithNibName:nil bundle:nil];
+    [self.pAllItms setDelegate:delegate_1];
+    self.pAllItms.navViewController = self.navigationController;
     
     CGRect tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + 50, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
@@ -116,6 +119,7 @@
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     [delegate searchStrReset];
+    searchBar.text = nil;
     [searchBar resignFirstResponder];
 }
 #pragma mark - View lifecycle
