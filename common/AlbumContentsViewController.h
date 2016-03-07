@@ -97,7 +97,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 @property (nonatomic, retain) NSString *pAlName;
 @property (nonatomic, retain) NSFileManager *pFlMgr;
-@property (nonatomic, retain) IBOutlet UINavigationController *navViewController;
+@property (nonatomic, retain)  UINavigationController *navViewController;
 
 @property(nonatomic, weak) id<AlbumContentsViewControllerDelegate> delegate;
 

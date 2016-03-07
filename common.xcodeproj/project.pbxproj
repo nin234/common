@@ -38,6 +38,7 @@
 		DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */; };
 		DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AB71C844E6F00052A03 /* MainViewController.m */; };
 		DBD16ABD1C844EBE00052A03 /* MainListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16ABC1C844EBE00052A03 /* MainListViewController.m */; };
+		DBD16AD51C8AF5B900052A03 /* AddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AD41C8AF5B900052A03 /* AddViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -95,6 +96,9 @@
 		DBD16ABA1C844E8600052A03 /* MainListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainListViewController.h; sourceTree = "<group>"; };
 		DBD16ABB1C844E9700052A03 /* MainListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainListViewController.xib; sourceTree = "<group>"; };
 		DBD16ABC1C844EBE00052A03 /* MainListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainListViewController.m; sourceTree = "<group>"; };
+		DBD16AD21C8AF59100052A03 /* AddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddViewController.h; sourceTree = "<group>"; };
+		DBD16AD31C8AF5A400052A03 /* AddViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddViewController.xib; sourceTree = "<group>"; };
+		DBD16AD41C8AF5B900052A03 /* AddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +157,9 @@
 				DBD16ABA1C844E8600052A03 /* MainListViewController.h */,
 				DBD16ABC1C844EBE00052A03 /* MainListViewController.m */,
 				DBD16ABB1C844E9700052A03 /* MainListViewController.xib */,
+				DBD16AD31C8AF5A400052A03 /* AddViewController.xib */,
+				DBD16AD21C8AF59100052A03 /* AddViewController.h */,
+				DBD16AD41C8AF5B900052A03 /* AddViewController.m */,
 				DBD16AB61C844E6F00052A03 /* MainViewController.h */,
 				DBD16AB71C844E6F00052A03 /* MainViewController.m */,
 				DBD16AB81C844E6F00052A03 /* MainViewController.xib */,
@@ -250,6 +257,7 @@
 				DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */,
 				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,
 				DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */,
+				DBD16AD51C8AF5B900052A03 /* AddViewController.m in Sources */,
 				DBD16ABD1C844EBE00052A03 /* MainListViewController.m in Sources */,
 				DB00E5271C7C912000E898F7 /* Photo.m in Sources */,
 				DB00E5091C7BF96100E898F7 /* NotesViewController.m in Sources */,
