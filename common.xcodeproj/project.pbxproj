@@ -39,6 +39,7 @@
 		DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AB71C844E6F00052A03 /* MainViewController.m */; };
 		DBD16ABD1C844EBE00052A03 /* MainListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16ABC1C844EBE00052A03 /* MainListViewController.m */; };
 		DBD16AD51C8AF5B900052A03 /* AddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AD41C8AF5B900052A03 /* AddViewController.m */; };
+		DBD16AF71C8DD17E00052A03 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AF51C8DD17E00052A03 /* EditViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -99,6 +100,9 @@
 		DBD16AD21C8AF59100052A03 /* AddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddViewController.h; sourceTree = "<group>"; };
 		DBD16AD31C8AF5A400052A03 /* AddViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddViewController.xib; sourceTree = "<group>"; };
 		DBD16AD41C8AF5B900052A03 /* AddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddViewController.m; sourceTree = "<group>"; };
+		DBD16AF51C8DD17E00052A03 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
+		DBD16AF61C8DD17E00052A03 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
+		DBD16AF81C8DD19800052A03 /* EditViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +164,9 @@
 				DBD16AD31C8AF5A400052A03 /* AddViewController.xib */,
 				DBD16AD21C8AF59100052A03 /* AddViewController.h */,
 				DBD16AD41C8AF5B900052A03 /* AddViewController.m */,
+				DBD16AF61C8DD17E00052A03 /* EditViewController.h */,
+				DBD16AF51C8DD17E00052A03 /* EditViewController.m */,
+				DBD16AF81C8DD19800052A03 /* EditViewController.xib */,
 				DBD16AB61C844E6F00052A03 /* MainViewController.h */,
 				DBD16AB71C844E6F00052A03 /* MainViewController.m */,
 				DBD16AB81C844E6F00052A03 /* MainViewController.xib */,
@@ -264,6 +271,7 @@
 				DB00E4F91C7BCC8300E898F7 /* TapDetectingImageView.m in Sources */,
 				DB00E51D1C7C8ED600E898F7 /* MySlider.m in Sources */,
 				DB00E4B71C7A9FF700E898F7 /* common.m in Sources */,
+				DBD16AF71C8DD17E00052A03 /* EditViewController.m in Sources */,
 				DB00E4EF1C7BC9E300E898F7 /* SlideScrollView.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
