@@ -41,6 +41,7 @@
 		DBD16AD51C8AF5B900052A03 /* AddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AD41C8AF5B900052A03 /* AddViewController.m */; };
 		DBD16AF71C8DD17E00052A03 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AF51C8DD17E00052A03 /* EditViewController.m */; };
 		DBD16B061C8EE95400052A03 /* DisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B051C8EE95400052A03 /* DisplayViewController.m */; };
+		DBD16B111C90549300052A03 /* DataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B101C90549300052A03 /* DataOps.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -107,6 +108,8 @@
 		DBD16B031C8EE94100052A03 /* DisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayViewController.h; sourceTree = "<group>"; };
 		DBD16B041C8EE94100052A03 /* DisplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayViewController.xib; sourceTree = "<group>"; };
 		DBD16B051C8EE95400052A03 /* DisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayViewController.m; sourceTree = "<group>"; };
+		DBD16B0F1C90547A00052A03 /* DataOps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataOps.h; sourceTree = "<group>"; };
+		DBD16B101C90549300052A03 /* DataOps.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataOps.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +176,8 @@
 				DBD16AF81C8DD19800052A03 /* EditViewController.xib */,
 				DBD16B051C8EE95400052A03 /* DisplayViewController.m */,
 				DBD16B031C8EE94100052A03 /* DisplayViewController.h */,
+				DBD16B0F1C90547A00052A03 /* DataOps.h */,
+				DBD16B101C90549300052A03 /* DataOps.m */,
 				DBD16B041C8EE94100052A03 /* DisplayViewController.xib */,
 				DBD16AB61C844E6F00052A03 /* MainViewController.h */,
 				DBD16AB71C844E6F00052A03 /* MainViewController.m */,
@@ -268,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBD16B111C90549300052A03 /* DataOps.m in Sources */,
 				DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */,
 				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,
 				DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */,
