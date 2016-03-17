@@ -33,7 +33,6 @@
 		DB00E53E1C7D27F600E898F7 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E53D1C7D27F600E898F7 /* KeychainItemWrapper.m */; };
 		DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E5481C7DD6F300E898F7 /* MapViewController.m */; };
 		DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */; };
-		DB00E57C1C81111000E898F7 /* InAppPurchase.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E57B1C81111000E898F7 /* InAppPurchase.m */; };
 		DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16A9A1C830F7900052A03 /* AlbumContentsViewController.m */; };
 		DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */; };
 		DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AB71C844E6F00052A03 /* MainViewController.m */; };
@@ -42,6 +41,7 @@
 		DBD16AF71C8DD17E00052A03 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16AF51C8DD17E00052A03 /* EditViewController.m */; };
 		DBD16B061C8EE95400052A03 /* DisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B051C8EE95400052A03 /* DisplayViewController.m */; };
 		DBD16B111C90549300052A03 /* DataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B101C90549300052A03 /* DataOps.m */; };
+		DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B4E1C9A407900052A03 /* AppUtil.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -85,8 +85,6 @@
 		DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumContentsTableViewCell.m; sourceTree = "<group>"; };
 		DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumContentsTableViewCell.h; sourceTree = "<group>"; };
 		DB00E5631C7DE1FC00E898F7 /* AlbumContentsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumContentsTableViewCell.xib; sourceTree = "<group>"; };
-		DB00E57B1C81111000E898F7 /* InAppPurchase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InAppPurchase.m; sourceTree = "<group>"; };
-		DB00E57D1C81112700E898F7 /* InAppPurchase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InAppPurchase.h; sourceTree = "<group>"; };
 		DBD16A9A1C830F7900052A03 /* AlbumContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumContentsViewController.m; sourceTree = "<group>"; };
 		DBD16A9B1C830F7900052A03 /* AlbumContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumContentsViewController.h; sourceTree = "<group>"; };
 		DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDisplayViewController.m; sourceTree = "<group>"; };
@@ -110,6 +108,8 @@
 		DBD16B051C8EE95400052A03 /* DisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayViewController.m; sourceTree = "<group>"; };
 		DBD16B0F1C90547A00052A03 /* DataOps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataOps.h; sourceTree = "<group>"; };
 		DBD16B101C90549300052A03 /* DataOps.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataOps.m; sourceTree = "<group>"; };
+		DBD16B4D1C9A407900052A03 /* AppUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppUtil.h; sourceTree = "<group>"; };
+		DBD16B4E1C9A407900052A03 /* AppUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppUtil.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +143,8 @@
 			isa = PBXGroup;
 			children = (
 				DB00E4B41C7A9FF700E898F7 /* common.h */,
+				DBD16B4D1C9A407900052A03 /* AppUtil.h */,
+				DBD16B4E1C9A407900052A03 /* AppUtil.m */,
 				DB00E4B61C7A9FF700E898F7 /* common.m */,
 				DB00E4ED1C7BC9E300E898F7 /* SlideScrollView.h */,
 				DB00E4EE1C7BC9E300E898F7 /* SlideScrollView.m */,
@@ -155,8 +157,6 @@
 				DB00E5631C7DE1FC00E898F7 /* AlbumContentsTableViewCell.xib */,
 				DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */,
 				DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */,
-				DB00E57D1C81112700E898F7 /* InAppPurchase.h */,
-				DB00E57B1C81111000E898F7 /* InAppPurchase.m */,
 				DBD16AA11C830FF600052A03 /* PhotoDisplayViewController.xib */,
 				DBD16AA01C830FC300052A03 /* AlbumContentsViewController.xib */,
 				DBD16A9F1C830FA000052A03 /* PhotoDisplayViewController.h */,
@@ -289,10 +289,10 @@
 				DB00E4EF1C7BC9E300E898F7 /* SlideScrollView.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
-				DB00E57C1C81111000E898F7 /* InAppPurchase.m in Sources */,
 				DB00E5331C7D24C300E898F7 /* AddressAnnotation.m in Sources */,
 				DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */,
 				DB00E53E1C7D27F600E898F7 /* KeychainItemWrapper.m in Sources */,
+				DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
