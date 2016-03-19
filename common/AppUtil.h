@@ -27,6 +27,7 @@
 {
     bool bUpgradeAction;
     bool bShrMgrStarted;
+     bool bUpgradeAlert;
 }
 
 

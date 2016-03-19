@@ -47,6 +47,7 @@
     {
         bShrMgrStarted = false ;
         bNoICloudAlrt = false;
+        bUpgradeAlert = false;
         inapp = [[InAppPurchase alloc] init];
         [inapp setProductId:productId];
         [inapp setDelegate:self];
@@ -77,7 +78,7 @@
     
     UIActionSheet *pSh;
     
-    pSh= [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", @"Facebook share", @"Upgrade", @"Share", nil];
+    pSh= [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", @"Upgrade", @"Share", nil];
     
     MainViewController *pMainVwCntrl = [self.navViewController.viewControllers objectAtIndex:0];
     [pMainVwCntrl.pAllItms lockItems];
@@ -168,29 +169,6 @@
     }
     else if (buttonIndex == 1)
     {
-        UIDevice *dev = [UIDevice currentDevice];
-        if ([[dev systemVersion] doubleValue] < 6.0)
-        {
-            [self iCloudEmailCancel];
-            return;
-        }
-        NSLog(@"In facebook share\n");
-        pMainVwCntrl.pAllItms.bInEmail = true;
-        if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook])
-        {
-            pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"Facebook" style:UIBarButtonItemStylePlain target:self action:@selector(fbshareNow)];
-            
-            
-        }
-        else
-        {
-            UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"No Facebook Account" message:@"Please set up facebook account in settings. House details including pictures can be shared with selected group of friends on Facebook" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            bNoICloudAlrt = true;
-            [pAvw show];
-        }
-    }
-    else if (buttonIndex == 2)
-    {
         
         [self iCloudEmailCancel];
         bUpgradeAction = true;
@@ -205,6 +183,27 @@
         
         
         
+    }
+    else if (buttonIndex == 2)
+    {
+        if (!appShrUtl.purchased)
+        {
+            NSLog(@"Cannot share item further without upgrade");
+            bUpgradeAlert = true;
+            UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Purchase/restore now" message:@"Please upgrade now for sharing" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [pAvw show];
+            return;
+        }
+        else
+        {
+            if (!bShrMgrStarted)
+            {
+                [pShrMgr start];
+                bShrMgrStarted = true;
+            }
+            [appShrUtl showShareView];
+        }
+
     }
     else
     {
@@ -307,6 +306,12 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSLog(@"Clicked button at index %ld", (long)buttonIndex);
+    if (bUpgradeAlert)
+    {
+        NSLog(@"Resetting bUpgradeAlert in alertview action");
+        bUpgradeAlert = false;
+        return;
+    }
     
     MainViewController *pMainVwCntrl = [self.navViewController.viewControllers objectAtIndex:0];
     int attchmnts = (int)buttonIndex;
