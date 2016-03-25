@@ -23,6 +23,8 @@
 @synthesize bNoICloudAlrt;
 @synthesize bFBAction;
 @synthesize bEmailConfirm;
+@synthesize aViewController1;
+@synthesize window;
 
 -(void) setPurchsd:(NSString *)trid
 {
@@ -55,6 +57,27 @@
         return self;
     }
     return  nil;
+}
+
+-(void) initializeShrUtl
+{
+    aViewController1 = [[MainViewController alloc]
+                        initWithNibName:nil bundle:nil];
+    
+    
+    UIImage *image = [UIImage imageNamed:@"895-user-group@2x.png"];
+    UIImage *imageSel = [UIImage imageNamed:@"895-user-group-selected@2x.png"];
+    aViewController1.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Share" image:image selectedImage:imageSel];
+    
+    UINavigationController *mainVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController1];
+    appShrUtl.window = self.window;
+    appShrUtl.navViewController = navViewController;
+    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl];
+    if (appShrUtl.purchased)
+        [appShrUtl registerForRemoteNotifications];
+    
+    
+
 }
 
 - (NSString *) getAlbumDir: (NSString *) album_name

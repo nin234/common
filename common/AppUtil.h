@@ -41,10 +41,13 @@
 @property bool bEmailConfirm;
 @property bool bNoICloudAlrt;
 @property (nonatomic, strong) NSString *productId;
+@property (nonatomic, retain) MainViewController *aViewController1;
+@property (nonatomic, retain) UIWindow *window;
 
 -(void) iCloudEmailCancel;
 - (NSString *) getAlbumDir: (NSString *) album_name;
 -(void) iCloudOrEmail;
 -(void) photoActions:(int) source;
+-(void) initializeShrUtl;
 
 @end
