@@ -17,6 +17,7 @@
 -(void)searchStrReset;
 -(void) itemAdd;
 -(void) iCloudOrEmail;
+-(void) shareContactsAdd;
 
 @end
 
@@ -30,6 +31,7 @@
 
 @property bool emailAction;
 @property bool fbAction;
+@property bool bShareView;
 
 @property (nonatomic, weak) id<MainViewControllerDelegate> delegate;
 @property (nonatomic, weak) id<MainListViewControllerDelegate> delegate_1;

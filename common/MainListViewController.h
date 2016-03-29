@@ -20,7 +20,7 @@
 
 @end
 
-@interface MainListViewController : UITableViewController<AlbumContentsViewControllerDelegate>
+@interface MainListViewController : UITableViewController<AlbumContentsViewControllerDelegate, UIAlertViewDelegate  >
 {
     NSThread *updateThread;
     int photoreqsource;
@@ -46,6 +46,7 @@
 @property bool bAttchmentsInit;
 @property bool bInICloudSync;
 @property bool bInEmail;
+@property bool bShareView;
 @property int currPhotoSelIndx;
 @property int actionNow;
 

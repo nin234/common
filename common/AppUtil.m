@@ -7,7 +7,6 @@
 //
 
 #import "AppUtil.h"
-#import "MainViewController.h"
 #import <Social/SLComposeViewController.h>
 #import <Social/SLServiceTypes.h>
 
@@ -59,6 +58,14 @@
     return  nil;
 }
 
+-(void) shareNow:(NSString *) shareStr
+{
+    id itm = [aViewController1.pAllItms getMessage:PHOTOREQSOURCE_SHARE];
+    NSString *shrStr = [shareStr stringByAppendingString:@":::"];
+    NSString *shrMsg = [delegate getShareMsg:itm];
+    shrStr = [shrStr stringByAppendingString:shrMsg];
+}
+
 -(void) initializeShrUtl
 {
     aViewController1 = [[MainViewController alloc]
@@ -68,11 +75,11 @@
     UIImage *image = [UIImage imageNamed:@"895-user-group@2x.png"];
     UIImage *imageSel = [UIImage imageNamed:@"895-user-group-selected@2x.png"];
     aViewController1.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Share" image:image selectedImage:imageSel];
-    
+    aViewController1.bShareView = true;
     UINavigationController *mainVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController1];
     appShrUtl.window = self.window;
     appShrUtl.navViewController = navViewController;
-    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl];
+    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl ContactsDelegate:self];
     if (appShrUtl.purchased)
         [appShrUtl registerForRemoteNotifications];
     
@@ -337,7 +344,6 @@
     }
     
     MainViewController *pMainVwCntrl = [self.navViewController.viewControllers objectAtIndex:0];
-    int attchmnts = (int)buttonIndex;
     
     if(bNoICloudAlrt)
     {
@@ -345,7 +351,8 @@
         bNoICloudAlrt = false;
         return;
     }
-    
+    int attchmnts = (int)buttonIndex;
+
     switch (attchmnts)
     {
         case 0:

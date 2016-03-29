@@ -10,6 +10,7 @@
 #import "MainViewController.h"
 #import "AlbumContentsViewController.h"
 #import <sys/stat.h>
+#import "AppUtil.h"
 
 const NSInteger SELECTION_INDICATOR_TAG_SH = 54321;
 const NSInteger TEXT_LABEL_TAG = 54322;
@@ -32,6 +33,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
 @synthesize actionNow;
 @synthesize navViewController;
 @synthesize delegate;
+@synthesize bShareView;
 
 //static int nRows;
 /*
@@ -59,6 +61,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
         seletedItems = [[NSMutableArray alloc] init];
         itemNames = [[NSMutableArray alloc] init];
         indexes = [[NSMutableArray alloc] init];
+        bShareView = false;
         NSLog(@"Creating the fetch queue\n");
                
     }
@@ -275,6 +278,12 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
 {
     
     //Here we are in email , so refreshData will not be invoked by the update thread, so no need to lock
+    if (!startIndx && source == PHOTOREQSOURCE_SHARE)
+    {
+        [attchments removeAllObjects];
+        [movOrImg removeAllObjects];
+        
+    }
     photoreqsource = source;
     NSUInteger count = [seletedItems count];
     bool bFound = false;
@@ -401,7 +410,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
         const NSInteger IMAGE_SIZE = 30;
         const NSInteger SIDE_PADDING = 35;
     
-        if (bInEmail || bInICloudSync)
+        if (bInEmail || bInICloudSync || bShareView)
         {
             NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row-1];
             if ([numbr boolValue] == YES)
@@ -479,6 +488,25 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
  }
  */
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    int attchmnts = (int)buttonIndex;
+    
+    switch (attchmnts)
+    {
+        case 0:
+            return;
+            break;
+        case 1:
+            [self getPhotos:0 source:PHOTOREQSOURCE_SHARE];
+            break;
+            
+        default:
+            break;
+    }
+    return;
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -501,7 +529,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
     if (indexPath.row > [indexes count])
         return;
     
-    if (bInEmail || bInICloudSync)
+    if (bInEmail || bInICloudSync || bShareView)
     {
         UITableViewCell *cell =
         [tableView cellForRowAtIndexPath:indexPath];
@@ -535,6 +563,11 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
                     NSLog(@"Changing image Not selected at index %lu\n", (unsigned long)i);
                     [seletedItems replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:NO]];
                 }
+            }
+            if (bShareView)
+            {
+                UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Attach Pictures" message:@"" delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
+                [pAvw show];
             }
         }
    

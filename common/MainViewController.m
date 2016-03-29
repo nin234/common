@@ -16,6 +16,7 @@
 @synthesize fbAction;
 @synthesize delegate;
 @synthesize delegate_1;
+@synthesize bShareView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -25,6 +26,7 @@
                
         emailAction = false;
         fbAction = false;
+        bShareView = false;
     }
     return self;
 }
@@ -58,9 +60,12 @@
     [self.view addSubview:self.pSearchBar];
     self.pAllItms = [[MainListViewController alloc]
                      initWithNibName:nil bundle:nil];
+    self.pAllItms.bInICloudSync = false;
+    self.pAllItms.bInEmail = false;
+    self.pAllItms.bAttchmentsInit = false;
     [self.pAllItms setDelegate:delegate_1];
     self.pAllItms.navViewController = self.navigationController;
-    
+    self.pAllItms.bShareView = self.bShareView;
     CGRect tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + 50, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     self.pAllItms.tableView = pTVw;
@@ -131,7 +136,14 @@
     // Do any additional setup after loading the view from its nib.
     NSString *title = @"House List";
     self.navigationItem.title = [NSString stringWithString:title];
-  
+    if (self.bShareView)
+    {
+        
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"\U0001F46A\U0001F46A" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
+        self.navigationItem.rightBarButtonItem = pBarItem;
+        return;
+    }
+
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
     self.navigationItem.rightBarButtonItem = pBarItem;
     UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
@@ -140,6 +152,12 @@
     //pDlg.dataSync.refreshNow = true;
    //  pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"Email" style:UIBarButtonItemStyleBordered target:pDlg action:@selector(emailNow)];
 
+}
+
+-(void) shareContactsAdd
+{
+    [delegate shareContactsAdd];
+    return;
 }
 
 -(void) itemAdd
