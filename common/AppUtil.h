@@ -25,6 +25,7 @@
 -(void) setPurchsed;
 -(NSString *) getEmailFbMsg:(id)itm;
 -(NSString *) getShareMsg:(id)itm;
+-(NSString *) getItemName:(id)itm;
 @end
 
 @interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, UIAlertViewDelegate>

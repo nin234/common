@@ -63,7 +63,10 @@
     id itm = [aViewController1.pAllItms getMessage:PHOTOREQSOURCE_SHARE];
     NSString *shrStr = [shareStr stringByAppendingString:@":::"];
     NSString *shrMsg = [delegate getShareMsg:itm];
+    NSString *name = [delegate getItemName:itm];
     shrStr = [shrStr stringByAppendingString:shrMsg];
+    [pShrMgr shareItem:shrMsg listName:name];
+    
 }
 
 -(void) initializeShrUtl

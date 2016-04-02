@@ -94,6 +94,7 @@
 		DB7061451CAA88350031C445 /* CommonTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonTranslator.h; sourceTree = "<group>"; };
 		DB7061461CAA88350031C445 /* CommonTranslator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonTranslator.m; sourceTree = "<group>"; };
 		DB70614A1CAA88650031C445 /* CommonShareMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonShareMgr.h; sourceTree = "<group>"; };
+		DB7061511CAA9B9B0031C445 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		DBD16A9A1C830F7900052A03 /* AlbumContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumContentsViewController.m; sourceTree = "<group>"; };
 		DBD16A9B1C830F7900052A03 /* AlbumContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumContentsViewController.h; sourceTree = "<group>"; };
 		DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDisplayViewController.m; sourceTree = "<group>"; };
@@ -155,6 +156,7 @@
 				DB7061421CAA88350031C445 /* CommonDecoder.h */,
 				DB7061431CAA88350031C445 /* CommonDecoder.m */,
 				DB7061441CAA88350031C445 /* CommonShareMgr.m */,
+				DB7061511CAA9B9B0031C445 /* Constants.h */,
 				DB7061451CAA88350031C445 /* CommonTranslator.h */,
 				DB7061461CAA88350031C445 /* CommonTranslator.m */,
 				DB00E4B41C7A9FF700E898F7 /* common.h */,

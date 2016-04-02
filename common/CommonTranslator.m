@@ -13,7 +13,7 @@
 
 -(char *) getItems:(long long)shareId msgLen:(int *)len
 {
-    return [self getItems:shareId msgLen:len msgId:GET_OPENHOUSES_ITEMS];
+    return [self getItems:shareId msgLen:len msgId:GET_ITEMS];
 }
 
 

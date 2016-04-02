@@ -13,14 +13,6 @@
 @implementation CommonShareMgr
 
 
--(void) getItems
-{
-    char *pMsgToSend = NULL;
-    int len =0;
-    pMsgToSend = [self.pTransl getItems:self.share_id msgLen:&len];
-    [self putMsgInQ:pMsgToSend msgLen:len];
-    return;
-}
 
 - (instancetype)init
 {

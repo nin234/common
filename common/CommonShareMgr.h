@@ -9,13 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <sharing/ShareMgr.h>
 
-#include "Constants.h"
-
 
 
 @interface CommonShareMgr : ShareMgr
 
--(void) getItems;
+
 - (instancetype)init;
 
 @end
