@@ -99,7 +99,7 @@
     bInitRefresh = true;
     bInUpload = false;
     bRedColor = false;
-    waitTime = 3;
+    waitTime = 4;
     bAnimateNow = false;
     bAnimateOnDwld = false;
     bAnimateOnStrtUp = false;

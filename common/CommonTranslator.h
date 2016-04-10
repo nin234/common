@@ -10,6 +10,6 @@
 
 @interface CommonTranslator : MessageTranslator
 
--(char *) getItems:(long long) shareId msgLen:(int *)len;
+
 
 @end

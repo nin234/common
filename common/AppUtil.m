@@ -66,7 +66,19 @@
     NSString *name = [delegate getItemName:itm];
     shrStr = [shrStr stringByAppendingString:shrMsg];
     [pShrMgr shareItem:shrMsg listName:name];
-    
+    NSUInteger cnt =  [aViewController1.pAllItms.attchments count];
+    for (NSUInteger i =0; i < cnt; ++i)
+    {
+        NSURL *picUrl = [aViewController1.pAllItms.attchments objectAtIndex:i];
+        NSArray *pathcomps = [picUrl pathComponents];
+        NSString *picName = [pathcomps lastObject];
+        if (picName == nil)
+            continue;
+        
+        [pShrMgr sharePicture:picUrl];
+    }
+    [aViewController1.pAllItms.attchments removeAllObjects];
+    [aViewController1.pAllItms.movOrImg removeAllObjects];
 }
 
 -(void) initializeShrUtl

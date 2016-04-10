@@ -20,7 +20,9 @@
     if (self)
     {
         self.pTransl = [[CommonTranslator alloc] init];
-        self.pDecoder = [[CommonDecoder alloc] init];
+        CommonDecoder* pCommonDcd = [[CommonDecoder alloc] init];
+        pCommonDcd.pShrMgr = self;
+        self.pDecoder = pCommonDcd;
     }
     return self;
 }

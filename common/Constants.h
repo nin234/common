@@ -9,6 +9,5 @@
 #ifndef Constants_h
 #define Constants_h
 
-#define GET_ITEMS 80
 
 #endif /* Constants_h */
