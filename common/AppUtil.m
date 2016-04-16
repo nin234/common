@@ -61,6 +61,7 @@
 -(void) shareNow:(NSString *) shareStr
 {
     id itm = [aViewController1.pAllItms getMessage:PHOTOREQSOURCE_SHARE];
+    NSString *picMetaStr = shareStr;
     NSString *shrStr = [shareStr stringByAppendingString:@":::"];
     NSString *shrMsg = [delegate getShareMsg:itm];
     NSString *name = [delegate getItemName:itm];
@@ -75,7 +76,7 @@
         if (picName == nil)
             continue;
         
-        [pShrMgr sharePicture:picUrl];
+        [pShrMgr sharePicture:picUrl metaStr:picMetaStr];
     }
     [aViewController1.pAllItms.attchments removeAllObjects];
     [aViewController1.pAllItms.movOrImg removeAllObjects];
