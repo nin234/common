@@ -7,8 +7,11 @@
 //
 
 #import "CommonDecoder.h"
+#import "CommonShareMgr.h"
 
 @implementation CommonDecoder
+
+
 
 -(instancetype) init
 {
@@ -19,15 +22,44 @@
 
 -(bool) decodeMessage:(char*)buffer msglen:(ssize_t)mlen
 {
-    if ([super decodeMessage:buffer msglen:mlen])
+    bool bRet = [super decodeMessage:buffer msglen:mlen];
+    
+    
+    int msgTyp;
+    memcpy(&msgTyp, buffer+sizeof(int), sizeof(int));
+    
+    switch (msgTyp)
     {
-        return true;
+        
+        case SHARE_ITEM_MSG:
+        {
+            bRet = [self processShareItemMessage:buffer msglen:mlen];
+        }
+            break;
+            
+            
+        default:
+            bRet = true;
+            break;
     }
     
-    bool bRet = true;
+
     
     return bRet;
     
+}
+
+-(bool) processShareItemMessage:(char *)buffer msglen:(ssize_t)mlen
+{
+   
+    int namelen;
+    memcpy(buffer + 2*sizeof(int), &namelen, sizeof(int));
+    NSString *list = [NSString stringWithCString:(buffer + 4*sizeof(int) + namelen) encoding:NSASCIIStringEncoding];
+    NSArray *listItems = [list componentsSeparatedByString:@";"];
+    CommonShareMgr *pCmnShrMgr = (CommonShareMgr *)self.pShrMgr;
+    
+    [pCmnShrMgr processItem:listItems];
+    return true;
 }
 
 @end

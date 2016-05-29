@@ -12,7 +12,7 @@
 
 @implementation CommonShareMgr
 
-
+@synthesize delegate;
 
 - (instancetype)init
 {
@@ -27,5 +27,10 @@
     return self;
 }
 
+-(void) processItem:(NSString *)itemStr
+{
+    [delegate decodeAndStoreItem:itemStr];
+    return;
+}
 
 @end

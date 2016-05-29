@@ -152,9 +152,9 @@
 		DB00E4B31C7A9FF700E898F7 /* common */ = {
 			isa = PBXGroup;
 			children = (
-				DB70614A1CAA88650031C445 /* CommonShareMgr.h */,
 				DB7061421CAA88350031C445 /* CommonDecoder.h */,
 				DB7061431CAA88350031C445 /* CommonDecoder.m */,
+				DB70614A1CAA88650031C445 /* CommonShareMgr.h */,
 				DB7061441CAA88350031C445 /* CommonShareMgr.m */,
 				DB7061511CAA9B9B0031C445 /* Constants.h */,
 				DB7061451CAA88350031C445 /* CommonTranslator.h */,
