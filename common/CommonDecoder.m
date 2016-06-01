@@ -35,9 +35,9 @@
         {
             bRet = [self processShareItemMessage:buffer msglen:mlen];
         }
-            break;
+        break;
             
-            
+                   
         default:
             bRet = true;
             break;
@@ -55,10 +55,10 @@
     int namelen;
     memcpy(buffer + 2*sizeof(int), &namelen, sizeof(int));
     NSString *list = [NSString stringWithCString:(buffer + 4*sizeof(int) + namelen) encoding:NSASCIIStringEncoding];
-    NSArray *listItems = [list componentsSeparatedByString:@";"];
+    
     CommonShareMgr *pCmnShrMgr = (CommonShareMgr *)self.pShrMgr;
     
-    [pCmnShrMgr processItem:listItems];
+    [pCmnShrMgr processItem:list];
     return true;
 }
 

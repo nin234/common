@@ -90,8 +90,10 @@
     itemsDeleted = 0;
     editedItems = [[NSMutableArray alloc] init];
     deletedItems = [[NSMutableArray alloc] init];
-    itemNamesTmp = [[NSMutableArray alloc] init];
+    itemNamesTmp = [[NSArray alloc] init];
     itemNames = [[NSMutableArray alloc] init];
+    unFilteredItemsTmp = [[NSArray alloc] init];
+    unFilteredItems = [[NSMutableArray alloc] init];
     sharedItems = [[NSMutableArray alloc]init];
     downloadIds = [[NSMutableArray alloc] init];
     updateNow = false;
@@ -504,6 +506,26 @@
         itemNamesTmp = [[moc executeFetchRequest:req error:&error]sortedArrayUsingDescriptors:sortDescriptors];
     }
     
+    NSFetchRequest *req1 = [[NSFetchRequest alloc] init];
+    [req1 setEntity:descr];
+    unFilteredItemsTmp = [moc executeFetchRequest:req1 error:&error];
+    
+    if (unFilteredItemsTmp == nil)
+    {
+        return;
+    }
+    
+    [workToDo lock];
+    [unFilteredItems removeAllObjects];
+    NSUInteger noOfItems = [unFilteredItemsTmp count];
+    for (NSUInteger i =0; i < noOfItems; ++i)
+    {
+        id litem = [delegate getLocalItem];
+        [delegate copyFromItem:[unFilteredItemsTmp objectAtIndex:i] local:litem];
+        [unFilteredItems addObject:litem];
+    }
+    [workToDo unlock];
+    
     if (itemNamesTmp == nil)
     {
         return;
@@ -543,6 +565,19 @@
     }
     [workToDo unlock];
     return;
+}
+
+-(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName
+{
+    NSUInteger cnt = [unFilteredItems count];
+    NSString *pAlName;
+    for (NSUInteger i=0; i < cnt; ++i)
+    {
+        pAlName = [delegate getAlbumName:shareId itemName:iName item:[unFilteredItems objectAtIndex:i]];
+        if (pAlName != nil)
+            return pAlName;
+    }
+    return nil;
 }
 
 -(void) updateMainLstVwCntrl

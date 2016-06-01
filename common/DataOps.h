@@ -23,15 +23,17 @@
 -(id) getLocalItem;
 -(void) copyFromItem:(id) itm local:(id)litm;
 -(MainViewController *) getMainViewController;
-
+-(NSString *)getAlbumName:(long long) shareId itemName:(NSString *) name item:(id)itm;
 @optional
 -(NSString *)getAddtionalPredStr:(NSUInteger) scnt predStrng:(NSString *)predStr;
+
 @end
 
 @interface DataOps: NSThread<UIAlertViewDelegate> 
 {
     NSMutableArray *newItems;
     NSCondition *workToDo;
+    NSLock *dbLock;
     int itemsToAdd;
     int itemsEdited;
     int itemsDeleted;
@@ -49,6 +51,10 @@
     NSMutableArray *seletedItemsTmp;
     NSMutableArray *indexesTmp;
      NSArray *itemNamesTmp;
+    
+    NSArray *unFilteredItemsTmp;
+    NSMutableArray *unFilteredItems;
+    
     bool bInitRefresh;
     bool forceRefresh;
     NSDate *refreshTime;
@@ -92,6 +98,6 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 - (void)saveContext;
-
+-(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName;
 
 @end

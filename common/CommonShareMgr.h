@@ -13,10 +13,14 @@
 
 -(void) decodeAndStoreItem :(NSString *) ItemStr;
 
+
 @end
 
 
 @interface CommonShareMgr : ShareMgr
+{
+       
+}
 
 
 - (instancetype)init;

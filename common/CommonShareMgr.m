@@ -23,6 +23,7 @@
         CommonDecoder* pCommonDcd = [[CommonDecoder alloc] init];
         pCommonDcd.pShrMgr = self;
         self.pDecoder = pCommonDcd;
+        picSoFar = 0;
     }
     return self;
 }
@@ -32,5 +33,6 @@
     [delegate decodeAndStoreItem:itemStr];
     return;
 }
+
 
 @end

@@ -65,6 +65,9 @@
     NSString *shrStr = [shareStr stringByAppendingString:@":::"];
     NSString *shrMsg = [delegate getShareMsg:itm];
     NSString *name = [delegate getItemName:itm];
+    if (name == nil)
+        return;
+    [picMetaStr stringByAppendingString:name];
     shrStr = [shrStr stringByAppendingString:shrMsg];
     [pShrMgr shareItem:shrMsg listName:name];
     NSUInteger cnt =  [aViewController1.pAllItms.attchments count];
