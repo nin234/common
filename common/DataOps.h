@@ -26,6 +26,7 @@
 -(NSString *)getAlbumName:(long long) shareId itemName:(NSString *) name item:(id)itm;
 @optional
 -(NSString *)getAddtionalPredStr:(NSUInteger) scnt predStrng:(NSString *)predStr;
+-(bool ) isEqualToLclItem:(id) item local:(id) litem;
 
 @end
 
@@ -99,5 +100,6 @@
 
 - (void)saveContext;
 -(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName;
+-(bool) isNewItem:(id) item;
 
 @end

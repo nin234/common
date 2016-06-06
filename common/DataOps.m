@@ -567,6 +567,17 @@
     return;
 }
 
+-(bool) isNewItem:(id) item
+{
+    NSUInteger cnt = [unFilteredItems count];
+    for (NSUInteger i=0; i < cnt; ++i)
+    {
+        if ([delegate isEqualToLclItem:item local:[unFilteredItems objectAtIndex:i ]])
+            return false;
+    }
+    return true;
+}
+
 -(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName
 {
     NSUInteger cnt = [unFilteredItems count];
