@@ -54,7 +54,7 @@
    
     int namelen;
     memcpy(buffer + 2*sizeof(int), &namelen, sizeof(int));
-    NSString *list = [NSString stringWithCString:(buffer + 4*sizeof(int) + namelen) encoding:NSASCIIStringEncoding];
+    NSString *list = [NSString stringWithCString:(buffer + 4*sizeof(int) + namelen + sizeof (long long)) encoding:NSASCIIStringEncoding];
     
     CommonShareMgr *pCmnShrMgr = (CommonShareMgr *)self.pShrMgr;
     

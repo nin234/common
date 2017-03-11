@@ -127,7 +127,7 @@
     
     UIActionSheet *pSh;
     
-    pSh= [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", @"Upgrade", @"Share", nil];
+    pSh= [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Share", @"Check Lists", nil];
     
     MainViewController *pMainVwCntrl = [self.navViewController.viewControllers objectAtIndex:0];
     [pMainVwCntrl.pAllItms lockItems];
@@ -216,6 +216,7 @@
         pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"Email" style:UIBarButtonItemStylePlain target:self action:@selector(emailNow)];
         
     }
+    
     else if (buttonIndex == 1)
     {
         
@@ -233,6 +234,7 @@
         
         
     }
+     
     else if (buttonIndex == 2)
     {
         if (!appShrUtl.purchased)
