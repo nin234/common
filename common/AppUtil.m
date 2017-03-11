@@ -7,6 +7,7 @@
 //
 
 #import "AppUtil.h"
+#import "TemplListViewController.h"
 #import <Social/SLComposeViewController.h>
 #import <Social/SLServiceTypes.h>
 

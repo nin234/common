@@ -7,7 +7,6 @@
 //
 
 #import "TemplListViewController.h"
-#import "AppDelegate.h"
 #import "ListViewController.h"
 
 @interface TemplListViewController ()
@@ -69,13 +68,7 @@
 - (void)templItemAdd
 {
     AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if (!pDlg.appUtl.purchased && pDlg.no_of_template_lists >= 2)
-    {
-        NSLog(@"Cannot add a new item without upgrade COUNT=%lu", (unsigned long)cnt);
-        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Upgrade now" message:@"Only two template lists allowed with free version. Please upgrade now to add unlimited number of template lists" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [pAvw show];
-        return;
-    }
+   
     
     pDlg.mlistName = nil;
     ListViewController *aViewController = [ListViewController alloc];
