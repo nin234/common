@@ -210,51 +210,22 @@
     
     if (buttonIndex == 0)
     {
-        NSLog(@"In email \n");
-        pMainVwCntrl.pAllItms.bInEmail = true;
-        pMainVwCntrl.emailAction = true;
-        pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"Email" style:UIBarButtonItemStylePlain target:self action:@selector(emailNow)];
+        if (!bShrMgrStarted)
+        {
+            [pShrMgr start];
+            bShrMgrStarted = true;
+        }
+        [appShrUtl showShareView];
         
     }
     
     else if (buttonIndex == 1)
     {
-        
-        [self iCloudEmailCancel];
-        bUpgradeAction = true;
-        UIActionSheet *pSh;
-        
-        pSh= [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Purchase", @"Restore Purchases", nil];
-        
-        MainViewController *pMainVwCntrl = [self.navViewController.viewControllers objectAtIndex:0];
-        [pMainVwCntrl.pAllItms lockItems];
-        [pSh setDelegate:self];
-        [pSh showInView:pMainVwCntrl.pAllItms.tableView];
+        TemplListViewController *aViewController = [[TemplListViewController alloc]
+                                                    initWithNibName:nil bundle:nil];
+        [self.navViewController pushViewController:aViewController animated:YES];
         
         
-        
-    }
-     
-    else if (buttonIndex == 2)
-    {
-        if (!appShrUtl.purchased)
-        {
-            NSLog(@"Cannot share item further without upgrade");
-            bUpgradeAlert = true;
-            UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Purchase/restore now" message:@"Please upgrade now for sharing" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [pAvw show];
-            return;
-        }
-        else
-        {
-            if (!bShrMgrStarted)
-            {
-                [pShrMgr start];
-                bShrMgrStarted = true;
-            }
-            [appShrUtl showShareView];
-        }
-
     }
     else
     {
