@@ -22,6 +22,22 @@
 
 /* Begin PBXBuildFile section */
 		3BF7F7651E74396300419F8D /* TemplListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7631E74396300419F8D /* TemplListViewController.m */; };
+		3BF7F7691E74949A00419F8D /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7671E74949A00419F8D /* ListViewController.m */; };
+		3BF7F7791E74F75C00419F8D /* EasyDataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7781E74F75C00419F8D /* EasyDataOps.m */; };
+		3BF7F77E1E74FB3700419F8D /* LocalMasterList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F77D1E74FB3700419F8D /* LocalMasterList.m */; };
+		3BF7F7801E74FB4300419F8D /* LocalMasterListNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F77F1E74FB4300419F8D /* LocalMasterListNames.m */; };
+		3BF7F7841E74FB9500419F8D /* EasyPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7831E74FB9500419F8D /* EasyPhoto.m */; };
+		3BF7F7871E74FC6100419F8D /* List1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7861E74FC6100419F8D /* List1ViewController.m */; };
+		3BF7F78B1E74FD4200419F8D /* EasySlideScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F78A1E74FD4200419F8D /* EasySlideScrollView.m */; };
+		3BF7F78E1E74FED500419F8D /* EasyDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F78D1E74FED500419F8D /* EasyDisplayViewController.m */; };
+		3BF7F7911E74FF2200419F8D /* MasterListNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7901E74FF2200419F8D /* MasterListNames.m */; };
+		3BF7F7951E74FF4D00419F8D /* EasyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7941E74FF4D00419F8D /* EasyListViewController.m */; };
+		3BF7F7981E74FF7E00419F8D /* EasyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7971E74FF7E00419F8D /* EasyViewController.m */; };
+		3BF7F79C1E75002600419F8D /* EasyTapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F79B1E75002600419F8D /* EasyTapDetectingImageView.m */; };
+		3BF7F79E1E7500A800419F8D /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F79D1E7500A800419F8D /* List.m */; };
+		3BF7F7A11E75060400419F8D /* EasyAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7A01E75060400419F8D /* EasyAddViewController.m */; };
+		3BF7F7A31E75064100419F8D /* MasterList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7A21E75064100419F8D /* MasterList.m */; };
+		3BF7F7A61E75065200419F8D /* ListNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7A51E75065200419F8D /* ListNames.m */; };
 		DB00E4B51C7A9FF700E898F7 /* common.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DB00E4B41C7A9FF700E898F7 /* common.h */; };
 		DB00E4B71C7A9FF700E898F7 /* common.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E4B61C7A9FF700E898F7 /* common.m */; };
 		DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E4BE1C7AA6B600E898F7 /* ThumbnailImageView.m */; };
@@ -65,6 +81,43 @@
 		3BF7F7621E74396300419F8D /* TemplListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplListViewController.h; sourceTree = "<group>"; };
 		3BF7F7631E74396300419F8D /* TemplListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplListViewController.m; sourceTree = "<group>"; };
 		3BF7F7641E74396300419F8D /* TemplListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplListViewController.xib; sourceTree = "<group>"; };
+		3BF7F7661E74949A00419F8D /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
+		3BF7F7671E74949A00419F8D /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
+		3BF7F7681E74949A00419F8D /* ListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListViewController.xib; sourceTree = "<group>"; };
+		3BF7F7761E74F66E00419F8D /* List.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		3BF7F7771E74F74800419F8D /* EasyDataOps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyDataOps.h; sourceTree = "<group>"; };
+		3BF7F7781E74F75C00419F8D /* EasyDataOps.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyDataOps.m; sourceTree = "<group>"; };
+		3BF7F77A1E74F7A400419F8D /* MasterListNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterListNames.h; sourceTree = "<group>"; };
+		3BF7F77B1E74FAE100419F8D /* LocalMasterListNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalMasterListNames.h; sourceTree = "<group>"; };
+		3BF7F77C1E74FAF100419F8D /* LocalMasterList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalMasterList.h; sourceTree = "<group>"; };
+		3BF7F77D1E74FB3700419F8D /* LocalMasterList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalMasterList.m; sourceTree = "<group>"; };
+		3BF7F77F1E74FB4300419F8D /* LocalMasterListNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalMasterListNames.m; sourceTree = "<group>"; };
+		3BF7F7811E74FB8100419F8D /* EasyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EasyViewController.xib; sourceTree = "<group>"; };
+		3BF7F7821E74FB8F00419F8D /* EasyPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyPhoto.h; sourceTree = "<group>"; };
+		3BF7F7831E74FB9500419F8D /* EasyPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyPhoto.m; sourceTree = "<group>"; };
+		3BF7F7851E74FC5900419F8D /* List1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List1ViewController.h; sourceTree = "<group>"; };
+		3BF7F7861E74FC6100419F8D /* List1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List1ViewController.m; sourceTree = "<group>"; };
+		3BF7F7881E74FC8700419F8D /* List1ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = List1ViewController.xib; sourceTree = "<group>"; };
+		3BF7F7891E74FD3700419F8D /* EasySlideScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasySlideScrollView.h; sourceTree = "<group>"; };
+		3BF7F78A1E74FD4200419F8D /* EasySlideScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasySlideScrollView.m; sourceTree = "<group>"; };
+		3BF7F78C1E74FECB00419F8D /* EasyDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyDisplayViewController.h; sourceTree = "<group>"; };
+		3BF7F78D1E74FED500419F8D /* EasyDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyDisplayViewController.m; sourceTree = "<group>"; };
+		3BF7F78F1E74FEDC00419F8D /* EasyDisplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EasyDisplayViewController.xib; sourceTree = "<group>"; };
+		3BF7F7901E74FF2200419F8D /* MasterListNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MasterListNames.m; sourceTree = "<group>"; };
+		3BF7F7921E74FF2D00419F8D /* MasterList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterList.h; sourceTree = "<group>"; };
+		3BF7F7931E74FF4300419F8D /* EasyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyListViewController.h; sourceTree = "<group>"; };
+		3BF7F7941E74FF4D00419F8D /* EasyListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyListViewController.m; sourceTree = "<group>"; };
+		3BF7F7961E74FF7700419F8D /* EasyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyViewController.h; sourceTree = "<group>"; };
+		3BF7F7971E74FF7E00419F8D /* EasyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyViewController.m; sourceTree = "<group>"; };
+		3BF7F7991E74FF9600419F8D /* EasyListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EasyListViewController.xib; sourceTree = "<group>"; };
+		3BF7F79A1E75001F00419F8D /* EasyTapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyTapDetectingImageView.h; sourceTree = "<group>"; };
+		3BF7F79B1E75002600419F8D /* EasyTapDetectingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyTapDetectingImageView.m; sourceTree = "<group>"; };
+		3BF7F79D1E7500A800419F8D /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
+		3BF7F79F1E7505FA00419F8D /* EasyAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyAddViewController.h; sourceTree = "<group>"; };
+		3BF7F7A01E75060400419F8D /* EasyAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyAddViewController.m; sourceTree = "<group>"; };
+		3BF7F7A21E75064100419F8D /* MasterList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MasterList.m; sourceTree = "<group>"; };
+		3BF7F7A41E75064A00419F8D /* ListNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListNames.h; sourceTree = "<group>"; };
+		3BF7F7A51E75065200419F8D /* ListNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListNames.m; sourceTree = "<group>"; };
 		DB00E4B11C7A9FF700E898F7 /* libcommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcommon.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB00E4B41C7A9FF700E898F7 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		DB00E4B61C7A9FF700E898F7 /* common.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = common.m; sourceTree = "<group>"; };
@@ -158,6 +211,9 @@
 			children = (
 				3BF7F7621E74396300419F8D /* TemplListViewController.h */,
 				3BF7F7631E74396300419F8D /* TemplListViewController.m */,
+				3BF7F7661E74949A00419F8D /* ListViewController.h */,
+				3BF7F7671E74949A00419F8D /* ListViewController.m */,
+				3BF7F7681E74949A00419F8D /* ListViewController.xib */,
 				3BF7F7641E74396300419F8D /* TemplListViewController.xib */,
 				DB7061421CAA88350031C445 /* CommonDecoder.h */,
 				DB7061431CAA88350031C445 /* CommonDecoder.m */,
@@ -216,7 +272,41 @@
 				DB00E4FA1C7BCC9E00E898F7 /* TapDetectingImageView.h */,
 				DB00E4F81C7BCC8300E898F7 /* TapDetectingImageView.m */,
 				DB00E4BD1C7AA6B600E898F7 /* ThumbnailImageView.h */,
+				3BF7F7771E74F74800419F8D /* EasyDataOps.h */,
+				3BF7F7761E74F66E00419F8D /* List.h */,
+				3BF7F7781E74F75C00419F8D /* EasyDataOps.m */,
+				3BF7F77A1E74F7A400419F8D /* MasterListNames.h */,
+				3BF7F77C1E74FAF100419F8D /* LocalMasterList.h */,
+				3BF7F77D1E74FB3700419F8D /* LocalMasterList.m */,
+				3BF7F77B1E74FAE100419F8D /* LocalMasterListNames.h */,
+				3BF7F77F1E74FB4300419F8D /* LocalMasterListNames.m */,
 				DB00E4BE1C7AA6B600E898F7 /* ThumbnailImageView.m */,
+				3BF7F7821E74FB8F00419F8D /* EasyPhoto.h */,
+				3BF7F7831E74FB9500419F8D /* EasyPhoto.m */,
+				3BF7F7881E74FC8700419F8D /* List1ViewController.xib */,
+				3BF7F7861E74FC6100419F8D /* List1ViewController.m */,
+				3BF7F7851E74FC5900419F8D /* List1ViewController.h */,
+				3BF7F7891E74FD3700419F8D /* EasySlideScrollView.h */,
+				3BF7F78A1E74FD4200419F8D /* EasySlideScrollView.m */,
+				3BF7F7811E74FB8100419F8D /* EasyViewController.xib */,
+				3BF7F78C1E74FECB00419F8D /* EasyDisplayViewController.h */,
+				3BF7F78F1E74FEDC00419F8D /* EasyDisplayViewController.xib */,
+				3BF7F7901E74FF2200419F8D /* MasterListNames.m */,
+				3BF7F79A1E75001F00419F8D /* EasyTapDetectingImageView.h */,
+				3BF7F7921E74FF2D00419F8D /* MasterList.h */,
+				3BF7F79B1E75002600419F8D /* EasyTapDetectingImageView.m */,
+				3BF7F7941E74FF4D00419F8D /* EasyListViewController.m */,
+				3BF7F7961E74FF7700419F8D /* EasyViewController.h */,
+				3BF7F7971E74FF7E00419F8D /* EasyViewController.m */,
+				3BF7F7991E74FF9600419F8D /* EasyListViewController.xib */,
+				3BF7F79F1E7505FA00419F8D /* EasyAddViewController.h */,
+				3BF7F7931E74FF4300419F8D /* EasyListViewController.h */,
+				3BF7F78D1E74FED500419F8D /* EasyDisplayViewController.m */,
+				3BF7F7A01E75060400419F8D /* EasyAddViewController.m */,
+				3BF7F7A41E75064A00419F8D /* ListNames.h */,
+				3BF7F7A51E75065200419F8D /* ListNames.m */,
+				3BF7F7A21E75064100419F8D /* MasterList.m */,
+				3BF7F79D1E7500A800419F8D /* List.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -297,28 +387,44 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BF7F7801E74FB4300419F8D /* LocalMasterListNames.m in Sources */,
+				3BF7F7691E74949A00419F8D /* ListViewController.m in Sources */,
 				DBD16B111C90549300052A03 /* DataOps.m in Sources */,
 				DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */,
 				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,
 				DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */,
+				3BF7F79E1E7500A800419F8D /* List.m in Sources */,
+				3BF7F7841E74FB9500419F8D /* EasyPhoto.m in Sources */,
 				DBD16AD51C8AF5B900052A03 /* AddViewController.m in Sources */,
 				DB7061481CAA88350031C445 /* CommonShareMgr.m in Sources */,
 				DBD16ABD1C844EBE00052A03 /* MainListViewController.m in Sources */,
+				3BF7F7951E74FF4D00419F8D /* EasyListViewController.m in Sources */,
 				DB00E5271C7C912000E898F7 /* Photo.m in Sources */,
+				3BF7F78B1E74FD4200419F8D /* EasySlideScrollView.m in Sources */,
 				DB00E5091C7BF96100E898F7 /* NotesViewController.m in Sources */,
 				3BF7F7651E74396300419F8D /* TemplListViewController.m in Sources */,
+				3BF7F7A11E75060400419F8D /* EasyAddViewController.m in Sources */,
 				DB00E4F91C7BCC8300E898F7 /* TapDetectingImageView.m in Sources */,
 				DB00E51D1C7C8ED600E898F7 /* MySlider.m in Sources */,
 				DB00E4B71C7A9FF700E898F7 /* common.m in Sources */,
+				3BF7F7981E74FF7E00419F8D /* EasyViewController.m in Sources */,
 				DB7061491CAA88350031C445 /* CommonTranslator.m in Sources */,
+				3BF7F7A61E75065200419F8D /* ListNames.m in Sources */,
 				DBD16AF71C8DD17E00052A03 /* EditViewController.m in Sources */,
+				3BF7F7A31E75064100419F8D /* MasterList.m in Sources */,
 				DBD16B061C8EE95400052A03 /* DisplayViewController.m in Sources */,
+				3BF7F79C1E75002600419F8D /* EasyTapDetectingImageView.m in Sources */,
 				DB00E4EF1C7BC9E300E898F7 /* SlideScrollView.m in Sources */,
+				3BF7F7791E74F75C00419F8D /* EasyDataOps.m in Sources */,
+				3BF7F77E1E74FB3700419F8D /* LocalMasterList.m in Sources */,
+				3BF7F7911E74FF2200419F8D /* MasterListNames.m in Sources */,
+				3BF7F7871E74FC6100419F8D /* List1ViewController.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
 				DB7061471CAA88350031C445 /* CommonDecoder.m in Sources */,
 				DB00E5331C7D24C300E898F7 /* AddressAnnotation.m in Sources */,
 				DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */,
+				3BF7F78E1E74FED500419F8D /* EasyDisplayViewController.m in Sources */,
 				DB00E53E1C7D27F600E898F7 /* KeychainItemWrapper.m in Sources */,
 				DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */,
 			);
