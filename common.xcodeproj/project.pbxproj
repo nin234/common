@@ -38,6 +38,7 @@
 		3BF7F7A11E75060400419F8D /* EasyAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7A01E75060400419F8D /* EasyAddViewController.m */; };
 		3BF7F7A31E75064100419F8D /* MasterList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7A21E75064100419F8D /* MasterList.m */; };
 		3BF7F7A61E75065200419F8D /* ListNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7A51E75065200419F8D /* ListNames.m */; };
+		3BF7F7B51E76044D00419F8D /* AppCmnUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7B41E76044D00419F8D /* AppCmnUtil.m */; };
 		DB00E4B51C7A9FF700E898F7 /* common.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DB00E4B41C7A9FF700E898F7 /* common.h */; };
 		DB00E4B71C7A9FF700E898F7 /* common.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E4B61C7A9FF700E898F7 /* common.m */; };
 		DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DB00E4BE1C7AA6B600E898F7 /* ThumbnailImageView.m */; };
@@ -118,6 +119,8 @@
 		3BF7F7A21E75064100419F8D /* MasterList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MasterList.m; sourceTree = "<group>"; };
 		3BF7F7A41E75064A00419F8D /* ListNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListNames.h; sourceTree = "<group>"; };
 		3BF7F7A51E75065200419F8D /* ListNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListNames.m; sourceTree = "<group>"; };
+		3BF7F7B31E76044D00419F8D /* AppCmnUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppCmnUtil.h; sourceTree = "<group>"; };
+		3BF7F7B41E76044D00419F8D /* AppCmnUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppCmnUtil.m; sourceTree = "<group>"; };
 		DB00E4B11C7A9FF700E898F7 /* libcommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcommon.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB00E4B41C7A9FF700E898F7 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		DB00E4B61C7A9FF700E898F7 /* common.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = common.m; sourceTree = "<group>"; };
@@ -257,6 +260,8 @@
 				DBD16B051C8EE95400052A03 /* DisplayViewController.m */,
 				DBD16B031C8EE94100052A03 /* DisplayViewController.h */,
 				DBD16B0F1C90547A00052A03 /* DataOps.h */,
+				3BF7F7B31E76044D00419F8D /* AppCmnUtil.h */,
+				3BF7F7B41E76044D00419F8D /* AppCmnUtil.m */,
 				DBD16B101C90549300052A03 /* DataOps.m */,
 				DBD16B041C8EE94100052A03 /* DisplayViewController.xib */,
 				DBD16AB61C844E6F00052A03 /* MainViewController.h */,
@@ -410,6 +415,7 @@
 				3BF7F7981E74FF7E00419F8D /* EasyViewController.m in Sources */,
 				DB7061491CAA88350031C445 /* CommonTranslator.m in Sources */,
 				3BF7F7A61E75065200419F8D /* ListNames.m in Sources */,
+				3BF7F7B51E76044D00419F8D /* AppCmnUtil.m in Sources */,
 				DBD16AF71C8DD17E00052A03 /* EditViewController.m in Sources */,
 				3BF7F7A31E75064100419F8D /* MasterList.m in Sources */,
 				DBD16B061C8EE95400052A03 /* DisplayViewController.m in Sources */,

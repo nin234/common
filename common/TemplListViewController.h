@@ -7,6 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppCmnUtil.h"
+
+@protocol TemplListViewControllerDelegate <NSObject>
+
+-(AppCmnUtil *) getAppCmnUtil;
+
+@end
+
 
 @interface TemplListViewController : UITableViewController<UIAlertViewDelegate>
 {
@@ -15,5 +23,7 @@
 }
 
 -(void) refreshMasterList;
+
+@property (nonatomic, weak) id<TemplListViewControllerDelegate> delegate;
 
 @end

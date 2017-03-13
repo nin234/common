@@ -15,6 +15,8 @@
 
 @implementation TemplListViewController
 
+@synthesize delegate;
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -30,11 +32,11 @@
     if (self)
     {
         // Custom initialization
-        AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [pDlg.dataSync lock];
-        masterList = [NSArray arrayWithArray:[pDlg.dataSync getMasterListNames]];
+        AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+        [pAppCmnUtil.dataSync lock];
+        masterList = [NSArray arrayWithArray:[pAppCmnUtil.dataSync getMasterListNames]];
         cnt = [masterList count];
-        [pDlg.dataSync unlock];
+        [pAppCmnUtil.dataSync unlock];
         NSLog (@"Master list name %@ count %ld", masterList, (long)cnt);
 
     }
@@ -43,38 +45,28 @@
 
 -(void) refreshMasterList
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [pDlg.dataSync lock];
-    masterList = [NSArray arrayWithArray:[pDlg.dataSync getMasterListNames]];
-    cnt = [masterList count];
-    [pDlg.dataSync unlock];
-    NSLog (@" Refreshed Master list name %@ count %ld", masterList, (long)cnt);
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSLog(@"Clicked button at index %ld", (long)buttonIndex);
-     AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIActionSheet *pSh;
-    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:pDlg cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Purchase", @"Restore Purchases", nil];
+   
     
-    [pSh showInView:self.tableView];
-    [pSh setDelegate:pDlg];
+    AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+    [pAppCmnUtil.dataSync lock];
 
-    return;
+    masterList = [NSArray arrayWithArray:[pAppCmnUtil.dataSync getMasterListNames]];
+    cnt = [masterList count];
+     [pAppCmnUtil.dataSync unlock];
+    NSLog (@" Refreshed Master list name %@ count %ld", masterList, (long)cnt);
 }
 
 
 - (void)templItemAdd
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-   
     
-    pDlg.mlistName = nil;
+   AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+    
+    pAppCmnUtil.mlistName = nil;
     ListViewController *aViewController = [ListViewController alloc];
     aViewController.editMode = eViewModeAdd;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
-    [pDlg.navViewController pushViewController:aViewController animated:YES];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     return;
 }
 
@@ -207,12 +199,13 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    pDlg.mlistName = [masterList objectAtIndex:indexPath.row];
+    
+     AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+    pAppCmnUtil.mlistName = [masterList objectAtIndex:indexPath.row];
     ListViewController *aViewController = [ListViewController alloc];
     aViewController.editMode = eViewModeDisplay;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
-    [pDlg.navViewController pushViewController:aViewController animated:NO];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
     
 }
 

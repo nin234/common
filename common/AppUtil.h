@@ -15,6 +15,8 @@
 #import "sharing/ContactsViewController.h"
 #import <MessageUI/MFMailComposeViewController.h>
 #import "MainViewController.h"
+#import "AppCmnUtil.h"
+#import "TemplListViewController.h"
 
 #define   PHOTOREQSOURCE_FB 1
 #define  PHOTOREQSOURCE_EMAIL 0
@@ -28,9 +30,8 @@
 -(NSString *) getItemName:(id)itm;
 @end
 
-@interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, UIAlertViewDelegate>
+@interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, UIAlertViewDelegate, TemplListViewControllerDelegate>
 {
-    bool bUpgradeAction;
     bool bShrMgrStarted;
      bool bUpgradeAlert;
 }
@@ -39,6 +40,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *navViewController;
 @property (nonatomic, retain) DataOps *dataSync;
 @property (nonatomic, retain) AppShrUtil *appShrUtl;
+@property  (nonatomic, retain) AppCmnUtil *appCmnUtil;
 @property (nonatomic, retain) InAppPurchase *inapp;
 @property (nonatomic, retain) ShareMgr *pShrMgr;
 @property (nonatomic, weak) id<AppUtilDelegate> delegate;
@@ -56,5 +58,7 @@
 -(void) photoActions:(int) source;
 -(void) initializeShrUtl;
 -(void) shareNow:(NSString *) shareStr;
+-(AppCmnUtil *) getAppCmnUtil;
+-(void) setNavViewController:(UINavigationController *)navViewController;
 
 @end

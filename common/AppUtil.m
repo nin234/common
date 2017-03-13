@@ -25,6 +25,7 @@
 @synthesize bEmailConfirm;
 @synthesize aViewController1;
 @synthesize window;
+@synthesize appCmnUtil;
 
 -(void) setPurchsd:(NSString *)trid
 {
@@ -54,9 +55,31 @@
         [inapp setProductId:productId];
         [inapp setDelegate:self];
         [[SKPaymentQueue defaultQueue] addTransactionObserver:inapp];
+        appCmnUtil = [[AppCmnUtil alloc] init];
+        
+        
+
         return self;
     }
     return  nil;
+}
+
+-(void) setNavViewController:(UINavigationController *)navViewControll
+{
+    navViewController = navViewControll;
+    appCmnUtil.navViewController = navViewControll;
+    
+}
+
+-(AppCmnUtil *) getAppCmnUtil
+{
+    return appCmnUtil;
+}
+
+-(void) setDataSync:(DataOps *)dataSyn
+{
+    dataSync = dataSyn;
+  appCmnUtil.dataSync = dataSyn;
 }
 
 -(void) shareNow:(NSString *) shareStr
@@ -176,39 +199,7 @@
     footer.backgroundColor = [UIColor clearColor];
     pMainVwCntrl.pAllItms.tableView.tableFooterView = footer;
     UIBarButtonItem *pBarItem1;
-    if (bUpgradeAction)
-    {
-        bUpgradeAction = false;
-        switch (buttonIndex)
-        {
-            case 0:
-                NSLog(@"Purchasing openhouses_unlocked");
-                //purchased = false;
-                if (!appShrUtl.purchased)
-                    [inapp start:true];
-                else
-                    NSLog(@"Already upgraded, ignoring");
-                [self iCloudEmailCancel];
-                break;
-                
-            case 1:
-                NSLog(@"Restoring openhouses_unlocked");
-                if (!appShrUtl.purchased)
-                    [inapp start:false];
-                else
-                    NSLog(@"Already upgraded, ignoring");
-                [self iCloudEmailCancel];
-                
-                break;
-                
-            default:
-                [self iCloudEmailCancel];
-                
-                break;
-        }
-        return;
-    }
-    
+        
     if (buttonIndex == 0)
     {
         if (!bShrMgrStarted)
@@ -224,6 +215,8 @@
     {
         TemplListViewController *aViewController = [[TemplListViewController alloc]
                                                     initWithNibName:nil bundle:nil];
+        aViewController.delegate  = self;
+        
         [self.navViewController pushViewController:aViewController animated:YES];
         
         

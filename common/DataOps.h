@@ -22,11 +22,12 @@
 -(NSString *) sortDetails:(bool *)ascending;
 -(id) getLocalItem;
 -(void) copyFromItem:(id) itm local:(id)litm;
--(MainViewController *) getMainViewController;
+
 -(NSString *)getAlbumName:(long long) shareId itemName:(NSString *) name item:(id)itm;
 @optional
 -(NSString *)getAddtionalPredStr:(NSUInteger) scnt predStrng:(NSString *)predStr;
 -(bool ) isEqualToLclItem:(id) item local:(id) litem;
+-(MainViewController *) getMainViewController;
 
 @end
 
@@ -73,6 +74,8 @@
     UIBackgroundTaskIdentifier dwldBkTaskId;
     UIBackgroundTaskIdentifier dwldStrtUpTaskId;
     UIBackgroundTaskIdentifier loginTaskId;
+    
+    NSMutableArray *masterListNamesArr;
 }
 
 -(void) main;
@@ -101,5 +104,6 @@
 - (void)saveContext;
 -(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName;
 -(bool) isNewItem:(id) item;
+-(NSArray *) getMasterListNames
 
 @end

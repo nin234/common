@@ -96,6 +96,7 @@
     unFilteredItems = [[NSMutableArray alloc] init];
     sharedItems = [[NSMutableArray alloc]init];
     downloadIds = [[NSMutableArray alloc] init];
+    masterListNamesArr =[[NSMutableArray alloc] init];
     updateNow = false;
     updateNowSetDontRefresh = false;
     bInitRefresh = true;
@@ -204,6 +205,12 @@
     }
     
     return;
+}
+
+
+-(NSArray *) getMasterListNames
+{
+    return masterListNamesArr;
 }
 
 -(void) addItem:(id)item
@@ -600,6 +607,8 @@
     }
    
     MainViewController *pMainVwCntrl = [delegate getMainViewController];
+    if (pMainVwCntrl == nil)
+        return;
     
     [workToDo lock];
     pMainVwCntrl.pAllItms.itemNames = [NSMutableArray arrayWithArray:itemNames];
