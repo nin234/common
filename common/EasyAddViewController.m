@@ -7,8 +7,8 @@
 //
 
 #import "EasyAddViewController.h"
-#import "AppDelegate.h"
 #import "List1ViewController.h"
+#import "AppCmnUtil.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -22,6 +22,7 @@
 @implementation EasyAddViewController
 
 @synthesize imagePickerController;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -37,11 +38,13 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [pDlg.dataSync lock];
-        masterList = [NSArray arrayWithArray:[pDlg.dataSync getMasterListNames]];
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        
+        
+        [pAppCmnUtil.dataSync lock];
+        masterList = [NSArray arrayWithArray:[pAppCmnUtil.dataSync getMasterListNames]];
         mcnt = [masterList count];
-        [pDlg.dataSync unlock];
+        [pAppCmnUtil.dataSync unlock];
         imagePickerController = [[UIImagePickerController alloc] init];
         NSLog (@"Master list name %@ count %ld", masterList, (long)mcnt);
 
@@ -63,15 +66,25 @@
     // Register the above class for a header view reuse.
     [self.tableView registerClass:[aTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"TableViewSectionHeaderViewIdentifier"];
     
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+   
     
     
     NSString *title = @"New List";
     self.navigationItem.title = [NSString stringWithString:title];
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:pDlg action:@selector(itemAddOptionsCancel) ];
+    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemAddOptionsCancel) ];
     self.navigationItem.leftBarButtonItem = pBarItem1;
 
 }
+
+- (void) itemAddOptionsCancel
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+
+    [pAppCmnUtil popView];
+    return;
+}
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -85,13 +98,39 @@
 {
 
     // Return the number of sections.
-    return 3;
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    if (pAppCmnUtil.bEasyGroc == true)
+    {
+            return 3;
+    }
+    
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-    if (section == 2)
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    if (pAppCmnUtil.bEasyGroc == true)
+    {
+        // Return the number of rows in the section.
+        if (section == 2)
+        {
+            if (!mcnt)
+            {
+                return 3;
+            }
+            else
+            {
+                return mcnt;
+            }
+        
+        }
+        else
+            return 1;
+    }
+    else
     {
         if (!mcnt)
         {
@@ -101,10 +140,8 @@
         {
             return mcnt;
         }
-        
+ 
     }
-    else
-        return 1;
 }
 
 -(void) loadView
@@ -139,33 +176,52 @@
     }
 
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    if (indexPath.section == 0 && indexPath.row ==0)
-    {
-        cell.imageView.image = [UIImage imageNamed:@"camera.png"];
-        cell.textLabel.text = @"Picture List";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        return cell;
-        
-    }
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     
-    if (indexPath.section == 1 && indexPath.row ==0)
+    if (pAppCmnUtil.bEasyGroc == true)
     {
+        if (indexPath.section == 0 && indexPath.row ==0)
+        {
+            cell.imageView.image = [UIImage imageNamed:@"camera.png"];
+            cell.textLabel.text = @"Picture List";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            return cell;
+            
+        }
         
-        cell.textLabel.text = @"Brand New List";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        return cell;
+        if (indexPath.section == 1 && indexPath.row ==0)
+        {
+            
+            cell.textLabel.text = @"Brand New List";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            return cell;
+            
+        }
         
+        if (indexPath.section == 2 && mcnt)
+        {
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
+            label.textAlignment = NSTextAlignmentLeft;
+            label.font = [UIFont boldSystemFontOfSize:14];
+            label.text = [masterList objectAtIndex:indexPath.row];
+            NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            [cell.contentView addSubview:label];
+        }
     }
-    
-    if (indexPath.section == 2 && mcnt)
+    else
     {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
-        label.textAlignment = NSTextAlignmentLeft;
-        label.font = [UIFont boldSystemFontOfSize:14];
-        label.text = [masterList objectAtIndex:indexPath.row];
-        NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        [cell.contentView addSubview:label];
+        if ( mcnt)
+        {
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
+            label.textAlignment = NSTextAlignmentLeft;
+            label.font = [UIFont boldSystemFontOfSize:14];
+            label.text = [masterList objectAtIndex:indexPath.row];
+            NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            [cell.contentView addSubview:label];
+        }
+
     }
     
 
@@ -177,7 +233,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     UIImage* image = (UIImage *) [info objectForKey:
                                   UIImagePickerControllerOriginalImage];
     struct timeval tv;
@@ -186,17 +242,17 @@
     NSString *pFlName = [[NSNumber numberWithInt:(int)filno] stringValue];
     pFlName = [pFlName stringByAppendingString:@".jpg"];
     
-    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     NSURL *pFlUrl;
     NSError *err;
-    NSURL *albumurl = pDlg.pPicsDir;
+    NSURL *albumurl = pAppCmnUtil.pPicsDir;
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
     {
         
         pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
     }
        
-    NSDictionary *dict = [pDlg.pFlMgr attributesOfItemAtPath:[pFlUrl path] error:&err];
+    NSDictionary *dict = [pAppCmnUtil.pFlMgr attributesOfItemAtPath:[pFlUrl path] error:&err];
     if (dict != nil)
         NSLog (@"Loading image in DisplayViewController %@ file size %lld\n", pFlUrl, [dict fileSize]);
     else
@@ -233,7 +289,7 @@
     
     NSData *thumbnaildata = UIImageJPEGRepresentation(thumbnail, 0.3);
     
-    albumurl = pDlg.pThumbNailsDir;
+    albumurl = pAppCmnUtil.pThumbNailsDir;
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
     {
         
@@ -261,15 +317,20 @@
     name = [name stringByAppendingString:@" "];
     name = [name stringByAppendingString:formattedDateString];
     
-    [pDlg.dataSync addPicItem:name picItem:pFlName];
-    [pDlg showPicList:name pictName:pFlName imagePicker:imagePickerController];
+    [pAppCmnUtil.dataSync addPicItem:name picItem:pFlName];
+    [pAppCmnUtil showPicList:name pictName:pFlName imagePicker:imagePickerController];
     return;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (section <2)
-        return 10.0;
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    if (pAppCmnUtil.bEasyGroc == true)
+    {
+        if (section <2)
+            return 10.0;
+    }
     
     return 40.0;
 }
@@ -277,8 +338,13 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (section <2)
-        return nil;
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    if (pAppCmnUtil.bEasyGroc == true)
+    {
+        if (section <2)
+            return nil;
+    }
     static NSString *headerReuseIdentifier = @"TableViewSectionHeaderViewIdentifier";
     
     // Reuse the instance that was created in viewDidLoad, or make a new one if not enough.
@@ -340,8 +406,27 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    pDlg.mlistName =nil;
+   
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    pAppCmnUtil.mlistName =nil;
+    
+    
+    if (pAppCmnUtil.bEasyGroc == false)
+    {
+        if ([masterList count] < indexPath.row + 1)
+        {
+            NSLog(@"Row count greater than template list items");
+            return;
+        }
+        pAppCmnUtil.mlistName = [masterList objectAtIndex:indexPath.row];
+        List1ViewController *aViewController = [List1ViewController alloc];
+        aViewController.editMode = eListModeAdd;
+        aViewController = [aViewController initWithNibName:nil bundle:nil];
+        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+
+        return;
+    }
+    
     if (indexPath.section == 2)
     {
         if ([masterList count] < indexPath.row + 1)
@@ -349,20 +434,20 @@
             NSLog(@"Row count greater than template list items");
             return;
         }
-        pDlg.mlistName = [masterList objectAtIndex:indexPath.row];
+        pAppCmnUtil.mlistName = [masterList objectAtIndex:indexPath.row];
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
-        [pDlg.navViewController pushViewController:aViewController animated:NO];
+        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
         
     }
     else if (indexPath.section == 1)
     {
-        pDlg.mlistName = nil;
+        pAppCmnUtil.mlistName = nil;
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
-        [pDlg.navViewController pushViewController:aViewController animated:NO];
+        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
 
     }
     else if (indexPath.section ==0)

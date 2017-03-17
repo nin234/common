@@ -10,6 +10,7 @@
 #import "TemplListViewController.h"
 #import <Social/SLComposeViewController.h>
 #import <Social/SLServiceTypes.h>
+#import "AppCmnUtil.h"
 
 @implementation AppUtil
 
@@ -25,7 +26,7 @@
 @synthesize bEmailConfirm;
 @synthesize aViewController1;
 @synthesize window;
-@synthesize appCmnUtil;
+
 
 -(void) setPurchsd:(NSString *)trid
 {
@@ -55,7 +56,7 @@
         [inapp setProductId:productId];
         [inapp setDelegate:self];
         [[SKPaymentQueue defaultQueue] addTransactionObserver:inapp];
-        appCmnUtil = [[AppCmnUtil alloc] init];
+        
         
         
 
@@ -67,18 +68,18 @@
 -(void) setNavViewController:(UINavigationController *)navViewControll
 {
     navViewController = navViewControll;
+    AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
     appCmnUtil.navViewController = navViewControll;
+    appCmnUtil.bEasyGroc = false;
     
 }
 
--(AppCmnUtil *) getAppCmnUtil
-{
-    return appCmnUtil;
-}
+
 
 -(void) setDataSync:(DataOps *)dataSyn
 {
     dataSync = dataSyn;
+    AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
   appCmnUtil.dataSync = dataSyn;
 }
 
@@ -215,7 +216,6 @@
     {
         TemplListViewController *aViewController = [[TemplListViewController alloc]
                                                     initWithNibName:nil bundle:nil];
-        aViewController.delegate  = self;
         
         [self.navViewController pushViewController:aViewController animated:YES];
         

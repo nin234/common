@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
+
+
 enum eViewMode {
     eViewModeDisplay,
     eViewModeEdit,
@@ -28,10 +31,16 @@ enum eViewMode {
 @property NSUInteger nRows;
 @property (nonatomic, retain) NSArray* mlist;
 
+
 -(void) refreshMasterList;
 -(void) refreshMasterListCpyFromLstVwCntrl:(ListViewController *) pLst;
 -(void) DeleteConfirm;
 -(void) addRow : (NSUInteger) rowNo;
 -(void) cleanUpItemMp;
+-(void) templItemEditCancel;
+- (void) templItemEditDone;
+- (void)templItemAddDone;
+-(void) templItemDisplay:(NSString *)templ_name lstcntr:(ListViewController *) pLst;
+- (void)templItemEdit;
 
 @end

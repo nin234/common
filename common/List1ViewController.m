@@ -7,8 +7,8 @@
 //
 
 #import "List1ViewController.h"
-#import "AppDelegate.h"
 #import "List.h"
+#import "AppCmnUtil.h"
 
 @interface AddRowTarget : NSObject
 
@@ -157,11 +157,12 @@
         undoArry = [[NSMutableArray alloc] init];
         redoArry  = [[NSMutableArray alloc] init];
         rowTarget = [[NSMutableDictionary alloc] init];
-        AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+       
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (editMode == eListModeAdd)
         {
             NSLog(@"Initializing List1ViewController in eListModeAdd\n");
-            if (pDlg.mlistName != nil)
+            if (pAppCmnUtil.mlistName != nil)
             {
                 [self refreshMasterList];
             }
@@ -170,7 +171,7 @@
                 [self createNewList];
             }
         }
-        else if (pDlg.listName != nil)
+        else if (pAppCmnUtil.listName != nil)
         {
             NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
             [self refreshList];
@@ -199,9 +200,10 @@
 
 -(void) refreshMasterList
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    mlist = [pDlg.dataSync getMasterList:pDlg.mlistName];
-    name = pDlg.mlistName;
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    mlist = [pAppCmnUtil.dataSync getMasterList:pAppCmnUtil.mlistName];
+    name = pAppCmnUtil.mlistName;
     NSDate *today = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
@@ -250,9 +252,10 @@
 
 -(void) refreshList
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    list = [pDlg.dataSync getList:pDlg.listName];
-    name = pDlg.listName;
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    list = [pAppCmnUtil.dataSync getList:pAppCmnUtil.listName];
+    name = pAppCmnUtil.listName;
     default_name = name;
     NSLog(@"list %@ for name %@ %s %d\n", list, name, __FILE__, __LINE__);
     if (list != nil)
@@ -310,13 +313,13 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+   
     if (editMode == eListModeAdd)
     {
         NSString *title = @"New List";
         self.navigationItem.title = [NSString stringWithString:title];
         
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:pDlg action:@selector(itemAddDone) ];
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(itemAddDone) ];
         self.navigationItem.rightBarButtonItem = pBarItem;
         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:pDlg action:@selector(itemAddCancel) ];
         self.navigationItem.leftBarButtonItem = pBarItem1;

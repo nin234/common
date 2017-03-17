@@ -8,11 +8,31 @@
 
 #import <Foundation/Foundation.h>
 #import "DataOps.h"
+#import "EasyViewController.h"
+
+enum eEditActionItems
+{
+    eSaveList,
+    eDeleteList
+};
 
 @interface AppCmnUtil : NSObject
 
 @property (nonatomic, retain) DataOps *dataSync;
 @property (nonatomic, retain) UINavigationController *navViewController;
 @property (nonatomic, retain) NSString *mlistName;
+@property (nonatomic, retain) NSString *listName;
+@property bool bEasyGroc;
+
+@property (nonatomic, retain) NSFileManager *pFlMgr;
+@property (nonatomic, retain) NSURL *pThumbNailsDir;
+@property (nonatomic, retain) NSURL *pPicsDir;
+@property (nonatomic, retain) EasyViewController *aViewController1;
+
++ (instancetype)sharedInstance;
+
+-(void) popView;
+
+-(void) showPicList:(NSString *)name pictName:(NSString *)picName imagePicker:(UIImagePickerController *) imagePick;
 
 @end

@@ -7,15 +7,14 @@
 //
 
 #import "TemplListViewController.h"
-#import "ListViewController.h"
+#import "AppCmnUtil.h"
+
 
 @interface TemplListViewController ()
 
 @end
 
 @implementation TemplListViewController
-
-@synthesize delegate;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -32,7 +31,7 @@
     if (self)
     {
         // Custom initialization
-        AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         [pAppCmnUtil.dataSync lock];
         masterList = [NSArray arrayWithArray:[pAppCmnUtil.dataSync getMasterListNames]];
         cnt = [masterList count];
@@ -43,11 +42,16 @@
     return self;
 }
 
+-(AppCmnUtil *) getAppCmnUtil
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    return pAppCmnUtil;
+}
+
 -(void) refreshMasterList
 {
    
-    
-    AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [pAppCmnUtil.dataSync lock];
 
     masterList = [NSArray arrayWithArray:[pAppCmnUtil.dataSync getMasterListNames]];
@@ -59,8 +63,8 @@
 
 - (void)templItemAdd
 {
-    
-   AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+   
     
     pAppCmnUtil.mlistName = nil;
     ListViewController *aViewController = [ListViewController alloc];
@@ -199,12 +203,12 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    
-     AppCmnUtil *pAppCmnUtil = [delegate getAppCmnUtil];
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     pAppCmnUtil.mlistName = [masterList objectAtIndex:indexPath.row];
     ListViewController *aViewController = [ListViewController alloc];
     aViewController.editMode = eViewModeDisplay;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
+    
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
     
 }

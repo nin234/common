@@ -7,7 +7,8 @@
 //
 
 #import "ListViewController.h"
-#import "AppDelegate.h"
+#import "AppCmnUtil.h"
+
 
 
 @interface AddRowTargetTmpl : NSObject
@@ -44,6 +45,7 @@
 @synthesize nRows;
 @synthesize mlist;
 @synthesize default_name;
+
 
 -(void) cleanUpItemMp
 {
@@ -166,9 +168,10 @@
 
 -(void) refreshMasterList
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    mlist = [pDlg.dataSync getMasterList:pDlg.mlistName];
-    name = pDlg.mlistName;
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    mlist = [pAppCmnUtil.dataSync getMasterList:pAppCmnUtil.mlistName];
+    name = pAppCmnUtil.mlistName;
     default_name = name;
     NSLog(@"Refreshing master list in ListViewController");
     NSLog(@"Master list %@ for name %@ %s %d\n", mlist, name, __FILE__, __LINE__);
@@ -201,6 +204,53 @@
     NSLog(@"itemMp dictionary to set view %@\n", itemMp);
 }
 
+-(void) templItemEditCancel
+{
+    
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil popView];
+    return;
+}
+
+- (void)templItemEdit
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil popView];
+    
+    ListViewController *aViewController = [ListViewController alloc];
+    aViewController.editMode = eViewModeEdit;
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    return;
+}
+
+-(void) templItemDisplay:(NSString *)templ_name lstcntr:(ListViewController *) pLst
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+
+    pAppCmnUtil.mlistName = templ_name;
+    ListViewController *aViewController = [ListViewController alloc];
+    aViewController.editMode = eViewModeDisplay;
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    [aViewController refreshMasterListCpyFromLstVwCntrl:pLst];
+    [aViewController.tableView reloadData];
+    return;
+}
+
+
+- (void)templItemAddDone
+{
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    
+    [self templItemDisplay:pListView.name lstcntr:pListView];
+    [pListView cleanUpItemMp];
+    [pAppCmnUtil.dataSync addTemplItem:pListView.name itemsDic:pListView.itemMp];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -211,21 +261,20 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-     AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (editMode == eViewModeEdit)
     {
         UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemEditActions)];
         
         self.navigationItem.rightBarButtonItem = pBarItem;
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:pDlg action:@selector(templItemEditCancel) ];
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemEditCancel) ];
         self.navigationItem.leftBarButtonItem = pBarItem1;
         NSString *title = @"Template List";
         self.navigationItem.title = [NSString stringWithString:title];
     }
     else if (editMode == eViewModeDisplay)
     {
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:pDlg action:@selector(templItemEdit) ];
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(templItemEdit) ];
         self.navigationItem.rightBarButtonItem = pBarItem;
         NSString *title = @"Template List";
         self.navigationItem.title = [NSString stringWithString:title];
@@ -235,14 +284,30 @@
         NSString *title = @"New Template List";
         self.navigationItem.title = [NSString stringWithString:title];
         
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:pDlg action:@selector(templItemAddDone) ];
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(templItemAddDone) ];
         self.navigationItem.rightBarButtonItem = pBarItem;
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:pDlg action:@selector(templItemAddCancel) ];
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemAddCancel) ];
         self.navigationItem.leftBarButtonItem = pBarItem1;
 
     }
 
 }
+
+- (void) templItemAddCancel
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+}
+
+- (void) templItemEditDone
+{
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    [pListView cleanUpItemMp];
+    [pAppCmnUtil.dataSync editedTemplItem:pListView.name itemsDic:pListView.itemMp];
+    return;
+}
+
 
 -(void) itemEditActions
 {
@@ -313,7 +378,7 @@
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
-    if (editMode != eListModeDisplay)
+    if (editMode != eViewModeDisplay)
     {
 
         if (textFldRowNo != -1)
@@ -348,6 +413,41 @@
   return NO;
 }
 
+
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (inEditAction)
+    {
+        inEditAction = false;
+        switch (buttonIndex)
+        {
+            case eSaveList:
+            {
+                
+                [self templItemEditDone];
+            }
+            break;
+            
+            case eDeleteList:
+            [self DeleteConfirm];
+            break;
+            
+            default:
+            break;
+        }
+        return;
+    }
+    printf("Clicked button at index %ld in delete template list\n", (long)buttonIndex);
+    if (buttonIndex == 0)
+    {
+      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        [pAppCmnUtil.dataSync deletedTemplItem:name];
+        [pAppCmnUtil popView];
+    }
+    
+}
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -359,12 +459,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-
-    // Return the number of rows in the section.
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSArray *vw = [pDlg.navViewController viewControllers];
-    NSUInteger cnt = [vw count];
-    NSLog(@"ListViewController No of view controllers %lu \n", (unsigned long)cnt);
     return nRows;
 }
 
@@ -388,44 +482,11 @@
     
 }
 
--(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (inEditAction)
-    {
-        inEditAction = false;
-        switch (buttonIndex)
-        {
-            case eSaveList:
-            {
-                AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                [pDlg templItemEditDone];
-            }
-                break;
-                
-            case eDeleteList:
-                [self DeleteConfirm];
-                break;
-                
-            default:
-                break;
-        }
-        return;
-    }
-    printf("Clicked button at index %ld in delete template list\n", (long)buttonIndex);
-    if (buttonIndex == 0)
-    {
-        AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [pDlg.dataSync deletedTemplItem:name];
-        [pDlg popView];
-    }
-    
-}
-
 #pragma mark - Table view delegate
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editMode != eListModeDisplay)
+    if (editMode != eViewModeDisplay)
     {
         if ([itemMp objectForKey:[NSNumber numberWithInteger:indexPath.row]] != nil)
             return YES;
@@ -499,7 +560,7 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(editMode != eListModeDisplay)
+    if(editMode != eViewModeDisplay)
     {
         
         if ([itemMp objectForKey:[NSNumber numberWithInteger:indexPath.row]] != nil)
@@ -562,7 +623,7 @@
     {
         fieldNames = [NSArray arrayWithObjects:@"Name", nil];
     }
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -596,7 +657,8 @@
             if (name == nil)
             {
                 NSString *pListName = @"List";
-                long listno = pDlg.dataSync.masterListCnt+1;
+                 AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+                long listno = pAppCmnUtil.dataSync.masterListCnt+1;
                 NSString *intStr = [[NSNumber numberWithLongLong:listno] stringValue];
                 pListName = [pListName stringByAppendingString:intStr];
                 textField.text = pListName;
@@ -629,7 +691,7 @@
                 //Ignoring the space place holder for empty inserted rows
                     if ([item isEqualToString:@" "] == NO)
                         textField.text = item;
-                    if(editMode != eListModeDisplay)
+                    if(editMode != eViewModeDisplay)
                     {
                         cell.showsReorderControl = YES;
                         UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
@@ -646,7 +708,7 @@
                 else
                 {
                     
-                    if (editMode != eListModeDisplay)
+                    if (editMode != eViewModeDisplay)
                     {
                         
                         UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];

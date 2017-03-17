@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+
 //#include <map>
 
 enum eListMode
@@ -24,11 +25,6 @@ enum eDispActionItems
     eEditList
 };
 
-enum eEditActionItems
-{
-    eSaveList,
-    eDeleteList
-};
 
 @interface List1ViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate, UISearchBarDelegate>
 {
@@ -66,5 +62,6 @@ enum eEditActionItems
 - (void)enableCancelButton:(UISearchBar *)aSearchBar;
 -(void) addRow : (NSUInteger) rowNo;
 -(void) cleanUpItemMp;
+- (void)itemAddDone;
 //need a data structure clean up
 @end

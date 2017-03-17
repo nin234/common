@@ -11,8 +11,10 @@
 #import <CoreData/CoreData.h>
 #import "MainViewController.h"
 
+
 @protocol DataOpsDelegate <NSObject>
 
+@optional
 -(bool) updateEditedItem:(id) item local:(id) litem;
 -(NSString *) getAlbumName:(id) item;
 -(id) getNewItem:(NSEntityDescription *) entity context:(NSManagedObjectContext *) managedObjectContext;
@@ -24,10 +26,11 @@
 -(void) copyFromItem:(id) itm local:(id)litm;
 
 -(NSString *)getAlbumName:(long long) shareId itemName:(NSString *) name item:(id)itm;
-@optional
+
 -(NSString *)getAddtionalPredStr:(NSUInteger) scnt predStrng:(NSString *)predStr;
 -(bool ) isEqualToLclItem:(id) item local:(id) litem;
 -(MainViewController *) getMainViewController;
+
 
 @end
 
@@ -76,10 +79,34 @@
     UIBackgroundTaskIdentifier loginTaskId;
     
     NSMutableArray *masterListNamesArr;
+     NSArray *masterListNamesTmp;
+    NSArray *masterListTmp;
+    NSMutableDictionary *masterListArr;
+    int templItemsToAdd;
+    NSMutableArray *masterListNames;
+    NSMutableArray *masterListMps;
+    NSMutableArray *masterListEditNames;
+    NSMutableArray *masterListEditMps;
+    int templItemsEdited;
+     NSMutableArray *masterListDeletedNames;
+    int templItemsDeleted;
+    NSMutableArray *listNames;
+    NSMutableArray *listPicUrls;
+    int picItemsToAdd;
+    NSMutableArray *listPicNames;
+    NSArray *listNamesTmp;
+    //array of the list names
+    NSMutableArray *listNamesArr;
+     NSMutableDictionary *picDic;
+    NSArray *listTmp;
+    //dictionary of list names as key and the actual list as the value
+    NSMutableDictionary *listArr;
+    
+
 }
 
 -(void) main;
-
+@property NSInteger listCnt;
 @property(nonatomic) dispatch_queue_t shareQ;
 @property (nonatomic) bool dontRefresh;
 @property (nonatomic) bool refreshNow;
@@ -87,8 +114,10 @@
 @property (nonatomic) bool loginNow;
 @property (nonatomic) bool updateNowSetDontRefresh;
 
+
 -(void) lock;
 -(void) unlock;
+@property NSInteger masterListCnt;
  
 
 -(void) addItem:(id)item;
@@ -96,14 +125,28 @@
 -(void) deletedItem: (id)item;
 
 @property (nonatomic, weak) id<DataOpsDelegate> delegate;
+
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+@property (readonly, strong, nonatomic) NSManagedObjectContext *easyManagedObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectModel *easyManagedObjectModel;
+@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *easyPersistentStoreCoordinator;
+
+@property (nonatomic, retain) UINavigationController *navViewController;
 
 - (void)saveContext;
 -(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName;
 -(bool) isNewItem:(id) item;
--(NSArray *) getMasterListNames
+-(NSArray *) getMasterListNames;
+- (void)saveEasyContext;
+-(NSArray *) getMasterList: (NSString *)key;
+-(void) addTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) editedTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) deletedTemplItem:(NSString *)name;
+-(void) addPicItem:(NSString *)name picItem:(NSString *)picUrl;
+-(NSArray *) getList: (NSString *)key;
+
 
 @end

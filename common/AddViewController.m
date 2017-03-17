@@ -26,6 +26,7 @@
 #import "AVFoundation/AVTime.h"
 #import "CoreMedia/CMTime.h"
 #import "textdefs.h"
+#import "EasyAddViewController.h"
 
 
 
@@ -481,7 +482,7 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize);
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
     NSLog(@"13 rows in section %ld of AddViewController\n" , (long)section);
-    return 13;
+    return 14;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -1067,7 +1068,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
                 if (row == 0)
                     label.backgroundColor = [UIColor yellowColor];
                 [cell.contentView addSubview:label];
-                if (row != 12)
+                if (row != 13)
                     textFrame = CGRectMake(75, 12, 200, 25);
                 else
                     textFrame = CGRectMake(110, 12, 170, 25);
@@ -1089,11 +1090,16 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
             }
             else if (row == 5)
             {
+                cell.textLabel.text = @"Check List";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
+            else if (row == 6)
+            {
                 cell.imageView.image = [UIImage imageNamed:@"note.png"];
                 cell.textLabel.text = @"Notes";
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; 
             }
-            else if (row == 6)
+            else if (row == 7)
             {
                 
                 NSString *pAlMoc = pAlName;
@@ -1151,7 +1157,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
                 cell.textLabel.text = @"Pictures";
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; 
             }
-            else if (row == 7)
+            else if (row == 8)
             {
             
                 cell.imageView.image = [UIImage imageNamed:@"map.png"];
@@ -1243,7 +1249,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
     
-    if (indexPath.row == 6)
+    if (indexPath.row == 7)
     {
         AlbumContentsViewController *albumContentsViewController = [[AlbumContentsViewController alloc] initWithNibName:@"AlbumContentsViewController" bundle:nil];
         NSLog(@"Pushing AlbumContents view controller %s %d\n" , __FILE__, __LINE__);
@@ -1261,7 +1267,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
         navViewController.navigationBar.topItem.rightBarButtonItem = pBarItem1;
         
     }
-    else if (indexPath.row == 7)
+    else if (indexPath.row == 8)
     {
         MKCoordinateSpan span;
         span.latitudeDelta = 0.001;
@@ -1278,7 +1284,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
         mapViewController.title = [delegate getAlbumTitle];
         [self.navigationController pushViewController:mapViewController animated:NO];
     }
-    else if (indexPath.row == 5)
+    else if (indexPath.row == 6)
     {
         NotesViewController *notesViewController = [NotesViewController alloc];
         notesViewController.notesTxt = [delegate getNotes];
@@ -1287,6 +1293,13 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
         //  albumContentsViewController.assetsGroup = group_;
         notesViewController.title = [delegate getAlbumTitle];
         [self.navigationController pushViewController:notesViewController animated:NO];   
+    }
+    else if (indexPath.row == 5)
+    {
+        EasyAddViewController *aViewController = [[EasyAddViewController alloc]
+                                                  initWithNibName:nil bundle:nil];
+       
+        [self.navigationController pushViewController:aViewController animated:YES];
     }
     else if (indexPath.row == 4)
     {
