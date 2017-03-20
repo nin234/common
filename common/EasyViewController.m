@@ -7,7 +7,9 @@
 //
 
 #import "EasyViewController.h"
-#import "AppDelegate.h"
+#import "AppCmnUtil.h"
+#import "EasyAddViewController.h"
+#import "TemplListViewController.h"
 
 @interface EasyViewController ()
 
@@ -16,6 +18,7 @@
 @implementation EasyViewController
 
 @synthesize bShareView;
+@synthesize delegate;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -94,9 +97,8 @@
 {
     //printf("Clicked search button\n");
     NSLog(@"Search button clicked in MainView Initiating new search with %@\n", [searchBar text]);
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    pDlg.pSearchStr = [searchBar text];
-    [self.pAllItms filter:pDlg.pSearchStr];
+    
+    [self.pAllItms filter:[searchBar text]];
     //pDlg.dataSync.refreshNow = true;
     [searchBar resignFirstResponder];
     
@@ -111,14 +113,93 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    pDlg.pSearchStr = nil;
+    
     searchBar.text = nil;
   //  pDlg.dataSync.refreshNow = true;
     [self.pAllItms removeFilter];
     [searchBar resignFirstResponder];
 }
 
+-(void) mainScreenActions: (NSInteger) buttonIndex
+{
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    switch (buttonIndex)
+    {
+        case 0:
+        {
+            
+            EasyViewController *pMainVwCntrl = [pAppCmnUtil.navViewController.viewControllers objectAtIndex:0];
+            
+            
+            pMainVwCntrl.pSearchBar.text = nil;
+            [pMainVwCntrl.pSearchBar resignFirstResponder];
+            TemplListViewController *aViewController = [[TemplListViewController alloc]
+                                                        initWithNibName:nil bundle:nil];
+            [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+        }
+        break;
+        
+        case 1:
+        {
+            [delegate shareMgrStartAndShow];
+        }
+        break;
+        
+        default:
+        break;
+    }
+    
+}
+
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Clicked button Index %ld", (long)buttonIndex);
+    
+    switch (eAction)
+    {
+        
+        
+        case eActnShetMainScreen:
+        [self mainScreenActions:buttonIndex];
+        break;
+        
+        default:
+        break;
+    }
+    
+}
+
+-(void) mainScrnActions
+{
+    
+    eAction = eActnShetMainScreen;
+    
+    UIActionSheet *pSh;
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Template Lists", @"Share", nil];
+    EasyViewController *pMainVwCntrl = [pAppCmnUtil.navViewController.viewControllers objectAtIndex:0];
+    [pSh showInView:pMainVwCntrl.pAllItms.tableView];
+    [pSh setDelegate:self];
+    
+    
+    return;
+}
+
+
+- (void)itemAdd
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    EasyViewController *pMainVwCntrl = [pAppCmnUtil.navViewController.viewControllers objectAtIndex:0];
+    
+    
+    pMainVwCntrl.pSearchBar.text = nil;
+    [pMainVwCntrl.pSearchBar resignFirstResponder];
+    EasyAddViewController *aViewController = [[EasyAddViewController alloc]
+                                              initWithNibName:nil bundle:nil];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    return;
+}
 
 - (void)viewDidLoad
 {
@@ -133,23 +214,20 @@
         self.navigationItem.rightBarButtonItem = pBarItem;
         return;
     }
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:pDlg action:@selector(itemAdd) ];
+   
+    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
     
     
     self.navigationItem.rightBarButtonItem = pBarItem;
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:pDlg action:@selector(mainScrnActions)];
+    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(mainScrnActions)];
     
     self.navigationItem.leftBarButtonItem = pBarItem1;
 }
 
 -(void) shareContactsAdd
 {
-   AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    pDlg.appUtl.selFrndCntrl.bModeShare = true;
-    pDlg.appUtl.tabBarController.selectedIndex = 1;
-    
-    return;
+    [delegate shareContactsSetSelected];
+       return;
 }
 
 - (void)didReceiveMemoryWarning

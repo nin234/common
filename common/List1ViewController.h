@@ -63,5 +63,6 @@ enum eDispActionItems
 -(void) addRow : (NSUInteger) rowNo;
 -(void) cleanUpItemMp;
 - (void)itemAddDone;
+- (void)itemEditDone;
 //need a data structure clean up
 @end

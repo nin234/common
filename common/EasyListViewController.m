@@ -7,9 +7,9 @@
 //
 
 #import "EasyListViewController.h"
-#import "AppDelegate.h"
 #import "List1ViewController.h"
 #import "EasyDisplayViewController.h"
+#import "AppCmnUtil.h"
 
 const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 
@@ -37,8 +37,9 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        pDlg.dataSync.refreshMainLst = true;
+        
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        pAppCmnUtil.dataSync.refreshMainLst = true;
         seletedItems = [[NSMutableArray alloc] init];
     }
     return self;
@@ -102,9 +103,9 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 
 -(void) refreshList
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-     list = [pDlg.dataSync getListNames];
-    picDic = [pDlg.dataSync getPics];
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+     list = [pAppCmnUtil.dataSync getListNames];
+    picDic = [pAppCmnUtil.dataSync getPics];
     unFiltrdList = [NSArray arrayWithArray:list];
     NSUInteger cnt = [list count];
     for (NSUInteger i=0; i < cnt ; ++i)
@@ -194,8 +195,9 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
         CGRect textFrame = CGRectMake(10, 10, 275, 25);
         if (pic != nil)
         {
-            AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            NSURL *albumurl = pDlg.pThumbNailsDir;
+           
+            AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+            NSURL *albumurl = pAppCmnUtil.pThumbNailsDir;
             NSURL *thumburl;
              NSError *err;
             if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
@@ -353,7 +355,8 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 
         return;
     }
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     if (list != nil && [list count] > indexPath.row)
     {
         NSString *item = [list objectAtIndex:indexPath.row];
@@ -364,15 +367,27 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
             photoVwCntrl.picName = pic;
             photoVwCntrl.listName = item;
             photoVwCntrl = [photoVwCntrl initWithNibName:nil bundle:nil];
-            [pDlg.navViewController pushViewController:photoVwCntrl animated:YES];
+            [pAppCmnUtil.navViewController pushViewController:photoVwCntrl animated:YES];
             
         }
         else
         {
-            [pDlg itemDisplay:item];
+            [self itemDisplay:item];
         }
     }
     
+}
+
+-(void) itemDisplay:(NSString *)listname
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    pAppCmnUtil.listName = listname;
+    [pAppCmnUtil.dataSync selectedItem:listname];
+    List1ViewController *aViewController = [List1ViewController alloc];
+    aViewController.editMode = eListModeDisplay;
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    return;
 }
 
 @end

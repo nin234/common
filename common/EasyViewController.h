@@ -9,12 +9,31 @@
 #import <UIKit/UIKit.h>
 #import "EasyListViewController.h"
 
-@interface EasyViewController : UIViewController <UISearchBarDelegate>
+enum eActionSheet
+{
+    eActnShetMainScreen,
+    eActnShetInAppPurchse
+};
+
+@protocol EasyViewControllerDelegate <NSObject>
+
+-(void) shareMgrStartAndShow;
+-(void) shareContactsSetSelected;
+
+@end
+
+@interface EasyViewController : UIViewController <UISearchBarDelegate, UIActionSheetDelegate>
+{
+    enum eActionSheet eAction;
+}
 
 @property (strong, nonatomic) EasyListViewController *pAllItms;
 @property (strong, nonatomic) UISearchBar *pSearchBar;
 @property (nonatomic) bool bShareView;
 
 - (void)enableCancelButton:(UISearchBar *)aSearchBar;
+- (void)itemAdd;
+-(void) mainScreenActions: (NSInteger) buttonIndex;
+@property (nonatomic, weak) id<EasyViewControllerDelegate> delegate;
 
 @end

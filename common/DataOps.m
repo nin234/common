@@ -19,6 +19,7 @@
 #import "List.h"
 #import "AppCmnUtil.h"
 #import "EasyViewController.h"
+#import "List1ViewController.h"
 
 
 @implementation DataOps
@@ -40,6 +41,7 @@
 @synthesize masterListCnt;
 @synthesize navViewController;
 @synthesize listCnt;
+@synthesize refreshMainLst;
 
 
 -(void) setRefreshNow:(bool)refNow
@@ -405,9 +407,12 @@
     dontRefresh = false;
     refreshNow = false;
     itemsToAdd = 0;
+     listMps = [[NSMutableArray alloc] init];
+    easyItemsToAdd =0;
     itemsEdited = 0;
     templItemsEdited = 0;
      templItemsToAdd = 0;
+    itemSelectedChanged = false;
     itemsToShare = 0;
     itemsToDownload = 0;
     itemsToDownloadOnStartUp = 0;
@@ -444,6 +449,14 @@
     listNames = [[NSMutableArray alloc] init];
     listPicUrls = [[NSMutableArray alloc] init];
      listPicNames = [[NSMutableArray alloc] init];
+    listEditNames = [[NSMutableArray alloc] init];
+    listEditMps = [[NSMutableArray alloc] init];
+    listHiddenMps = [[NSMutableArray alloc] init];
+    itemsHidden = 0;
+    itemsEasyEdited = 0;
+    itemsEasyDeleted = 0;
+    listDeletedNames = [[NSMutableArray alloc] init];
+    
     
     shareQ = dispatch_queue_create("P2P_SHAREQ", DISPATCH_QUEUE_SERIAL);
     [self refreshData];
@@ -454,7 +467,7 @@
     for(;;)
     {
         [workToDo lock];
-        if (!templItemsDeleted || !templItemsToAdd  || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd )
+        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd  || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst)
         {
            // NSLog(@"Waiting for work\n");
             NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:waitTime];
@@ -476,6 +489,23 @@
             [self refreshTemplData];
             [self updateMasterLstVwCntrl];
             
+        }
+        
+        if (refreshMainLst)
+        {
+            
+            [self refreshItemData];
+            [self updateEasyMainLstVwCntrl];
+            refreshMainLst = false;
+        }
+
+        
+        
+        if (itemSelectedChanged)
+        {
+            [self updateSelectedItem];
+            [self refreshItemData];
+            itemSelectedChanged = false;
         }
         
         if (picItemsToAdd)
@@ -510,6 +540,43 @@
             [self updateMainLstVwCntrl];
 
         }
+        
+        if (itemsHidden)
+        {
+            
+            NSLog(@"Updating  %d hidden items\n", itemsHidden);
+            [self updateHiddenItems];
+            [self refreshItemData];
+            
+        }
+        
+        
+        if (itemsEasyEdited)
+        {
+            NSLog(@"Editing %d items\n", itemsEdited);
+            [self updateEasyEditedItems];
+            [self refreshItemData];
+            [self updateEasyMainLstVwCntrl];
+            [self updateLstVwCntrl];
+        }
+        
+        if (itemsEasyDeleted)
+        {
+            NSLog(@"Deleting easy %d items\n", itemsDeleted);
+            [self updateEasyDeletedItems];
+            [self refreshItemData];
+            [self updateEasyMainLstVwCntrl];
+        }
+
+        if (easyItemsToAdd)
+        {
+            NSLog(@"Adding %d template items\n", itemsToAdd);
+            [self storeNewEasyItems];
+            [self refreshItemData];
+            [self updateEasyMainLstVwCntrl];
+            [self updateLstVwCntrl];
+        }
+
         
         if (itemsEdited)
         {
@@ -573,6 +640,381 @@
     
     return;
 }
+
+
+-(void) updateEasyDeletedItems
+{
+    
+    [workToDo lock];
+    NSUInteger mecnt = [listDeletedNames count];
+    for (NSUInteger i=0; i < mecnt; ++i)
+    {
+        NSString *name = [listDeletedNames objectAtIndex:i];
+        NSMutableArray* listarr =  [listArr objectForKey:name];
+        if (listarr != nil)
+        {
+            NSUInteger enmcnt = [listarr count];
+            for (NSUInteger j=0; j < enmcnt; ++j)
+            {
+                [self.easyManagedObjectContext deleteObject:[listarr objectAtIndex:j]];
+            }
+        }
+    }
+    
+    NSUInteger mlnmcnt = [listNamesArr count];
+    for (NSUInteger i=0; i < mecnt; ++i)
+    {
+        NSString *name = [listDeletedNames objectAtIndex:i];
+        for (NSUInteger j=0; j < mlnmcnt; ++j)
+        {
+            if ([name isEqualToString:[listNamesArr objectAtIndex:j]])
+            {
+                [self.easyManagedObjectContext deleteObject:[listNamesTmp objectAtIndex:j]];
+            }
+        }
+    }
+    
+    [listDeletedNames removeAllObjects];
+    
+    itemsEasyDeleted -= mecnt;
+    [workToDo unlock];
+    
+    [self saveEasyContext];
+    return;
+}
+
+-(NSArray *) getListNames
+{
+    [workToDo lock];
+    NSArray *tmpArr = [NSArray arrayWithArray:listNamesArr];
+    [workToDo unlock];
+    return tmpArr;
+}
+
+
+-(void) editItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+{
+    [workToDo lock];
+    [listEditNames addObject:name];
+    [listEditMps addObject:itmsMp];
+    ++itemsEasyEdited;
+    NSLog(@"Added  new item %@ %d and signalling work to do\n", name, itemsEdited);
+    [workToDo signal];
+    [workToDo unlock];
+    return;
+}
+
+-(NSDictionary *) getPics
+{
+    [workToDo lock];
+    NSDictionary *pics = [NSDictionary dictionaryWithDictionary:picDic];
+    [workToDo unlock];
+    return pics;
+}
+
+
+-(void) updateLstVwCntrl
+{
+   
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        NSArray *vws = [pAppCmnUtil.navViewController viewControllers];
+        NSUInteger vwcnt = [vws count];
+        //NSLog(@"No of view controllers EasyDataOps:updateLstVwCntrl %lu", (unsigned long)vwcnt);
+        for (NSUInteger i=0; i < vwcnt; ++i)
+        {
+            if ([[vws objectAtIndex:i] isMemberOfClass:[List1ViewController class]])
+            {
+                List1ViewController *pLst = [vws objectAtIndex:i];
+                [pLst refreshList];
+                [pLst.tableView reloadData];
+            }
+            //  NSLog(@"View controller class EasyDataOps:updateLstVwCntrl %@", NSStringFromClass([[vws objectAtIndex:i] class]));
+            
+            
+        }
+    });
+    return;
+}
+
+-(void) hiddenItems:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp hiddenDic:(NSMutableDictionary*) hiddensMp
+{
+    [workToDo lock];
+    [listEditNames addObject:name];
+    [listEditMps addObject:itmsMp];
+    [listHiddenMps addObject:hiddensMp];
+    ++itemsHidden;
+    NSLog(@"Added hidden item %@ %d and signalling work to do\n", name, itemsEdited);
+    [workToDo signal];
+    [workToDo unlock];
+    return;
+    
+}
+
+-(void) updateHiddenItems
+{
+    
+    [workToDo lock];
+    NSUInteger ecnt = [listEditNames count];
+    for (NSUInteger i=0; i < ecnt; ++i)
+    {
+        NSString *name = [listEditNames objectAtIndex:i];
+        NSMutableArray* listarr =  [listArr objectForKey:name];
+        if (listarr != nil)
+        {
+            NSUInteger enmcnt = [listarr count];
+            for (NSUInteger j=0; j < enmcnt; ++j)
+            {
+                [self.easyManagedObjectContext deleteObject:[listarr objectAtIndex:j]];
+            }
+        }
+    }
+    
+    int nStoreCnt=0;
+    for (int i=0; i < ecnt; ++i)
+    {
+        nStoreCnt += [[listEditMps objectAtIndex:i] count];
+    }
+    
+    
+    
+    NSUInteger mlnmcnt = [listNamesArr count];
+    for (NSUInteger i=0; i < ecnt; ++i)
+    {
+        NSString *name = [listEditNames objectAtIndex:i];
+        for (NSUInteger j=0; j < mlnmcnt; ++j)
+        {
+            if ([name isEqualToString:[listNamesArr objectAtIndex:j]])
+            {
+                [self.easyManagedObjectContext deleteObject:[listNamesTmp objectAtIndex:j]];
+            }
+        }
+    }
+    [workToDo unlock];
+    
+    
+    NSMutableArray *storeItems = [[NSMutableArray alloc] initWithCapacity:nStoreCnt];
+    NSMutableArray *storeNames = [[NSMutableArray alloc] initWithCapacity:ecnt];
+    
+    NSManagedObjectModel *managedObjectModel =
+    [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
+    NSDictionary *ent = [managedObjectModel entitiesByName];
+    printf("entity count %lu\n", (unsigned long)[[ent allKeys] count]);
+    NSEntityDescription *entity =
+    [ent objectForKey:@"List"];
+    
+    for (int i=0 ; i < nStoreCnt; ++i)
+    {
+        List *newItem = [[List alloc]
+                         initWithEntity:entity insertIntoManagedObjectContext:self.easyManagedObjectContext];
+        [storeItems addObject:newItem];
+    }
+    NSEntityDescription *nameEntity = [ent objectForKey:@"ListNames"];
+    for (int i=0; i<ecnt; ++i)
+    {
+        ListNames *newName = [[ListNames alloc] initWithEntity:nameEntity insertIntoManagedObjectContext:self.easyManagedObjectContext];
+        [storeNames addObject:newName];
+    }
+    
+    
+    [workToDo lock];
+    NSUInteger nTotCnt=0;
+    for (int i=0; i <ecnt; ++i)
+    {
+        NSArray *keys = [[listEditMps objectAtIndex:i] allKeys];
+        NSMutableDictionary *rowitems = [listEditMps objectAtIndex:i];
+        NSMutableDictionary *hiddenitems = [listHiddenMps objectAtIndex:i];
+        NSString *name = [listEditNames objectAtIndex:i];
+        NSUInteger valcnt = [keys count];
+        for (NSUInteger j=0; j < valcnt; ++j)
+        {
+            NSString *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+            NSUInteger len = [itemstr length];
+            if (!len)
+            {
+                continue;
+            }
+            List *item = [storeItems objectAtIndex:nTotCnt];
+            item.name = name;
+            item.item = itemstr;
+            item.rowno = [[keys objectAtIndex:j] intValue];
+            NSNumber *hidden = [hiddenitems objectForKey:[keys objectAtIndex:j]];
+            item.hidden = [hidden boolValue];
+            ++nTotCnt;
+            // NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
+        }
+        ListNames *mname = [storeNames objectAtIndex:i];
+        mname.name = name;
+        mname.current = YES;
+        //NSLog(@"Storing master list name %@\n", mname);
+        
+    }
+    
+    if (nTotCnt < nStoreCnt)
+    {
+        for (NSUInteger i= nTotCnt ; i < nStoreCnt; ++i)
+        {
+            [self.easyManagedObjectContext deleteObject:[storeItems objectAtIndex:i]];
+        }
+    }
+    
+    if (itemsHidden > ecnt)
+    {
+        NSRange aR;
+        aR.location = 0;
+        aR.length = ecnt;
+        [listEditNames removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+        [listEditMps removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+        [listHiddenMps removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+    }
+    else
+    {
+        [listEditMps removeAllObjects];
+        [listEditNames removeAllObjects];
+        [listHiddenMps removeAllObjects];
+    }
+    itemsHidden -= ecnt;
+    [workToDo unlock];
+    [self saveEasyContext];
+    return;
+}
+
+
+
+
+-(void) updateSelectedItem
+{
+    
+    NSString *selectedItm;
+    [workToDo lock];
+    selectedItm = selectedItem;
+    [workToDo unlock];
+    
+    NSUInteger mlnmcnt = [listNamesArr count];
+    for (NSUInteger j=0; j < mlnmcnt; ++j)
+    {
+        ListNames *mname = [listNamesTmp objectAtIndex:j];
+        // NSLog(@"Before updating current item %@", mname);
+        if ([mname.name isEqualToString:selectedItm])
+        mname.current = YES;
+        else
+        mname.current = NO;
+        //NSLog(@"After updating current item %@", mname);
+    }
+    
+    [self saveEasyContext];
+    
+    return;
+}
+
+
+
+-(void) storeNewEasyItems
+{
+    
+    int nItems = easyItemsToAdd;
+    int nStoreCnt=0;
+    [workToDo lock];
+    for (int i=0; i < nItems; ++i)
+    {
+        nStoreCnt += [[listMps objectAtIndex:i] count];
+    }
+    [workToDo unlock];
+    
+    NSMutableArray *storeItems = [[NSMutableArray alloc] initWithCapacity:nStoreCnt];
+    NSMutableArray *storeNames = [[NSMutableArray alloc] initWithCapacity:nItems];
+    
+    NSManagedObjectModel *managedObjectModel =
+    [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
+    NSDictionary *ent = [managedObjectModel entitiesByName];
+    printf("entity count %lu\n", (unsigned long)[[ent allKeys] count]);
+    NSEntityDescription *entity =
+    [ent objectForKey:@"List"];
+    
+    for (int i=0 ; i < nStoreCnt; ++i)
+    {
+        List *newItem = [[List alloc]
+                         initWithEntity:entity insertIntoManagedObjectContext:self.easyManagedObjectContext];
+        //List *newItem = [[List alloc] init];
+        
+        [storeItems addObject:newItem];
+    }
+    NSEntityDescription *nameEntity = [ent objectForKey:@"ListNames"];
+    if(nStoreCnt)
+    {
+        for (int i=0; i<nItems; ++i)
+        {
+            ListNames *newName = [[ListNames alloc] initWithEntity:nameEntity insertIntoManagedObjectContext:self.easyManagedObjectContext];
+            [storeNames addObject:newName];
+        }
+    }
+    
+    [workToDo lock];
+    NSUInteger nTotCnt=0;
+    if (nStoreCnt)
+    {
+        for (int i=0; i <nItems; ++i)
+        {
+            NSArray *keys = [[listMps objectAtIndex:i] allKeys];
+            NSMutableDictionary *rowitems = [listMps objectAtIndex:i];
+            NSString *name = [listNames objectAtIndex:i];
+            NSUInteger valcnt = [keys count];
+            for (NSUInteger j=0; j < valcnt; ++j)
+            {
+                NSString *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+                NSUInteger len = [itemstr length];
+                if (!len)
+                {
+                    continue;
+                }
+                List *item = [storeItems objectAtIndex:nTotCnt];
+                
+                
+                
+                item.item = itemstr;
+                item.name = name;
+                item.hidden = NO;
+                item.rowno = [[keys objectAtIndex:j] intValue];
+                ++nTotCnt;
+                //NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
+            }
+            ListNames *mname = [storeNames objectAtIndex:i];
+            mname.name = name;
+            //NSLog(@"Storing  list name %@\n", mname);
+            
+        }
+    }
+    if (easyItemsToAdd > nItems)
+    {
+        NSRange aR;
+        aR.location = 0;
+        aR.length = nItems;
+        [listNames removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+        [listMps removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+    }
+    else
+    {
+        [listMps removeAllObjects];
+        [listNames removeAllObjects];
+    }
+    easyItemsToAdd -= nItems;
+    [workToDo unlock];
+    [self saveEasyContext];
+    
+    return;
+}
+
+-(void) selectedItem: (NSString *) selectedItm
+{
+    [workToDo lock];
+    itemSelectedChanged = true;
+    selectedItem = selectedItm;
+    [workToDo unlock];
+    return;
+}
+
+
+
 
 -(void) storeNewPicItems
 {
@@ -747,6 +1189,149 @@
     return nil;
 }
 
+-(void) deletedEasyItem:(NSString *)name
+{
+    [workToDo lock];
+    [listDeletedNames addObject:name];
+    ++itemsDeleted;
+    NSLog(@"Added deleted item %@ %d and signalling work to do\n", name, itemsDeleted);
+    [workToDo signal];
+    [workToDo unlock];
+    
+    return;
+}
+
+
+-(void) updateEasyEditedItems
+{
+    
+    [workToDo lock];
+    NSUInteger ecnt = [listEditNames count];
+    for (NSUInteger i=0; i < ecnt; ++i)
+    {
+        NSString *name = [listEditNames objectAtIndex:i];
+        NSMutableArray* listarr =  [listArr objectForKey:name];
+        if (listarr != nil)
+        {
+            NSUInteger enmcnt = [listarr count];
+            for (NSUInteger j=0; j < enmcnt; ++j)
+            {
+                [self.easyManagedObjectContext deleteObject:[listarr objectAtIndex:j]];
+            }
+        }
+    }
+    
+    int nStoreCnt=0;
+    for (int i=0; i < ecnt; ++i)
+    {
+        nStoreCnt += [[listEditMps objectAtIndex:i] count];
+    }
+    
+    
+    
+    NSUInteger mlnmcnt = [listNamesArr count];
+    for (NSUInteger i=0; i < ecnt; ++i)
+    {
+        NSString *name = [listEditNames objectAtIndex:i];
+        for (NSUInteger j=0; j < mlnmcnt; ++j)
+        {
+            if ([name isEqualToString:[listNamesArr objectAtIndex:j]])
+            {
+                [self.easyManagedObjectContext deleteObject:[listNamesTmp objectAtIndex:j]];
+            }
+        }
+    }
+    [workToDo unlock];
+    
+    
+    NSMutableArray *storeItems = [[NSMutableArray alloc] initWithCapacity:nStoreCnt];
+    NSMutableArray *storeNames = [[NSMutableArray alloc] initWithCapacity:ecnt];
+    
+    NSManagedObjectModel *managedObjectModel =
+    [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
+    NSDictionary *ent = [managedObjectModel entitiesByName];
+    printf("entity count %lu\n", (unsigned long)[[ent allKeys] count]);
+    NSEntityDescription *entity =
+    [ent objectForKey:@"List"];
+    
+    for (int i=0 ; i < nStoreCnt; ++i)
+    {
+        List *newItem = [[List alloc]
+                         initWithEntity:entity insertIntoManagedObjectContext:self.easyManagedObjectContext];
+        [storeItems addObject:newItem];
+    }
+    NSEntityDescription *nameEntity = [ent objectForKey:@"ListNames"];
+    for (int i=0; i<ecnt; ++i)
+    {
+        ListNames *newName = [[ListNames alloc] initWithEntity:nameEntity insertIntoManagedObjectContext:self.easyManagedObjectContext];
+        [storeNames addObject:newName];
+    }
+    
+    
+    [workToDo lock];
+    NSUInteger nTotCnt=0;
+    for (int i=0; i <ecnt; ++i)
+    {
+        NSArray *keys = [[listEditMps objectAtIndex:i] allKeys];
+        NSMutableDictionary *rowitems = [listEditMps objectAtIndex:i];
+        NSString *name = [listEditNames objectAtIndex:i];
+        NSUInteger valcnt = [keys count];
+        for (NSUInteger j=0; j < valcnt; ++j)
+        {
+            NSString *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+            NSUInteger len = [itemstr length];
+            if (!len)
+            {
+                continue;
+            }
+            List *item = [storeItems objectAtIndex:nTotCnt];
+            item.name = name;
+            item.item = itemstr;
+            item.rowno = [[keys objectAtIndex:j] intValue];
+            item.hidden = NO;
+            ++nTotCnt;
+            // NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
+        }
+        ListNames *mname = [storeNames objectAtIndex:i];
+        mname.name = name;
+        mname.current = YES;
+        //NSLog(@"Storing master list name %@\n", mname);
+        
+    }
+    
+    if (nTotCnt < nStoreCnt)
+    {
+        for (NSUInteger i= nTotCnt ; i < nStoreCnt; ++i)
+        {
+            [self.easyManagedObjectContext deleteObject:[storeItems objectAtIndex:i]];
+        }
+    }
+    
+    if (itemsEasyEdited > ecnt)
+    {
+        NSRange aR;
+        aR.location = 0;
+        aR.length = ecnt;
+        [listEditNames removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+        [listEditMps removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+    }
+    else
+    {
+        [listEditMps removeAllObjects];
+        [listEditNames removeAllObjects];
+    }
+    itemsEasyEdited -= ecnt;
+    [workToDo unlock];
+    
+    [self saveEasyContext];
+    
+    return;
+}
+
+
+
+
+
 
 -(void) refreshTemplData
 {
@@ -808,6 +1393,7 @@
     
     return;
 }
+
 
 -(void) addTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
 {
@@ -1218,6 +1804,19 @@
     }
     return nil;
 }
+
+-(void) addItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+{
+    [workToDo lock];
+    [listNames addObject:name];
+    [listMps addObject:itmsMp];
+    ++easyItemsToAdd;
+    NSLog(@"Added  new item %@ %d and signalling work to do\n", name, itemsToAdd);
+    [workToDo signal];
+    [workToDo unlock];
+    return;
+}
+
 
 -(NSArray *) getList: (NSString *)key
 {

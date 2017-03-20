@@ -101,6 +101,18 @@
     NSArray *listTmp;
     //dictionary of list names as key and the actual list as the value
     NSMutableDictionary *listArr;
+    int easyItemsToAdd;
+    NSMutableArray *listMps;
+    //the two parameters below are used to update the selected item in the list for apple watch
+    NSString *selectedItem;
+    bool itemSelectedChanged;
+    NSMutableArray *listEditNames;
+    NSMutableArray *listEditMps;
+    NSMutableArray *listHiddenMps;
+    int itemsHidden;
+    int itemsEasyEdited;
+    int itemsEasyDeleted;
+     NSMutableArray *listDeletedNames;
     
 
 }
@@ -124,6 +136,8 @@
 -(void) editedItem:(id)item;
 -(void) deletedItem: (id)item;
 
+-(void) addItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
+
 @property (nonatomic, weak) id<DataOpsDelegate> delegate;
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -135,6 +149,7 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *easyPersistentStoreCoordinator;
 
 @property (nonatomic, retain) UINavigationController *navViewController;
+@property (nonatomic) bool refreshMainLst;
 
 - (void)saveContext;
 -(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName;
@@ -147,6 +162,11 @@
 -(void) deletedTemplItem:(NSString *)name;
 -(void) addPicItem:(NSString *)name picItem:(NSString *)picUrl;
 -(NSArray *) getList: (NSString *)key;
-
+-(void) selectedItem: (NSString *) selectedItem;
+-(void) hiddenItems:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp hiddenDic:(NSMutableDictionary*) hiddensMp;
+-(void) editItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) deletedEasyItem:(NSString *)name;
+-(NSArray *) getListNames;
+-(NSDictionary *) getPics;
 
 @end

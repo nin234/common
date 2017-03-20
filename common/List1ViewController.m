@@ -303,6 +303,69 @@
     return;
 }
 
+- (void)itemAddDone
+{
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    List1ViewController *pListView = (List1ViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    [pAppCmnUtil popView];
+    if (![pListView.itemMp count])
+    {
+        NSLog(@"Empty list not adding");
+        return;
+    }
+    [pListView cleanUpItemMp];
+    [pAppCmnUtil.dataSync addItem:pListView.name itemsDic:pListView.itemMp];
+    [self itemDisplay:pListView.name lstcntr:pListView];
+    
+    return;
+}
+
+-(void) itemDisplay:(NSString *)listname
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    pAppCmnUtil.listName = listname;
+    [pAppCmnUtil.dataSync selectedItem:listname];
+    List1ViewController *aViewController = [List1ViewController alloc];
+    aViewController.editMode = eListModeDisplay;
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    return;
+}
+
+
+
+
+-(void) itemEditCancel
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    List1ViewController *pListView = (List1ViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    [self itemDisplay:pListView.name];
+    return;
+}
+
+-(void) itemDisplay:(NSString *)itemname lstcntr:(List1ViewController *)pLst
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    pAppCmnUtil.listName = itemname;
+    [pAppCmnUtil.dataSync selectedItem:itemname];
+    List1ViewController *aViewController = [List1ViewController alloc];
+    aViewController.editMode = eListModeDisplay;
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    [aViewController refreshListFromCpy:pLst];
+    [aViewController.tableView reloadData];
+    
+    return;
+}
+
+- (void) itemAddCancel
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil popView];
+    
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -321,7 +384,7 @@
         
         UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(itemAddDone) ];
         self.navigationItem.rightBarButtonItem = pBarItem;
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:pDlg action:@selector(itemAddCancel) ];
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemAddCancel) ];
         self.navigationItem.leftBarButtonItem = pBarItem1;
     }
     else if (editMode == eListModeEdit)
@@ -333,7 +396,7 @@
         
         self.navigationItem.rightBarButtonItem = pBarItem;
 
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:pDlg action:@selector(itemEditCancel) ];
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemEditCancel) ];
         self.navigationItem.leftBarButtonItem = pBarItem1;
     }
     else
@@ -369,10 +432,11 @@
                 hiddenMp = [[NSMutableDictionary alloc] initWithDictionary:hiddenUnFiltrdMp];
             itemMp = [[NSMutableDictionary alloc] initWithDictionary:itemUnFiltrdMp];
         }
-        AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (itemMp == nil || ![itemMp count] || hiddenMp == nil || ![hiddenMp count])
             return;
-        [pDlg.dataSync hiddenItems:name itemsDic:itemMp hiddenDic:hiddenMp];
+        [pAppCmnUtil.dataSync hiddenItems:name itemsDic:itemMp hiddenDic:hiddenMp];
     }
 }
 
@@ -419,6 +483,17 @@
     
 }
 
+-(void) itemEditDone
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    List1ViewController *pListView = (List1ViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    [pAppCmnUtil popView];
+    [pListView cleanUpItemMp];
+    [pAppCmnUtil.dataSync editItem:pListView.name itemsDic:pListView.itemMp];
+    [self itemDisplay:pListView.name lstcntr:pListView];
+    return;
+}
+
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     
@@ -431,8 +506,8 @@
         {
             case eSaveList:
             {
-                AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                [pDlg itemEditDone];
+                
+                [self itemEditDone];
             }
             break;
                 
@@ -451,9 +526,9 @@
         inDeleteAction = false;
         if (!buttonIndex)
         {
-            AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [pDlg.dataSync deletedItem:name];
-            [pDlg popView];
+            AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+            [pAppCmnUtil.dataSync deletedEasyItem:name];
+            [pAppCmnUtil popView];
 
         }
         return;
@@ -513,8 +588,8 @@
             
         case eEditList:
         {
-            AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [pDlg itemEdit];
+            
+            [self itemEdit];
         }
         break;
             
@@ -524,6 +599,19 @@
     
     return;
 }
+
+-(void) itemEdit
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil popView];
+    List1ViewController *aViewController = [List1ViewController alloc];
+    aViewController.editMode = eListModeEdit;
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    
+    return;
+}
+
 
 
 - (void)enableCancelButton:(UISearchBar *)aSearchBar
@@ -563,13 +651,7 @@
 {
     //printf("Clicked search button\n");
     NSLog(@"Search button clicked Initiating new search with %@\n", [searchBar text]);
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    pDlg.pSearchStr1 = [searchBar text];
-    if (![pDlg.pSearchStr1 length])
-    {
-        NSLog(@"Empty search string returning");
-        return;
-    }
+   
     if(!bDicInit)
     {
         bDicInit = true;
@@ -620,9 +702,7 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    pDlg.pSearchStr1 = nil;
-    bSearchStr = false;
+       bSearchStr = false;
     searchBar.text = nil;
     //  pDlg.dataSync.refreshNow = true;
      itemMp = [[NSMutableDictionary alloc] initWithDictionary:itemUnFiltrdMp];
