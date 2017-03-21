@@ -422,6 +422,7 @@
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
+        aViewController.bEasyGroc = false;
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
 
         return;

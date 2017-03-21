@@ -54,6 +54,7 @@ enum eDispActionItems
 
 @property (nonatomic, retain) UISearchBar *pSearchBar;
 @property enum eListMode editMode;
+@property bool bEasyGroc;
 
 -(void) refreshMasterList;
 -(void) refreshList;

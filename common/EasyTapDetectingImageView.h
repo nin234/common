@@ -45,8 +45,10 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 */
 
-@protocol EasyTapDetectingImageViewDelegate;
+
 #include <sys/time.h>
+#import <UIKit/UIKit.h>
+@protocol EasyTapDetectingImageViewDelegate;
 
 @interface EasyTapDetectingImageView : UIImageView {
 	

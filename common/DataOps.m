@@ -828,16 +828,16 @@
         NSUInteger valcnt = [keys count];
         for (NSUInteger j=0; j < valcnt; ++j)
         {
-            NSString *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
-            NSUInteger len = [itemstr length];
+            List *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+            NSUInteger len = [itemstr.item length];
             if (!len)
             {
                 continue;
             }
             List *item = [storeItems objectAtIndex:nTotCnt];
             item.name = name;
-            item.item = itemstr;
-            item.rowno = [[keys objectAtIndex:j] intValue];
+            item.item = itemstr.item;
+            item.rowno = itemstr.rowno;
             NSNumber *hidden = [hiddenitems objectForKey:[keys objectAtIndex:j]];
             item.hidden = [hidden boolValue];
             ++nTotCnt;
@@ -961,8 +961,8 @@
             NSUInteger valcnt = [keys count];
             for (NSUInteger j=0; j < valcnt; ++j)
             {
-                NSString *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
-                NSUInteger len = [itemstr length];
+                List *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+                NSUInteger len = [itemstr.item length];
                 if (!len)
                 {
                     continue;
@@ -971,10 +971,10 @@
                 
                 
                 
-                item.item = itemstr;
+                item.item = itemstr.item;
                 item.name = name;
-                item.hidden = NO;
-                item.rowno = [[keys objectAtIndex:j] intValue];
+                item.hidden = itemstr.hidden;
+                item.rowno = itemstr.rowno;
                 ++nTotCnt;
                 //NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
             }
@@ -1278,17 +1278,17 @@
         NSUInteger valcnt = [keys count];
         for (NSUInteger j=0; j < valcnt; ++j)
         {
-            NSString *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
-            NSUInteger len = [itemstr length];
+            List *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+            NSUInteger len = [itemstr.item length];
             if (!len)
             {
                 continue;
             }
             List *item = [storeItems objectAtIndex:nTotCnt];
             item.name = name;
-            item.item = itemstr;
-            item.rowno = [[keys objectAtIndex:j] intValue];
-            item.hidden = NO;
+            item.item = itemstr.item;
+            item.rowno = itemstr.rowno;
+            item.hidden = itemstr.hidden;
             ++nTotCnt;
             // NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
         }

@@ -44,6 +44,7 @@
 @synthesize hiddenCells;
 @synthesize pSearchBar;
 @synthesize default_name;
+@synthesize bEasyGroc;
 
 
 -(void) cleanUpItemMp
@@ -54,8 +55,8 @@
     for (NSUInteger i=0; i < cnt; ++i)
     {
         NSNumber *rowNo = [keys objectAtIndex:i];
-        NSString *item = [itemMp objectForKey:rowNo];
-        if ([item isEqualToString:@" "] == YES)
+        List *item = [itemMp objectForKey:rowNo];
+        if ([item.item isEqualToString:@" "] == YES)
             [itemMp removeObjectForKey:rowNo];
     }
     
@@ -78,7 +79,9 @@
     
     NSInteger no_of_items = [keys count];
     
-    NSString  *prevItem = nil;
+    List  *prevItem = nil;
+    List *emptyItem = [[List alloc] init];
+    emptyItem.item  = @" ";
     
     NSUInteger lastIndx = -1;
        NSLog(@"Inserting row at index=%lu no_of_items=%ld", (unsigned long)insrtedRowNo, (long)no_of_items);
@@ -88,17 +91,18 @@
         lastIndx = [rowNo1 unsignedIntegerValue];
         if (lastIndx < insrtedRowNo)
             continue;
-        NSString *item = prevItem;
+        List *item = prevItem;
         
         prevItem = [itemMp objectForKey:rowNo1];
         if (insrtedRowNo != [rowNo1 unsignedIntegerValue])
         {
-            NSLog(@"Setting object %@ for key %@", item, rowNo1);
+            NSLog(@"Setting object %@ for key %@", item.item, rowNo1);
             [itemMp setObject:item forKey:rowNo1];
         }
         else
         {
-            [itemMp setObject:@" " forKey:rowNo1];
+            
+            [itemMp setObject:emptyItem forKey:rowNo1];
              NSLog(@"Removing object %@ for key %@", item, rowNo1);
         }
         
@@ -120,7 +124,7 @@
     
     if (insrtedRowNo == (no_of_items+1))
     {
-        [itemMp setObject:@" " forKey:[NSNumber numberWithInteger:insrtedRowNo]];
+        [itemMp setObject:emptyItem forKey:[NSNumber numberWithInteger:insrtedRowNo]];
     }
     
 
@@ -157,6 +161,7 @@
         undoArry = [[NSMutableArray alloc] init];
         redoArry  = [[NSMutableArray alloc] init];
         rowTarget = [[NSMutableDictionary alloc] init];
+        bEasyGroc = true;
        
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (editMode == eListModeAdd)
@@ -221,7 +226,11 @@
         for (NSUInteger i=0; i < nRows-1; ++i)
         {
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:i+1];
-            [itemMp setObject:[mlist objectAtIndex:i] forKey:rowNm];
+            List *newItem = [[List alloc] init];
+            newItem.item =[mlist objectAtIndex:i];
+            newItem.rowno = i+1;
+            newItem.hidden = false;
+            [itemMp setObject:newItem forKey:rowNm];
         }
         nRows += 35;
         NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
@@ -268,7 +277,7 @@
         {
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:i+1];
             List *item = [list objectAtIndex:i];
-            [itemMp setObject:item.item forKey:rowNm];
+            [itemMp setObject:item forKey:rowNm];
             if (editMode == eListModeDisplay)
             {
                 NSNumber *rowVal = [NSNumber numberWithBool:item.hidden];
@@ -379,13 +388,21 @@
    
     if (editMode == eListModeAdd)
     {
-        NSString *title = @"New List";
-        self.navigationItem.title = [NSString stringWithString:title];
+        if (bEasyGroc == true)
+        {
+            NSString *title = @"New List";
+            self.navigationItem.title = [NSString stringWithString:title];
         
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(itemAddDone) ];
-        self.navigationItem.rightBarButtonItem = pBarItem;
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemAddCancel) ];
-        self.navigationItem.leftBarButtonItem = pBarItem1;
+            UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(itemAddDone) ];
+            self.navigationItem.rightBarButtonItem = pBarItem;
+            UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemAddCancel) ];
+            self.navigationItem.leftBarButtonItem = pBarItem1;
+        }
+        else
+        {
+            NSString *title = @"Check List";
+            self.navigationItem.title = [NSString stringWithString:title];
+        }
     }
     else if (editMode == eListModeEdit)
     {
@@ -672,14 +689,16 @@
     NSUInteger rowno =0;
     for (NSUInteger i=0; i < cnt; ++i)
     {
-        NSString *item = [itemUnFiltrdMp objectForKey:[keys objectAtIndex:i]];
+        List *item = [itemUnFiltrdMp objectForKey:[keys objectAtIndex:i]];
         NSStringCompareOptions  opt = NSCaseInsensitiveSearch;
-        NSRange aR = [item rangeOfString:[searchBar text] options:opt];
+        NSRange aR = [item.item rangeOfString:[searchBar text] options:opt];
         if (aR.location == NSNotFound && aR.length ==0)
         {
             continue;
         }
         NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:rowno+1];
+        
+        
         [itemMp setObject:item forKey:rowNm];
         NSNumber *rowVal = [hiddenCellsUnFiltrdMp objectForKey:[keys objectAtIndex:i]];
         if (rowVal != nil)
@@ -769,11 +788,15 @@
             NSUInteger len = [textField.text length];
             if (len)
             {
-                [itemMp setObject:textField.text forKey:rowNm];
-                if (indPath.row > nRows-3)
+                List *item = [itemMp objectForKey:rowNm];
+                if (item != NULL)
                 {
-                    nRows+=35;
-                    [self.tableView reloadData];
+                    item.item = textField.text;
+                    if (indPath.row > nRows-3)
+                    {
+                        nRows+=35;
+                        [self.tableView reloadData];
+                    }
                 }
             }
             else
@@ -856,8 +879,8 @@
         return;
     
     NSNumber *soureRow = [NSNumber numberWithInteger:sourceIndexPath.row];
-    NSString *sourceItem = [itemMp objectForKey:soureRow];
-    NSString *prevItem;
+    List *sourceItem = [itemMp objectForKey:soureRow];
+    List *prevItem;
     
     NSArray *keys1 = [itemMp allKeys];
      NSArray *keys = [keys1 sortedArrayUsingSelector: @selector(compare:)];
@@ -876,14 +899,14 @@
                     continue;
                 else if ([rowNo unsignedIntegerValue] < destinationIndexPath.row)
                 {
-                    NSString *item = [itemMp objectForKey:rowNo];
+                    List *item = [itemMp objectForKey:rowNo];
                     NSUInteger newKey = [rowNo unsignedIntegerValue];
                     --newKey;
                     [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
                 }
                 else
                 {
-                    NSString *item = [itemMp objectForKey:rowNo];
+                    List *item = [itemMp objectForKey:rowNo];
                     NSUInteger newKey = [rowNo unsignedIntegerValue];
                     --newKey;
                     [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
@@ -899,7 +922,7 @@
             }
             else
             {
-                NSString *tmpItem = [itemMp objectForKey:rowNo];
+                List *tmpItem = [itemMp objectForKey:rowNo];
                 [itemMp setObject:prevItem forKey:rowNo];
                 prevItem = tmpItem;
             }
@@ -928,7 +951,7 @@
             NSNumber *rowNo = [keys objectAtIndex:i];
             if ([rowNo unsignedIntegerValue] < indexPath.row)
                 continue;
-            NSString *item = [itemMp objectForKey:rowNo];
+            List *item = [itemMp objectForKey:rowNo];
             
                 
             [itemMp removeObjectForKey:rowNo];
@@ -1075,12 +1098,12 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                 }
             }
                 NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:editMode == eListModeDisplay?row-1: row];
-                NSString *item = [itemMp objectForKey:rowNm];
+                List *item = [itemMp objectForKey:rowNm];
                 if (item != nil)
                 {
                     //Ignoring the space place holder for empty inserted rows
-                    if ([item isEqualToString:@" "] == NO)
-                        textField.text = item;
+                    if ([item.item isEqualToString:@" "] == NO)
+                        textField.text = item.item;
                     if (editMode == eListModeDisplay)
                     {
                         

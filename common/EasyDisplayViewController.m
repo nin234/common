@@ -46,8 +46,8 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 */
 
 #import "EasyDisplayViewController.h"
-#import "AppDelegate.h"
 #import "EasySlideScrollView.h"
+#import "AppCmnUtil.h"
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -96,7 +96,8 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 -(void) displayPhoto
 {
-    AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     EasySlideScrollView *imageScrollView = (EasySlideScrollView *)self.view;
     NSLog(@"View dimensions frame x=%f y=%f height=%f width=%f bounds x=%f y=%f height = %f width=%f\n", [imageScrollView frame].origin.x, [imageScrollView frame].origin.y, [imageScrollView frame].size.height, [imageScrollView frame].size.width,
           [imageScrollView bounds].origin.x, [imageScrollView bounds].origin.y, [imageScrollView bounds].size.height, [imageScrollView bounds].size.width);
@@ -107,7 +108,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     
     
     NSError *err;
-    NSURL *albumurl = pDlg.pPicsDir;
+    NSURL *albumurl = pAppCmnUtil.pPicsDir;
     NSURL *imgUrl;
     
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
@@ -187,18 +188,19 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     printf("Clicked button at index %ld\n", (long)buttonIndex);
     if (buttonIndex == 0)
     {
         if (delconfirm)
         {
-            AppDelegate *pDlg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            
             NSError *err;
-            if ([pDlg.pFlMgr removeItemAtURL:currURL error:&err])
+            if ([pAppCmnUtil.pFlMgr removeItemAtURL:currURL error:&err])
                 NSLog(@"Removed item at URL %@\n", currURL);
             else 
                 NSLog(@"Failed to remove item at URL %@ reason %@\n", currURL, err);
-            NSURL *albumurl = pDlg.pThumbNailsDir;
+            NSURL *albumurl = pAppCmnUtil.pThumbNailsDir;
             NSURL *thumburl;
             
             if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
@@ -206,14 +208,14 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
                 thumburl = [albumurl URLByAppendingPathComponent:picName isDirectory:NO];
             }
 
-                       if ([pDlg.pFlMgr removeItemAtURL:thumburl error:&err])
+                       if ([pAppCmnUtil.pFlMgr removeItemAtURL:thumburl error:&err])
                 NSLog(@"Removed item at URL %@\n", thumburl);
             else 
                 NSLog(@"Failed to remove item at URL %@ reason %@\n", thumburl, err);
             
             delconfirm = false;
-            [pDlg.dataSync deletedItem:listName];
-            [pDlg.navViewController popViewControllerAnimated:YES];
+            [pAppCmnUtil.dataSync deletedItem:listName];
+            [pAppCmnUtil.navViewController popViewControllerAnimated:YES];
         }
         else 
         {
