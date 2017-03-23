@@ -14,6 +14,8 @@
 #include <dirent.h>
 #include "string.h"
 #import "NotesViewController.h"
+#import "List1ViewController.h"
+#import "AppCmnUtil.h"
 #include <math.h>
 
 @implementation DisplayViewController
@@ -33,6 +35,7 @@
     {
             nSmallest = 0;
         processQuery = true;
+        checkListArr = nil;
 	     NSString *pAlMoc = pAlName;
 	    printf("In DisplayViewController Selected album name %s\n", [pAlMoc UTF8String]);
 	    char szFileNo[64];
@@ -193,7 +196,7 @@
 {
 
     // Return the number of rows in the section.
-    return 12;
+    return 13;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -310,11 +313,16 @@
         }
         else if (row == 4)
         {
+            cell.textLabel.text = @"Check List";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        else if (row == 5)
+        {
             cell.imageView.image = [UIImage imageNamed:@"note.png"];
             cell.textLabel.text = @"Notes";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; 
         }
-        else if (row == 5)
+        else if (row == 6)
         {
             
             printf("Selected album name %s nSmallest %d\n", [pAlName UTF8String], nSmallest);
@@ -344,7 +352,7 @@
             cell.textLabel.text = @"Pictures";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; 
         }
-        else if (row == 6)
+        else if (row == 7)
         {
             cell.imageView.image = [UIImage imageNamed:@"map.png"];
             cell.textLabel.text = @"Map";
@@ -413,7 +421,7 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    if (indexPath.row == 5)
+    if (indexPath.row == 6)
     {
         AlbumContentsViewController *albumContentsViewController = [[AlbumContentsViewController alloc] initWithNibName:@"AlbumContentsViewController" bundle:nil];
         NSLog(@"Pushing AlbumContents view controller %s %d\n" , __FILE__, __LINE__);
@@ -429,7 +437,7 @@
        navViewController.navigationBar.topItem.title = [NSString stringWithString:[delegate getDispItemTitle]];
         
     }
-    else if (indexPath.row == 6)
+    else if (indexPath.row == 7)
     {
         MKCoordinateSpan span;
         
@@ -448,7 +456,7 @@
         mapViewController.reg = reg;
          [self.navigationController pushViewController:mapViewController animated:NO];
     }
-    else if (indexPath.row == 4)
+    else if (indexPath.row == 5)
     {
         NotesViewController *notesViewController = [[NotesViewController alloc] initWithNibName:@"NotesViewController" bundle:nil];
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
@@ -457,6 +465,29 @@
         notesViewController.title = [delegate getDispItemTitle];
         notesViewController.notesTxt = [delegate getDispNotes];
         [self.navigationController pushViewController:notesViewController animated:NO];   
+    }
+    else if (indexPath.row == 4)
+    {
+            AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        if (checkListArr == nil)
+        {
+            checkListArr = [pAppCmnUtil.dataSync getList:[delegate getDispName]];
+        }
+        
+        if (checkListArr != nil)
+        {
+            pAppCmnUtil.mlistName = nil;
+            List1ViewController *aViewController = [List1ViewController alloc];
+            aViewController.editMode = eListModeDisplay;
+            aViewController.bEasyGroc = false;
+            aViewController.bDoubleParent = false;
+            aViewController.list = checkListArr;
+            pAppCmnUtil.listName = [delegate getDispName];
+            aViewController.name = [delegate getDispName];
+            aViewController = [aViewController initWithNibName:nil bundle:nil];
+            
+            [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+        }
     }
 }
 

@@ -27,6 +27,8 @@
 #import "CoreMedia/CMTime.h"
 #import "textdefs.h"
 #import "EasyAddViewController.h"
+#import "AppCmnUtil.h"
+#import "List1ViewController.h"
 
 
 
@@ -1195,6 +1197,11 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
 
 -(void) itemAddDone
 {
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil.dataSync addItem:[delegate getName] itemsDic:pAppCmnUtil.itemsMp];
+    pAppCmnUtil.itemsMp = nil;
+  
+
     [delegate itemAddCancel];
     return;
 }
@@ -1296,10 +1303,29 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
     }
     else if (indexPath.row == 5)
     {
-        EasyAddViewController *aViewController = [[EasyAddViewController alloc]
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        if (pAppCmnUtil.itemsMp == nil)
+        {
+                EasyAddViewController *aViewController = [[EasyAddViewController alloc]
                                                   initWithNibName:nil bundle:nil];
-       
-        [self.navigationController pushViewController:aViewController animated:YES];
+        
+                pAppCmnUtil.listName = [delegate getAlbumTitle];
+
+            [self.navigationController pushViewController:aViewController animated:YES];
+        }
+        else
+        {
+            pAppCmnUtil.mlistName = nil;
+            List1ViewController *aViewController = [List1ViewController alloc];
+            aViewController.editMode = eListModeAdd;
+            aViewController.bEasyGroc = false;
+            aViewController.bDoubleParent = false;
+            aViewController = [aViewController initWithNibName:nil bundle:nil];
+            
+            [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+
+            
+        }
     }
     else if (indexPath.row == 4)
     {

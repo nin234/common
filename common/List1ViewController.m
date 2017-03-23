@@ -9,6 +9,7 @@
 #import "List1ViewController.h"
 #import "List.h"
 #import "AppCmnUtil.h"
+#import "EditViewController.h"
 
 @interface AddRowTarget : NSObject
 
@@ -45,6 +46,8 @@
 @synthesize pSearchBar;
 @synthesize default_name;
 @synthesize bEasyGroc;
+@synthesize bDoubleParent;
+@synthesize list;
 
 
 -(void) cleanUpItemMp
@@ -162,25 +165,53 @@
         redoArry  = [[NSMutableArray alloc] init];
         rowTarget = [[NSMutableDictionary alloc] init];
         bEasyGroc = true;
+        bDoubleParent = false;
        
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (editMode == eListModeAdd)
         {
             NSLog(@"Initializing List1ViewController in eListModeAdd\n");
-            if (pAppCmnUtil.mlistName != nil)
+            if (bEasyGroc)
             {
-                [self refreshMasterList];
+                
+                if (pAppCmnUtil.itemsMp != nil)
+                {
+                    itemMp = pAppCmnUtil.itemsMp;
+                }
+                else if (pAppCmnUtil.mlistName != nil)
+                {
+                    [self refreshMasterList];
+                }
+                            }
+            else
+            {
+                if (pAppCmnUtil.mlistName != nil)
+                {
+                    [self refreshMasterList];
+                }
+                else
+                {
+                    [self createListFromBkUp];
+                }
+            }
+        }
+        else
+        {
+            if (bEasyGroc)
+            {
+                [self populateCheckList];
             }
             else
             {
-                [self createNewList];
+                if (pAppCmnUtil.listName != nil)
+                {
+                    NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
+                    [self refreshList];
+
+                }
             }
         }
-        else if (pAppCmnUtil.listName != nil)
-        {
-            NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
-            [self refreshList];
-        }
+        
     }
     return self;
     
@@ -203,20 +234,46 @@
     return;
 }
 
+-(void) createListFromBkUp
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    name = pAppCmnUtil.listName;
+
+    if (pAppCmnUtil.itemsMp != nil)
+    {
+        
+        itemMp = pAppCmnUtil.itemsMp;
+        nRows = [itemMp count] + 1;
+    }
+    else
+    {
+        itemMp = [NSMutableDictionary dictionaryWithCapacity:15];
+        nRows =1;
+    }
+}
+
 -(void) refreshMasterList
 {
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     mlist = [pAppCmnUtil.dataSync getMasterList:pAppCmnUtil.mlistName];
-    name = pAppCmnUtil.mlistName;
-    NSDate *today = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
-    NSString *formattedDateString = [dateFormatter stringFromDate:today];
-    name = [name stringByAppendingString:@" "];
-    name = [name stringByAppendingString:formattedDateString];
-    default_name = name;
+    if (bEasyGroc)
+    {
+        name = pAppCmnUtil.mlistName;
+        NSDate *today = [NSDate date];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+        NSString *formattedDateString = [dateFormatter stringFromDate:today];
+        name = [name stringByAppendingString:@" "];
+        name = [name stringByAppendingString:formattedDateString];
+        default_name = name;
+    }
+    else
+    {
+        name = pAppCmnUtil.listName;
+    }
+    
     NSLog(@"Master list %@ for name %@ %s %d\n", mlist, name, __FILE__, __LINE__);
     if (mlist != nil)
     {
@@ -232,7 +289,8 @@
             newItem.hidden = false;
             [itemMp setObject:newItem forKey:rowNm];
         }
-        nRows += 35;
+        if (!bEasyGroc)
+            nRows += 35;
         NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
         
     }
@@ -257,6 +315,36 @@
     hiddenCells = pLst.hiddenCells;
     nRows = [itemMp count] +2;
     return;
+}
+
+-(void) populateCheckList
+{
+    default_name = name;
+    NSLog(@"list %@ for name %@ %s %d\n", list, name, __FILE__, __LINE__);
+    if (list != nil)
+    {
+        nRows = [list count]+1;
+        
+        itemMp = [NSMutableDictionary dictionaryWithCapacity:nRows];
+        hiddenMp = [NSMutableDictionary dictionaryWithCapacity:nRows];
+        for (NSUInteger i=0; i < nRows-1; ++i)
+        {
+            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:i+1];
+            List *item = [list objectAtIndex:i];
+            [itemMp setObject:item forKey:rowNm];
+        }
+        nRows += 3;
+        NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
+        
+    }
+    else
+    {
+        nRows = 2;
+    }
+    NSLog(@"itemMp dictionary to set view %@\n", itemMp);
+    
+    return;
+
 }
 
 -(void) refreshList
@@ -329,6 +417,39 @@
     return;
 }
 
+-(void)willMoveToParentViewController:(UIViewController *)parent
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    pAppCmnUtil.itemsMp = itemMp;
+}
+
+-(void)didMoveToParentViewController:(UIViewController *)parent
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (parent !=nil && bDoubleParent)
+    {
+       
+            EditViewController *pEditView = (EditViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+        if (pEditView != nil)
+        {
+            pEditView.itemMp = itemMp;
+        }
+        
+    }
+    else if (parent != nil)
+    {
+        if (editMode == eListModeEdit)
+        {
+            EditViewController *pEditView = (EditViewController *)parent;
+       
+            if (pEditView != nil)
+            {
+                pEditView.itemMp = itemMp;
+            }
+        }
+    }
+}
+
 -(void) itemDisplay:(NSString *)listname
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
@@ -375,6 +496,8 @@
 }
 
 
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -406,25 +529,41 @@
     }
     else if (editMode == eListModeEdit)
     {
-        NSString *title = @"Edit List";
-        self.navigationItem.title = [NSString stringWithString:title];
+        if (bEasyGroc == true)
+        {
+            NSString *title = @"Edit List";
+            self.navigationItem.title = [NSString stringWithString:title];
         
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemEditActions)];
+            UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemEditActions)];
         
-        self.navigationItem.rightBarButtonItem = pBarItem;
+            self.navigationItem.rightBarButtonItem = pBarItem;
 
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemEditCancel) ];
-        self.navigationItem.leftBarButtonItem = pBarItem1;
+            UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:  UIBarButtonSystemItemCancel target:self action:@selector(itemEditCancel) ];
+            self.navigationItem.leftBarButtonItem = pBarItem1;
+        }
+        else
+        {
+            NSString *title = @"Check List";
+            self.navigationItem.title = [NSString stringWithString:title];
+        }
     }
     else
     {
-        NSString *title = @"List";
-        self.navigationItem.title = [NSString stringWithString:title];
+        if (bEasyGroc == true)
+        {
         
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemDispActions)];
+            NSString *title = @"List";
+            self.navigationItem.title = [NSString stringWithString:title];
         
-        self.navigationItem.rightBarButtonItem = pBarItem;
-       
+            UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemDispActions)];
+        
+            self.navigationItem.rightBarButtonItem = pBarItem;
+        }
+        else
+        {
+            NSString *title = @"Check List";
+            self.navigationItem.title = [NSString stringWithString:title];
+        }
     }
 }
 
@@ -1084,7 +1223,10 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
             CGRect textFrame = CGRectMake(cell.bounds.origin.x+10, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
             UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
             textField.delegate = self;
-            [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
+            if (!bEasyGroc && editMode != eListModeDisplay)
+            {
+                [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
+            }
             if(editMode == eListModeDisplay)
             {
                 if (row == 1)
@@ -1094,8 +1236,9 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                         textField.text = name;
                         [cell.contentView addSubview:textField];
                     }
-                    break;
+                  
                 }
+                break;
             }
                 NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:editMode == eListModeDisplay?row-1: row];
                 List *item = [itemMp objectForKey:rowNm];
@@ -1106,27 +1249,56 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                         textField.text = item.item;
                     if (editMode == eListModeDisplay)
                     {
+                        if (bEasyGroc)
+                        {
+                            CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
+                            UISwitch *hideCell = [[UISwitch alloc] initWithFrame:switchFrame];
+                            [hideCell addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
+                            cell.accessoryView = hideCell;
+                            hideCell.on = YES;
                         
-                        CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
-                        UISwitch *hideCell = [[UISwitch alloc] initWithFrame:switchFrame];
-                        [hideCell addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
-                        cell.accessoryView = hideCell;
-                        hideCell.on = YES;
+                            hideCell.tag = row;
+                        }
+                        else
+                        {
+                            if (item.hidden)
+                            {
+                                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                            }
+                            else
+                            {
+                                cell.accessoryType = UITableViewCellAccessoryNone;
+                            }
+                        }
+
                         
-                        hideCell.tag = row;
                     }
                     else
                     {
                        //cell.editing =YES;
-                        cell.showsReorderControl = YES;
-                        UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+                        if (bEasyGroc)
+                        {
+                            cell.showsReorderControl = YES;
+                            UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
                         
-                        AddRowTarget *pBtnAct= [[AddRowTarget alloc] init];
-                        [rowTarget setObject:pBtnAct forKey:rowNm];
-                        pBtnAct.rowNo = row;
-                        pBtnAct.pLst1Vw = self;
-                        [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
-                        cell.editingAccessoryView = rowAddButton;
+                            AddRowTarget *pBtnAct= [[AddRowTarget alloc] init];
+                            [rowTarget setObject:pBtnAct forKey:rowNm];
+                            pBtnAct.rowNo = row;
+                            pBtnAct.pLst1Vw = self;
+                            [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
+                            cell.editingAccessoryView = rowAddButton;
+                        }
+                        else
+                        {
+                            if (item.hidden)
+                            {
+                                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                            }
+                            else
+                            {
+                                cell.accessoryType = UITableViewCellAccessoryNone;
+                            }
+                        }
                         
                         
                     }
@@ -1134,7 +1306,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                 else
                 {
                     
-                    if (editMode != eListModeDisplay)
+                    if (editMode != eListModeDisplay && !bEasyGroc)
                     {
                         
                         UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
@@ -1217,6 +1389,26 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+    
+    NSUInteger row = indexPath.row;
+    
+    NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:editMode == eListModeDisplay?row-1: row];
+    List *item = [itemMp objectForKey:rowNm];
+    if (!bEasyGroc && editMode != eListModeDisplay)
+    {
+        
+        UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+        if (selectedCell.accessoryType == UITableViewCellAccessoryNone) {
+            selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+            //hidden is a misnomer comes from EasyGroc code . false is the default
+            item.hidden = true;
+           
+        }
+        else{
+            selectedCell.accessoryType = UITableViewCellAccessoryNone;
+            item.hidden = false;
+        }
+    }
 }
 
 @end

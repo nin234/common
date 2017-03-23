@@ -23,6 +23,10 @@
 #import "AVFoundation/AVTime.h"
 #import "CoreMedia/CMTime.h"
 #import "textdefs.h"
+#import "List1ViewController.h"
+#import "EasyAddViewController.h"
+#import "AppCmnUtil.h"
+#import "List.h"
 
 #define IS_IPHONE_6 (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
 #define IS_IPHONE_6P (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
@@ -41,6 +45,7 @@
 @synthesize pFlMgr;
 @synthesize delegate;
 @synthesize navViewController;
+@synthesize itemMp;
 
 
 
@@ -70,6 +75,8 @@
         bInPicCapture = false;
         bSaveLastPic = false;
         nSmallest = 0;
+         checkListArr= nil;
+        itemMp = nil;
         
 	     NSString *pAlMoc = pAlName;
 	    printf("In DisplayViewController edit album name %s\n", [pAlMoc UTF8String]);
@@ -266,6 +273,8 @@
 
 -(void) itemEditDone
 {
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil.dataSync editItem:[delegate getEditName] itemsDic:itemMp];
     [delegate itemEditDone];
     return;
 }
@@ -788,7 +797,7 @@
 {
     
     // Return the number of rows in the section.
-    return 15;
+    return 16;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -995,11 +1004,16 @@
         }
         else if (row == 5)
         {
+            cell.textLabel.text = @"Check List";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        else if (row == 6)
+        {
             cell.imageView.image = [UIImage imageNamed:@"note.png"];
             cell.textLabel.text = @"Notes";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; 
         }
-        else if (row == 6)
+        else if (row == 7)
         {
             
             printf("Selected album name %s\n", [pAlName UTF8String]);
@@ -1037,7 +1051,7 @@
             cell.textLabel.text = @"Pictures";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; 
         }
-        else if (row == 7)
+        else if (row == 8)
         {
             
             cell.imageView.image = [UIImage imageNamed:@"map.png"];
@@ -1045,7 +1059,7 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
         }
-        if (row == 14)
+        if (row == 15)
         {
             UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 325, 44)];
             [button setBackgroundImage:[[UIImage imageNamed:@"delete_button.png"]
@@ -1100,7 +1114,7 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    if (indexPath.row == 6)
+    if (indexPath.row == 7)
     {
         AlbumContentsViewController *albumContentsViewController = [[AlbumContentsViewController alloc] initWithNibName:@"AlbumContentsViewController" bundle:nil];
         NSLog(@"Pushing AlbumContents view controller %s %d\n" , __FILE__, __LINE__);
@@ -1114,7 +1128,7 @@
         [albumContentsViewController  setTitle:[delegate getEditItemTitle]];
         
     }
-    else if (indexPath.row == 7)
+    else if (indexPath.row == 8)
     {
         MKCoordinateSpan span;
         CLLocationCoordinate2D loc;
@@ -1131,7 +1145,7 @@
         mapViewController.title = [delegate getEditItemTitle];
         [self.navigationController pushViewController:mapViewController animated:NO];
     }
-    else if (indexPath.row == 5)
+    else if (indexPath.row == 6)
     {
         NotesViewController *notesViewController = [[NotesViewController alloc] initWithNibName:@"NotesViewController" bundle:nil];
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
@@ -1139,7 +1153,39 @@
         notesViewController.title = [delegate getEditItemTitle];
         notesViewController.notesTxt = [delegate getEditNotes];
         [self.navigationController pushViewController:notesViewController animated:NO];   
-    } 
+    }
+    else if (indexPath.row == 5)
+    {
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        if (itemMp != nil)
+        {
+            [self populateCheckListArrFromItemMp];
+        }
+        
+        if (checkListArr == nil)
+        {
+            
+             checkListArr = [pAppCmnUtil.dataSync getList:[delegate getEditName]];
+            if (checkListArr == nil)
+            {
+            
+                EasyAddViewController *aViewController = [[EasyAddViewController alloc]
+                                                      initWithNibName:nil bundle:nil];
+            
+                pAppCmnUtil.listName = [delegate getAlbumTitle];
+            
+                [self.navigationController pushViewController:aViewController animated:YES];
+            }
+            else
+            {
+                 [self checkListViewDisp];
+            }
+        }
+        else
+        {
+            [self checkListViewDisp];
+        }
+    }
     else if (indexPath.row == 4)
     {
             NSLog(@"Show camera selection\n");
@@ -1149,6 +1195,35 @@
 
 
    
+}
+
+-(void) populateCheckListArrFromItemMp
+{
+    NSMutableArray *arry = [[NSMutableArray alloc] init];
+    for (id key in itemMp)
+    {
+        List *item = [itemMp objectForKey:key];
+        [arry addObject:item];
+        
+    }
+    checkListArr = [arry copy];
+    
+}
+
+-(void) checkListViewDisp
+{
+     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    pAppCmnUtil.mlistName = nil;
+    List1ViewController *aViewController = [List1ViewController alloc];
+    aViewController.editMode = eListModeEdit;
+    aViewController.bEasyGroc = false;
+    aViewController.bDoubleParent = false;
+    aViewController.list = checkListArr;
+    pAppCmnUtil.listName = [delegate getEditName];
+    aViewController.name = [delegate getEditName];
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    
+    [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
 }
 
 @end

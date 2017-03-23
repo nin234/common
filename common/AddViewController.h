@@ -39,6 +39,7 @@
 -(NSString *) getNotes;
 -(double) getLongitude;
 -(double) getLatitude;
+-(NSString *) getName;
 @end
 
 @interface AddViewController : UITableViewController <UIImagePickerControllerDelegate, UITextFieldDelegate, UITableViewDelegate, MKMapViewDelegate, AlbumContentsViewControllerDelegate>

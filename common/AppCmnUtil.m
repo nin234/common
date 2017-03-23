@@ -22,6 +22,7 @@
 @synthesize pThumbNailsDir;
 @synthesize aViewController1;
 @synthesize listName;
+@synthesize itemsMp;
 
 -(instancetype) init
 {
@@ -29,6 +30,7 @@
     if (self)
     {
         mlistName = [[NSString alloc] init];
+        itemsMp = nil;
         return self;
 
     }

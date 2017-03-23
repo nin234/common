@@ -30,7 +30,6 @@ enum eDispActionItems
 {
     NSUInteger nRows;
     NSArray* mlist;
-    NSArray* list;
     bool bDicInit;
     NSDictionary *itemUnFiltrdMp;
     NSDictionary *hiddenUnFiltrdMp;
@@ -51,10 +50,12 @@ enum eDispActionItems
 @property (nonatomic, retain) NSMutableDictionary *itemMp;
 @property (nonatomic, retain) NSMutableDictionary *hiddenMp;
 @property (nonatomic, retain) NSMutableDictionary *hiddenCells;
+@property (nonatomic, retain)NSArray* list;
 
 @property (nonatomic, retain) UISearchBar *pSearchBar;
 @property enum eListMode editMode;
 @property bool bEasyGroc;
+@property bool bDoubleParent;
 
 -(void) refreshMasterList;
 -(void) refreshList;

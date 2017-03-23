@@ -34,6 +34,8 @@
 -(bool) changeCharacters:(NSInteger) tag;
 -(bool) rangeFourTag:(NSInteger) tag;
 -(bool) numbersTag:(NSInteger) tag;
+-(NSString *) getEditName;
+-(NSString *) getAlbumTitle;
 @end
 
 @interface EditViewController : UITableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, AlbumContentsViewControllerDelegate>
@@ -44,6 +46,7 @@
     bool bInShowCam;
     struct timeval last_mode_change;
     bool processQuery;
+    NSArray *checkListArr;
 }
  
 
@@ -65,6 +68,7 @@
 @property (nonatomic, retain) NSMutableArray *movurls;
 @property (nonatomic, retain) NSString *pAlName;
 @property (nonatomic, retain) NSFileManager *pFlMgr;
+@property (nonatomic, retain) NSMutableDictionary *itemMp;
 
 @property (nonatomic, retain)  UINavigationController *navViewController;
 

@@ -21,6 +21,7 @@
 -(double) getDispLatitude;
 -(double) getDispLongitude;
 -(NSString *) getDispNotes;
+-(NSString *) getDispName;
 
 @end
 
@@ -30,6 +31,7 @@
 //ALAssetsLibrary *assetsLibrary;
    // ALAssetsGroup *group_;
     NSMetadataQuery *query;
+    NSArray *checkListArr;
 }
 
 @property int nSmallest;
