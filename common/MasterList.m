@@ -13,5 +13,7 @@
 @dynamic name;
 @dynamic item;
 @dynamic rowno;
-
+@dynamic startMonth;
+@dynamic endMonth;
+@dynamic inventory;
 @end

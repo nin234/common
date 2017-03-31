@@ -114,6 +114,9 @@
     int itemsEasyDeleted;
      NSMutableArray *listDeletedNames;
     
+    int templNameItemsToAdd;
+    NSMutableArray *masterListNamesOnly;
+    
 
 }
 
@@ -168,5 +171,6 @@
 -(void) deletedEasyItem:(NSString *)name;
 -(NSArray *) getListNames;
 -(NSDictionary *) getPics;
+-(void) addTemplName:(NSString *)name;
 
 @end

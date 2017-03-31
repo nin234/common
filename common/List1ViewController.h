@@ -46,6 +46,7 @@ enum eDispActionItems
 }
 
 @property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *mlistName;
 @property (nonatomic, retain) NSString *default_name;
 @property (nonatomic, retain) NSMutableDictionary *itemMp;
 @property (nonatomic, retain) NSMutableDictionary *hiddenMp;

@@ -15,6 +15,10 @@
 
 @property (nonatomic) NSUInteger rowNo;
 @property (nonatomic, weak) List1ViewController *pLst1Vw;
+@property (nonatomic, weak) UIButton *rowAddButton;
+
+
+
 
 -(void) addRow1;
 @end
@@ -23,10 +27,17 @@
 
 @synthesize rowNo;
 @synthesize pLst1Vw;
+@synthesize rowAddButton;
+
+
 
 -(void) addRow1
 {
-    [pLst1Vw addRow:rowNo];
+ 
+    CGPoint hitPoint = [rowAddButton convertPoint:CGPointZero toView:pLst1Vw.tableView];
+    NSIndexPath *hitIndex = [pLst1Vw.tableView indexPathForRowAtPoint:hitPoint];
+    [pLst1Vw addRow:hitIndex.row];
+
     return;
 }
 
@@ -48,6 +59,7 @@
 @synthesize bEasyGroc;
 @synthesize bDoubleParent;
 @synthesize list;
+@synthesize mlistName;
 
 
 -(void) cleanUpItemMp
@@ -178,14 +190,14 @@
                 {
                     itemMp = pAppCmnUtil.itemsMp;
                 }
-                else if (pAppCmnUtil.mlistName != nil)
+                else if (mlistName != nil)
                 {
                     [self refreshMasterList];
                 }
                             }
             else
             {
-                if (pAppCmnUtil.mlistName != nil)
+                if (mlistName != nil)
                 {
                     [self refreshMasterList];
                 }
@@ -256,10 +268,10 @@
 {
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    mlist = [pAppCmnUtil.dataSync getMasterList:pAppCmnUtil.mlistName];
+    mlist = [pAppCmnUtil.dataSync getMasterList:mlistName];
     if (bEasyGroc)
     {
-        name = pAppCmnUtil.mlistName;
+        name = mlistName;
         NSDate *today = [NSDate date];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateStyle:NSDateFormatterShortStyle];
@@ -1031,7 +1043,7 @@
              continue;
         
         if ([rowNo unsignedIntegerValue] > sourceIndexPath.row && [rowNo unsignedIntegerValue] > destinationIndexPath.row)
-            break;
+            continue;
         if (sourceIndexPath.row < destinationIndexPath.row)
         {
                 if ([rowNo unsignedIntegerValue] == sourceIndexPath.row)
@@ -1285,6 +1297,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                             [rowTarget setObject:pBtnAct forKey:rowNm];
                             pBtnAct.rowNo = row;
                             pBtnAct.pLst1Vw = self;
+                            pBtnAct.rowAddButton = rowAddButton;
                             [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
                             cell.editingAccessoryView = rowAddButton;
                         }

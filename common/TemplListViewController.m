@@ -7,6 +7,7 @@
 //
 
 #import "TemplListViewController.h"
+#import "ComponentsViewController.h"
 #import "AppCmnUtil.h"
 
 
@@ -61,19 +62,50 @@
 }
 
 
+
 - (void)templItemAdd
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
    
+    if (pAppCmnUtil.bEasyGroc)
+    {
+        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Template list" message:@"Please enter name of Template list" delegate:self cancelButtonTitle:@"CANCEL" otherButtonTitles:@"OK", nil];
+        pAvw.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [pAvw show];
+    }
+    else
+    {
     
-    pAppCmnUtil.mlistName = nil;
-    ListViewController *aViewController = [ListViewController alloc];
-    aViewController.editMode = eViewModeAdd;
-    aViewController = [aViewController initWithNibName:nil bundle:nil];
-    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+        
+        ListViewController *aViewController = [ListViewController alloc];
+        aViewController.editMode = eViewModeAdd;
+        aViewController.mlistName = nil;
+        aViewController = [aViewController initWithNibName:nil bundle:nil];
+        [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    }
     return;
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex)
+    {
+        case CANCEL_TEMPL_NAME_BUTTON:
+            return;
+            break;
+            
+        case ADD_TEMPL_NAME_BUTTON:
+        {
+            NSString *templName =  [[alertView textFieldAtIndex:0] text];
+             AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+            [pAppCmnUtil.dataSync addTemplName:templName];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
 
 - (void)viewDidLoad
 {
@@ -146,6 +178,7 @@
     label.font = [UIFont boldSystemFontOfSize:14];
     label.text = [masterList objectAtIndex:indexPath.row];
     NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
+     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [cell.contentView addSubview:label];
 
     // Configure the cell...
@@ -204,12 +237,23 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    pAppCmnUtil.mlistName = [masterList objectAtIndex:indexPath.row];
-    ListViewController *aViewController = [ListViewController alloc];
-    aViewController.editMode = eViewModeDisplay;
-    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    if (pAppCmnUtil.bEasyGroc)
+    {
+        ComponentsViewController *aViewController = [ComponentsViewController alloc];
+        aViewController.masterListName = [masterList objectAtIndex:indexPath.row];
+        aViewController = [aViewController initWithNibName:nil bundle:nil];
+        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+    }
+    else
+    {
+        
+        ListViewController *aViewController = [ListViewController alloc];
+        aViewController.editMode = eViewModeDisplay;
+        aViewController.mlistName= [masterList objectAtIndex:indexPath.row];
+        aViewController = [aViewController initWithNibName:nil bundle:nil];
     
-    [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+    }
     
 }
 

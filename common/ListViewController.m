@@ -8,6 +8,7 @@
 
 #import "ListViewController.h"
 #import "AppCmnUtil.h"
+#import "MasterList.h"
 
 
 
@@ -15,6 +16,8 @@
 
 @property (nonatomic) NSUInteger rowNo;
 @property (nonatomic, weak) ListViewController *pLstVw;
+@property (nonatomic, weak) UIButton *rowAddButton;
+@property (nonatomic, weak) UIButton *seasonPicker;
 
 -(void) addRow1;
 @end
@@ -23,11 +26,24 @@
 
 @synthesize rowNo;
 @synthesize pLstVw;
+@synthesize rowAddButton;
+@synthesize seasonPicker;
+
+
 
 -(void) addRow1
 {
-    [pLstVw addRow:rowNo];
+    CGPoint hitPoint = [rowAddButton convertPoint:CGPointZero toView:pLstVw.tableView];
+    NSIndexPath *hitIndex = [pLstVw.tableView indexPathForRowAtPoint:hitPoint];
+    [pLstVw addRow:hitIndex.row];
     return;
+}
+
+-(void) selectSeason
+{
+    CGPoint hitPoint = [rowAddButton convertPoint:CGPointZero toView:pLstVw.tableView];
+    NSIndexPath *hitIndex = [pLstVw.tableView indexPathForRowAtPoint:hitPoint];
+    [pLstVw showSeasonPicker:hitIndex.row];
 }
 
 @end
@@ -45,7 +61,15 @@
 @synthesize nRows;
 @synthesize mlist;
 @synthesize default_name;
+@synthesize seasonPicker;
+@synthesize mlistName;
+@synthesize easyGrocLstType;
 
+-(void) showSeasonPicker : (NSUInteger) rowNo
+{
+    seasonPickerRowNo = rowNo;
+    seasonPicker.hidden = NO;
+}
 
 -(void) cleanUpItemMp
 {
@@ -141,6 +165,41 @@
     return self;
 }
 
+-(void) pickSeasons
+{
+    seasonPicker.hidden = YES;
+    NSNumber * rowNum = [NSNumber numberWithUnsignedInteger:seasonPickerRowNo];
+    MasterList *mlistForSo = [itemMp objectForKey:rowNum];
+    mlistForSo.startMonth = startMonth;
+    mlistForSo.endMonth = endMonth;
+    
+}
+
+- (int)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 2;
+}
+
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return _pickerData[component][row];
+}
+
+- (int)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 12;
+}
+
+// Catpure the picker view selection
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    // This method is triggered whenever the user makes a change to the picker selection.
+    // The parameter named row and component represents what was selected.
+    if (!component)
+        startMonth = row;
+    else
+        endMonth = row;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -151,6 +210,25 @@
     if (self)
     {
         [self refreshMasterList];
+        CGRect mainScrn = [UIScreen mainScreen].applicationFrame;
+        CGRect  viewRect;
+        viewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height/4, mainScrn.size.width, mainScrn.size.height/2);
+        seasonPicker = [[UIPickerView alloc] initWithFrame:viewRect];
+        UIToolbar *toolBar= [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,mainScrn.size.width,50)];
+       // [toolBar setBarStyle:UIBarStyleBlackOpaque];
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pickSeasons) ];
+       
+        toolBar.items = @[pBarItem];
+        
+       [seasonPicker addSubview:toolBar];
+      //  seasonPicker.inputAccessoryView = toolBar;
+        [self.tableView addSubview:seasonPicker];
+        seasonPicker.hidden = YES;
+        _pickerData = @[ @[@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec"],
+                         @[@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov",@"Dec"]];
+        seasonPicker.delegate = self;
+        seasonPicker.dataSource = self;
+        
     }
     return self;
 }
@@ -169,9 +247,12 @@
 -(void) refreshMasterList
 {
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (mlistName != nil)
+        mlist = [pAppCmnUtil.dataSync getMasterList:mlistName];
+    else
+        mlist = nil;
+    name = mlistName;
     
-    mlist = [pAppCmnUtil.dataSync getMasterList:pAppCmnUtil.mlistName];
-    name = pAppCmnUtil.mlistName;
     default_name = name;
     NSLog(@"Refreshing master list in ListViewController");
     NSLog(@"Master list %@ for name %@ %s %d\n", mlist, name, __FILE__, __LINE__);
@@ -219,6 +300,7 @@
     
     ListViewController *aViewController = [ListViewController alloc];
     aViewController.editMode = eViewModeEdit;
+    aViewController.easyGrocLstType = easyGrocLstType;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     return;
@@ -227,11 +309,10 @@
 -(void) templItemDisplay:(NSString *)templ_name lstcntr:(ListViewController *) pLst
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    
-
-    pAppCmnUtil.mlistName = templ_name;
     ListViewController *aViewController = [ListViewController alloc];
     aViewController.editMode = eViewModeDisplay;
+    aViewController.easyGrocLstType = easyGrocLstType;
+    aViewController.name = templ_name;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     [aViewController refreshMasterListCpyFromLstVwCntrl:pLst];
@@ -261,6 +342,24 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    NSString *title;
+    switch (easyGrocLstType) {
+        case eInvntryLst:
+            title = @"Inventory List";
+        break;
+            
+        case eScratchLst:
+             title =@"Scratch Pad";
+        break;
+            
+        case eRecurrngLst:
+            title = @"Recurring List";
+            break;
+            
+        default:
+            break;
+    }
+    
     
     if (editMode == eViewModeEdit)
     {
@@ -281,7 +380,7 @@
     }
     else
     {
-        NSString *title = @"New Template List";
+        
         self.navigationItem.title = [NSString stringWithString:title];
         
         UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(templItemAddDone) ];
@@ -307,6 +406,28 @@
     [pAppCmnUtil.dataSync editedTemplItem:pListView.name itemsDic:pListView.itemMp];
     return;
 }
+
+- (void)switchToggled:(id)sender
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    UISwitch *toggleSwitch = (UISwitch *)sender;
+    NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
+    MasterList *item = [itemMp objectForKey:rowNm];
+    if (item != nil)
+    {
+        if (toggleSwitch.on == YES)
+        {
+            item.inventory = 10;
+        }
+        else
+        {
+            item.inventory = 0;
+        }
+    }
+    [pAppCmnUtil.dataSync editedTemplItem:item.name itemsDic:itemMp];
+    
+}
+
 
 
 -(void) itemEditActions
@@ -361,7 +482,15 @@
             NSUInteger len = [textField.text length];
             if (len)
             {
-                [itemMp setObject:textField.text forKey:rowNm];
+                MasterList *item = [itemMp objectForKey:rowNm];
+                if (item == nil)
+                {
+                    item = [[MasterList alloc] init];
+                    item.startMonth = 0;
+                    item.endMonth =11;
+                    item.inventory =10;
+                }
+                [itemMp setObject:item forKey:rowNm];
                 if (indPath.row > nRows-3)
                 {
                     nRows+=35;
@@ -502,8 +631,8 @@
         return;
     
     NSNumber *soureRow = [NSNumber numberWithInteger:sourceIndexPath.row];
-    NSString *sourceItem = [itemMp objectForKey:soureRow];
-    NSString *prevItem;
+    MasterList *sourceItem = [itemMp objectForKey:soureRow];
+    MasterList *prevItem;
     
     NSArray *keys1 = [itemMp allKeys];
     NSArray *keys = [keys1 sortedArrayUsingSelector: @selector(compare:)];
@@ -515,21 +644,21 @@
             continue;
         
         if ([rowNo unsignedIntegerValue] > sourceIndexPath.row && [rowNo unsignedIntegerValue] > destinationIndexPath.row)
-            break;
+            continue;
         if (sourceIndexPath.row < destinationIndexPath.row)
         {
             if ([rowNo unsignedIntegerValue] == sourceIndexPath.row)
                 continue;
             else if ([rowNo unsignedIntegerValue] < destinationIndexPath.row)
             {
-                NSString *item = [itemMp objectForKey:rowNo];
+                MasterList *item = [itemMp objectForKey:rowNo];
                 NSUInteger newKey = [rowNo unsignedIntegerValue];
                 --newKey;
                 [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
             }
             else
             {
-                NSString *item = [itemMp objectForKey:rowNo];
+                MasterList *item = [itemMp objectForKey:rowNo];
                 NSUInteger newKey = [rowNo unsignedIntegerValue];
                 --newKey;
                 [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
@@ -545,7 +674,7 @@
             }
             else
             {
-                NSString *tmpItem = [itemMp objectForKey:rowNo];
+                MasterList *tmpItem = [itemMp objectForKey:rowNo];
                 [itemMp setObject:prevItem forKey:rowNo];
                 prevItem = tmpItem;
             }
@@ -598,7 +727,7 @@
             NSNumber *rowNo = [keys objectAtIndex:i];
             if ([rowNo unsignedIntegerValue] < indexPath.row)
                 continue;
-            NSString *item = [itemMp objectForKey:rowNo];
+            MasterList *item = [itemMp objectForKey:rowNo];
             if (item == nil)
                 continue;
             [itemMp removeObjectForKey:rowNo];
@@ -678,6 +807,7 @@
             
         default:
         {
+             AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
             CGRect textFrame = CGRectMake(cell.bounds.origin.x+10, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
            
                 UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
@@ -685,14 +815,15 @@
                 textField.delegate = self;
                 [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
                 NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:row];
-                NSString *item = [itemMp objectForKey:rowNm];
+                MasterList *item = [itemMp objectForKey:rowNm];
                 if (item != nil)
                 {
                 //Ignoring the space place holder for empty inserted rows
-                    if ([item isEqualToString:@" "] == NO)
-                        textField.text = item;
+                    if ([item.item isEqualToString:@" "] == NO)
+                        textField.text = item.item;
                     if(editMode != eViewModeDisplay)
                     {
+                        UIView *pVw = [[UIView alloc] init];
                         cell.showsReorderControl = YES;
                         UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
                         
@@ -700,8 +831,40 @@
                         [rowTarget setObject:pBtnAct forKey:rowNm];
                         pBtnAct.rowNo = row;
                         pBtnAct.pLstVw = self;
+                        
+                        UIButton *seasonPicker = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                        pBtnAct.rowAddButton = rowAddButton;
+                        pBtnAct.seasonPicker = seasonPicker;
                         [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
-                        cell.editingAccessoryView = rowAddButton;
+                        
+                        [seasonPicker addTarget:pBtnAct action:@selector(selectSeason) forControlEvents:UIControlEventTouchDown];
+                        [pVw addSubview:rowAddButton];
+                        
+                        [pVw addSubview:seasonPicker];
+                        if (pAppCmnUtil.bEasyGroc && easyGrocLstType == eInvntryLst)
+                            cell.editingAccessoryView = pVw;
+                        else
+                            cell.editingAccessoryView = rowAddButton;
+
+                    }
+                    else
+                    {
+                        CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
+                        UISwitch *invOnOffSwtch = [[UISwitch alloc] initWithFrame:switchFrame];
+                        [invOnOffSwtch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
+                        cell.accessoryView = invOnOffSwtch;
+                        invOnOffSwtch.onTintColor = [UIColor greenColor];
+                        invOnOffSwtch.tintColor = [UIColor redColor];
+                        if (item.inventory)
+                        {
+                            invOnOffSwtch.on = YES;
+                        }
+                        else
+                        {
+                            invOnOffSwtch.on = NO;
+                        }
+                        
+                        invOnOffSwtch.tag = row;
 
                     }
                 }
@@ -710,16 +873,28 @@
                     
                     if (editMode != eViewModeDisplay)
                     {
-                        
+                        UIView *pVw = [[UIView alloc] init];
                         UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
                         
                         AddRowTargetTmpl *pBtnAct= [[AddRowTargetTmpl alloc] init];
                         [rowTarget setObject:pBtnAct forKey:rowNm];
                         pBtnAct.rowNo = row;
                         pBtnAct.pLstVw = self;
+                         UIButton *seasonPicker = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                        pBtnAct.rowAddButton = rowAddButton;
+                        pBtnAct.seasonPicker = seasonPicker;
                         [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
-                        cell.editingAccessoryView = rowAddButton;
+                        [pVw addSubview:rowAddButton];
+                        [seasonPicker addTarget:pBtnAct action:@selector(selectSeason) forControlEvents:UIControlEventTouchDown];
+                       
+                        [pVw addSubview:seasonPicker];
+                        if (pAppCmnUtil.bEasyGroc && easyGrocLstType == eInvntryLst)
+                            cell.editingAccessoryView = pVw;
+                        else
+                            cell.editingAccessoryView = rowAddButton;
+                        
                         rowAddButton.hidden = YES;
+                        seasonPicker.hidden = YES;
                         
                     }
                     

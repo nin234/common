@@ -310,6 +310,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     CGRect zoomRect = [self zoomRectForScale:newScale withCenter:tapPoint];
     [imageScrollView zoomToRect:zoomRect animated:YES];
 }
+
 - (void)tapDetectingImageView:(EasyTapDetectingImageView *)view gotSwipe:(BOOL)left
 {
     return;

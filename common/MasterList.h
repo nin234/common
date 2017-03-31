@@ -14,5 +14,8 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * item;
 @property long long rowno;
+@property int startMonth;
+@property int endMonth;
+@property int inventory;
 
 @end

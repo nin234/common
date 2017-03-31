@@ -773,6 +773,8 @@
         [navViewController popViewControllerAnimated:NO];
         
         [delegate deleteEditItem];
+         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        [pAppCmnUtil.dataSync deletedEasyItem:[delegate getEditName] ];
         
         [self.navViewController popViewControllerAnimated:YES];
         [self.navViewController popViewControllerAnimated:YES];
@@ -1213,10 +1215,11 @@
 -(void) checkListViewDisp
 {
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    pAppCmnUtil.mlistName = nil;
+    
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.editMode = eListModeEdit;
     aViewController.bEasyGroc = false;
+    aViewController.mlistName = nil;
     aViewController.bDoubleParent = false;
     aViewController.list = checkListArr;
     pAppCmnUtil.listName = [delegate getEditName];

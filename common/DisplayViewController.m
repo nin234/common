@@ -476,10 +476,11 @@
         
         if (checkListArr != nil)
         {
-            pAppCmnUtil.mlistName = nil;
+            
             List1ViewController *aViewController = [List1ViewController alloc];
             aViewController.editMode = eListModeDisplay;
             aViewController.bEasyGroc = false;
+            aViewController.mlistName = nil;
             aViewController.bDoubleParent = false;
             aViewController.list = checkListArr;
             pAppCmnUtil.listName = [delegate getDispName];

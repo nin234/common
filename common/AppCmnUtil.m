@@ -15,7 +15,6 @@
 
 @synthesize dataSync;
 @synthesize navViewController ;
-@synthesize mlistName;
 @synthesize bEasyGroc;
 @synthesize pFlMgr;
 @synthesize pPicsDir;
@@ -29,8 +28,9 @@
     self = [super init];
     if (self)
     {
-        mlistName = [[NSString alloc] init];
+        
         itemsMp = nil;
+        bEasyGroc = false;
         return self;
 
     }

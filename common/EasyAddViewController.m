@@ -408,7 +408,7 @@
      */
    
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    pAppCmnUtil.mlistName =nil;
+    
     
     
     if (pAppCmnUtil.bEasyGroc == false)
@@ -418,10 +418,11 @@
             NSLog(@"Row count greater than template list items");
             return;
         }
-        pAppCmnUtil.mlistName = [masterList objectAtIndex:indexPath.row];
+       
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
         aViewController.bEasyGroc = false;
+        aViewController.mlistName = [masterList objectAtIndex:indexPath.row];
         aViewController.bDoubleParent = true;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         
@@ -437,19 +438,21 @@
             NSLog(@"Row count greater than template list items");
             return;
         }
-        pAppCmnUtil.mlistName = [masterList objectAtIndex:indexPath.row];
+        
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
+        aViewController.mlistName = [masterList objectAtIndex:indexPath.row];
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
         
     }
     else if (indexPath.section == 1)
     {
-        pAppCmnUtil.mlistName = nil;
+        
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
+        aViewController.mlistName = nil;
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
 
     }

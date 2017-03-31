@@ -1315,10 +1315,11 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
         }
         else
         {
-            pAppCmnUtil.mlistName = nil;
+            
             List1ViewController *aViewController = [List1ViewController alloc];
             aViewController.editMode = eListModeAdd;
             aViewController.bEasyGroc = false;
+            aViewController.mlistName = nil;
             aViewController.bDoubleParent = false;
             aViewController = [aViewController initWithNibName:nil bundle:nil];
             

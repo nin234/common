@@ -20,7 +20,6 @@ enum eEditActionItems
 
 @property (nonatomic, retain) DataOps *dataSync;
 @property (nonatomic, retain) UINavigationController *navViewController;
-@property (nonatomic, retain) NSString *mlistName;
 @property (nonatomic, retain) NSString *listName;
 @property bool bEasyGroc;
 

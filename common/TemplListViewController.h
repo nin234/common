@@ -10,7 +10,12 @@
 #import "ListViewController.h"
 
 
-
+enum templateNameButtons
+{
+    CANCEL_TEMPL_NAME_BUTTON,
+    ADD_TEMPL_NAME_BUTTON
+    
+};
 
 @interface TemplListViewController : UITableViewController<UIAlertViewDelegate>
 {
