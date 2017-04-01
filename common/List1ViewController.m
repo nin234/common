@@ -10,6 +10,7 @@
 #import "List.h"
 #import "AppCmnUtil.h"
 #import "EditViewController.h"
+#import "MasterList.h"
 
 @interface AddRowTarget : NSObject
 
@@ -178,6 +179,9 @@
         rowTarget = [[NSMutableDictionary alloc] init];
         bEasyGroc = true;
         bDoubleParent = false;
+        nRows = 1;
+        mInvMp = [[NSMutableDictionary alloc] init];
+        mScrtchArr = nil;
        
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (editMode == eListModeAdd)
@@ -185,16 +189,15 @@
             NSLog(@"Initializing List1ViewController in eListModeAdd\n");
             if (bEasyGroc)
             {
-                
-                if (pAppCmnUtil.itemsMp != nil)
-                {
-                    itemMp = pAppCmnUtil.itemsMp;
-                }
-                else if (mlistName != nil)
+                if (mlistName != nil)
                 {
                     [self refreshMasterList];
                 }
-                            }
+                else
+                {
+                    [self createNewList];
+                }
+            }
             else
             {
                 if (mlistName != nil)
@@ -209,7 +212,7 @@
         }
         else
         {
-            if (bEasyGroc)
+            if (!bEasyGroc)
             {
                 [self populateCheckList];
             }
@@ -285,33 +288,101 @@
     {
         name = pAppCmnUtil.listName;
     }
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [calendar  components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
+    NSInteger month = [components month];
     
     NSLog(@"Master list %@ for name %@ %s %d\n", mlist, name, __FILE__, __LINE__);
     if (mlist != nil)
     {
-        nRows = [mlist count]+1;
+        int recrLstCnt = [mlist count];
         
-        itemMp = [NSMutableDictionary dictionaryWithCapacity:nRows];
-        for (NSUInteger i=0; i < nRows-1; ++i)
+        itemMp = [NSMutableDictionary dictionaryWithCapacity:100];
+        for (NSUInteger i=0; i < recrLstCnt; ++i)
         {
-            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:i+1];
+            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
             List *newItem = [[List alloc] init];
-            newItem.item =[mlist objectAtIndex:i];
-            newItem.rowno = i+1;
+            MasterList *mitem =[mlist objectAtIndex:i];
+            
+            if (mitem.endMonth > mitem.startMonth)
+            {
+                if (month > mitem.endMonth || month < mitem.startMonth)
+                    continue;
+                
+            }
+            else if (mitem.endMonth == mitem.startMonth)
+            {
+                if (month != mitem.endMonth)
+                    continue;
+            }
+            else
+            {
+                if (month < mitem.startMonth && month > mitem.endMonth)
+                    continue;
+            }
+            newItem.rowno = nRows;
+            ++nRows;
+            newItem.item = mitem.item;
             newItem.hidden = false;
             [itemMp setObject:newItem forKey:rowNm];
         }
-        if (!bEasyGroc)
-            nRows += 35;
-        NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
+       
         
     }
-    else
+    
+    if (bEasyGroc)
+    {
+        mInvListName = [mlistName stringByAppendingString:@":INV"];
+        mInvArr = [pAppCmnUtil.dataSync getMasterList:mInvListName];
+        NSUInteger invArrCnt = [mInvArr count];
+        
+        for (NSUInteger i=0; i < invArrCnt; ++i)
+        {
+            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
+            List *newItem = [[List alloc] init];
+            MasterList *mitem =[mInvArr objectAtIndex:i];
+            NSNumber *invLstRowNo = [NSNumber numberWithUnsignedInteger:mitem.rowno];
+            [mInvMp setObject:mitem forKey:invLstRowNo];
+            
+            if (mitem.inventory)
+                continue;
+            else
+                mitem.inventory = 10;
+            newItem.rowno = nRows;
+            ++nRows;
+            newItem.item = mitem.item;
+            newItem.hidden = false;
+            [itemMp setObject:newItem forKey:rowNm];
+        }
+        
+        mScrtchListName = [mlistName stringByAppendingString:@":SCRTCH"];
+        mScrtchArr = [pAppCmnUtil.dataSync getMasterList:mScrtchListName];
+        NSUInteger scrtchArrCnt = [mScrtchArr count];
+        for (NSUInteger i=0; i < scrtchArrCnt; ++i)
+        {
+            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
+            List *newItem = [[List alloc] init];
+            MasterList *mitem =[mScrtchArr objectAtIndex:i];
+            newItem.rowno = nRows;
+            ++nRows;
+            newItem.item = mitem.item;
+            newItem.hidden = false;
+            [itemMp setObject:newItem forKey:rowNm];
+        }
+
+        if (bEasyGroc)
+            nRows += 35;
+        
+    }
+    
+    
+    if (bEasyGroc && nRows ==1)
     {
         nRows = 50;
         itemMp = [NSMutableDictionary dictionaryWithCapacity:50];
     }
     NSLog(@"itemMp dictionary to set view %@\n", itemMp);
+    NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
     return;
 
     
@@ -424,6 +495,16 @@
     }
     [pListView cleanUpItemMp];
     [pAppCmnUtil.dataSync addItem:pListView.name itemsDic:pListView.itemMp];
+    if (bEasyGroc)
+    {
+        if ([mInvMp count])
+            [pAppCmnUtil.dataSync editedTemplItem:mInvListName itemsDic:mInvMp];
+        if (mScrtchArr != nil && [mScrtchArr count])
+        {
+            [pAppCmnUtil.dataSync deletedTemplItem:mScrtchListName];
+        }
+        
+    }
     [self itemDisplay:pListView.name lstcntr:pListView];
     
     return;

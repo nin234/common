@@ -472,7 +472,7 @@
     for(;;)
     {
         [workToDo lock];
-        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd  || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd)
+        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd  || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
         {
            // NSLog(@"Waiting for work\n");
             NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:waitTime];
@@ -504,6 +504,7 @@
             [self updateMasterLstVwCntrl];
         }
         
+       
         if (refreshMainLst)
         {
             
@@ -1457,6 +1458,7 @@
     
     return;
 }
+
 
 -(void) addTemplName:(NSString *)name
 {

@@ -116,8 +116,7 @@
     
     int templNameItemsToAdd;
     NSMutableArray *masterListNamesOnly;
-    
-
+   
 }
 
 -(void) main;
@@ -172,5 +171,6 @@
 -(NSArray *) getListNames;
 -(NSDictionary *) getPics;
 -(void) addTemplName:(NSString *)name;
+
 
 @end

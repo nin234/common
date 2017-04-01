@@ -30,6 +30,11 @@ enum eDispActionItems
 {
     NSUInteger nRows;
     NSArray* mlist;
+    NSString *mInvListName;
+    NSArray *mInvArr ;
+    NSMutableDictionary *mInvMp;
+    NSString *mScrtchListName;
+    NSArray *mScrtchArr;
     bool bDicInit;
     NSDictionary *itemUnFiltrdMp;
     NSDictionary *hiddenUnFiltrdMp;

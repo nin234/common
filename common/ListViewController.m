@@ -196,9 +196,9 @@
     // This method is triggered whenever the user makes a change to the picker selection.
     // The parameter named row and component represents what was selected.
     if (!component)
-        startMonth = row;
+        startMonth = row+1;
     else
-        endMonth = row;
+        endMonth = row+1;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -486,8 +486,8 @@
                 if (item == nil)
                 {
                     item = [[MasterList alloc] init];
-                    item.startMonth = 0;
-                    item.endMonth =11;
+                    item.startMonth = 1;
+                    item.endMonth =12;
                     item.inventory =10;
                 }
                 [itemMp setObject:item forKey:rowNm];
