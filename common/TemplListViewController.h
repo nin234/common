@@ -10,6 +10,13 @@
 #import "ListViewController.h"
 
 
+@protocol TemplListViewControllerDelegate <NSObject>
+
+-(void) templShareMgrStartAndShow;
+-(void) shareContactsSetSelected;
+
+@end
+
 enum templateNameButtons
 {
     CANCEL_TEMPL_NAME_BUTTON,
@@ -21,9 +28,15 @@ enum templateNameButtons
 {
     NSInteger cnt;
     NSArray *masterList;
+    NSMutableArray *seletedItems;
 }
 
 -(void) refreshMasterList;
+
+@property (nonatomic, weak) id<TemplListViewControllerDelegate> delegate;
+
+@property bool bShareTemplView;
+-(NSString *) getSelectedItem;
 
 
 @end

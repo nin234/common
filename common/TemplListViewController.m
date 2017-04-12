@@ -10,12 +10,16 @@
 #import "ComponentsViewController.h"
 #import "AppCmnUtil.h"
 
+const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 
 @interface TemplListViewController ()
 
 @end
 
 @implementation TemplListViewController
+
+@synthesize delegate;
+@synthesize bShareTemplView;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -38,6 +42,8 @@
         cnt = [masterList count];
         [pAppCmnUtil.dataSync unlock];
         NSLog (@"Master list name %@ count %ld", masterList, (long)cnt);
+        bShareTemplView = false;
+        seletedItems = [[NSMutableArray alloc] init];
 
     }
     return self;
@@ -107,6 +113,38 @@
     }
 }
 
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Clicked button Index %ld", (long)buttonIndex);
+    
+    switch (buttonIndex)
+    {
+            
+        case 0:
+            [delegate templShareMgrStartAndShow];
+            break;
+            
+        default:
+            break;
+    }
+    
+}
+
+-(void) templScrnActions
+{
+    
+    
+    UIActionSheet *pSh;
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Share", nil];
+    EasyViewController *pMainVwCntrl = [pAppCmnUtil.navViewController.viewControllers objectAtIndex:0];
+    [pSh showInView:pMainVwCntrl.pAllItms.tableView];
+    [pSh setDelegate:self];
+    
+    
+    return;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -119,11 +157,31 @@
     
     NSString *title = @"Template Lists";
     self.navigationItem.title = [NSString stringWithString:title];
-    
+    if (self.bShareTemplView)
+    {
+        
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"\U0001F46A\U0001F46A" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
+        self.navigationItem.rightBarButtonItem = pBarItem;
+        return;
+    }
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(templItemAdd) ];
     self.navigationItem.rightBarButtonItem = pBarItem;
+     AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
+    if (appCmnUtil.bEasyGroc == true)
+    {
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(templScrnActions)];
+    
+        self.navigationItem.leftBarButtonItem = pBarItem1;
+    }
+
     
 
+}
+
+-(void) shareContactsAdd
+{
+    [delegate shareContactsSetSelected];
+    return;
 }
 
 - (void)didReceiveMemoryWarning
@@ -149,6 +207,22 @@
     return cnt;
     
 }
+
+-(NSString *) getSelectedItem
+{
+    NSUInteger cnt = [seletedItems count];
+    for (NSUInteger i=0; i < cnt; ++i)
+    {
+        
+        NSNumber* row_no = [seletedItems objectAtIndex:i];
+        if ([row_no boolValue] == YES)
+        {
+            return [masterList objectAtIndex:i];
+        }
+    }
+    return NULL;
+}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -176,9 +250,30 @@
     
     label.textAlignment = NSTextAlignmentLeft;
     label.font = [UIFont boldSystemFontOfSize:14];
-    label.text = [masterList objectAtIndex:indexPath.row];
+    NSString *text;
+    if(bShareTemplView)
+    {
+        NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
+        if ([numbr boolValue] == YES)
+        {
+            text = @"\u2705";
+        }
+        else
+        {
+            text = @"\u2B1C";
+        }
+        
+        text = [text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
+        label.text = text;
+    }
+    else
+    {
+        label.text = [masterList objectAtIndex:indexPath.row];
+    }
+    label.tag = SELECTION_INDICATOR_TAG_3;
     NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
-     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    if (!self.bShareTemplView)
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [cell.contentView addSubview:label];
 
     // Configure the cell...
@@ -236,6 +331,51 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+    
+    if (bShareTemplView)
+    {
+        UITableViewCell *cell =
+        [tableView cellForRowAtIndexPath:indexPath];
+        UILabel *textField = (UILabel *)[cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_3];
+        NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
+        if ([numbr boolValue] == YES)
+        {
+            
+            [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:NO]];
+            textField.text = @"\u2B1C";
+            textField.text = [textField.text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
+        }
+        else
+        {
+            textField.text = @"\u2705";
+            textField.text = [textField.text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
+            NSUInteger crnt = indexPath.row;
+            
+            NSLog(@"Changing  image to selected at index %lu\n", (unsigned long)crnt);
+            [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:YES]];
+            NSUInteger cnt = [seletedItems count];
+            for (NSUInteger i=0; i < cnt; ++i)
+            {
+                if (i==crnt)
+                    continue;
+                NSNumber* othr_row_no = [seletedItems objectAtIndex:i];
+                if ([othr_row_no boolValue] == YES)
+                {
+                    UITableViewCell *othr_row_cell =
+                    [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                    UILabel *othr_row_textfld = (UILabel *)[othr_row_cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_3];
+                    othr_row_textfld.text =@"\u2B1C";
+                    othr_row_textfld.text =  [othr_row_textfld.text stringByAppendingString:[masterList objectAtIndex:i]];
+                    NSLog(@"Changing image Not selected at index %lu\n", (unsigned long)i);
+                    [seletedItems replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:NO]];
+                }
+            }
+            
+
+        }
+        return;
+    }
+    
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     if (pAppCmnUtil.bEasyGroc)
     {

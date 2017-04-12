@@ -316,7 +316,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     {
         UITableViewCell *cell =
         [tableView cellForRowAtIndexPath:indexPath];
-        UITextField *textField = (UITextField *)[cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_2];
+        UILabel *textField = (UILabel *)[cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_2];
         NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
         if ([numbr boolValue] == YES)
         {
@@ -343,7 +343,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
                 {
                     UITableViewCell *othr_row_cell =
                     [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                    UITextField *othr_row_textfld = (UITextField *)[othr_row_cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_2];
+                    UILabel *othr_row_textfld = (UILabel *)[othr_row_cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_2];
                     othr_row_textfld.text =@"\u2B1C";
                     othr_row_textfld.text =  [othr_row_textfld.text stringByAppendingString:[list objectAtIndex:i]];
                     NSLog(@"Changing image Not selected at index %lu\n", (unsigned long)i);
