@@ -251,6 +251,8 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     label.textAlignment = NSTextAlignmentLeft;
     label.font = [UIFont boldSystemFontOfSize:14];
     NSString *text;
+    NSArray *pArr = [[masterList objectAtIndex:indexPath.row] componentsSeparatedByString:@":::"];
+    NSString *textLstName = [pArr objectAtIndex:[pArr count]-1];
     if(bShareTemplView)
     {
         NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
@@ -263,12 +265,12 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
             text = @"\u2B1C";
         }
         
-        text = [text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
+        text = [text stringByAppendingString:textLstName];
         label.text = text;
     }
     else
     {
-        label.text = [masterList objectAtIndex:indexPath.row];
+        label.text = textLstName;
     }
     label.tag = SELECTION_INDICATOR_TAG_3;
     NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
