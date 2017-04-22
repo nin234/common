@@ -14,5 +14,7 @@
 @property (nonatomic, retain) NSDate   *date;
 @property (nonatomic, retain) NSString * picurl;
 @property BOOL current;
+@property (nonatomic) long long share_id;
+@property (nonatomic, retain) NSString *share_name;
 
 @end

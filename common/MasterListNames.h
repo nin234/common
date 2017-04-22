@@ -12,5 +12,8 @@
 @interface MasterListNames : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic) long long share_id;
+@property (nonatomic, retain) NSString *share_name;
+
 
 @end

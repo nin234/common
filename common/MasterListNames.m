@@ -11,5 +11,7 @@
 @implementation MasterListNames
 
 @dynamic name;
+@dynamic share_id;
+@dynamic share_name;
 
 @end

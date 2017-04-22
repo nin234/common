@@ -14,5 +14,9 @@
 @dynamic date;
 @dynamic picurl;
 @dynamic current;
+@dynamic share_id;
+@dynamic share_name;
+
+
 
 @end

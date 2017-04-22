@@ -993,7 +993,16 @@
                 //NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
             }
             ListNames *mname = [storeNames objectAtIndex:i];
-            mname.name = name;
+            
+            NSArray *namecomps = [name componentsSeparatedByString:@"::];::"];
+            
+            mname.name = [namecomps objectAtIndex:0];
+            if ([namecomps count] >1)
+            {
+                mname.share_id = [[namecomps objectAtIndex:1] longLongValue];
+                mname.share_name = [namecomps objectAtIndex:1];
+            }
+
             //NSLog(@"Storing  list name %@\n", mname);
             
         }
@@ -1195,7 +1204,14 @@
                 //  NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
             }
             MasterListNames *mname = [storeNames objectAtIndex:i];
-            mname.name = name;
+            NSArray *namecomps = [name componentsSeparatedByString:@"::];::"];
+            
+            mname.name = [namecomps objectAtIndex:0];
+            if ([namecomps count] >1)
+            {
+                mname.share_id = [[namecomps objectAtIndex:1] longLongValue];
+                mname.share_name = [namecomps objectAtIndex:1];
+            }
             // NSLog(@"Storing master list name %@\n", mname);
             
         }
