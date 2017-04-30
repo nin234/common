@@ -104,7 +104,9 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 -(void) refreshList
 {
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-     list = [pAppCmnUtil.dataSync getListNames];
+    NSArray *listNames = [pAppCmnUtil.dataSync getListNames];
+    list = [[listNames reverseObjectEnumerator] allObjects];
+    
     picDic = [pAppCmnUtil.dataSync getPics];
     unFiltrdList = [NSArray arrayWithArray:list];
     NSUInteger cnt = [list count];
