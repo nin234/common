@@ -799,7 +799,7 @@
 {
     
     // Return the number of rows in the section.
-    return 16;
+    return 17;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -831,10 +831,34 @@
     
     if ([delegate rangeFourTag:textField.tag])
     {
-        if (range.location >= 4)
+        if ([string rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location != NSNotFound)
+        {
             return NO;
+        }
+        NSString *proposedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        
+        if (proposedText.length > 4)        {
+            return NO;
+        }
+
     }
-    if ([delegate numbersTag:textField.tag])
+    if ([delegate ratingsTag:textField.tag])
+    {
+        if ([string rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location != NSNotFound)
+        {
+            return NO;
+        }
+        NSString *proposedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (proposedText.length > 2)
+        {
+            return NO;
+        }
+        
+        if ([proposedText intValue] < 0 || [proposedText intValue] >10)
+            return NO;
+        characterSet = [[NSCharacterSet characterSetWithCharactersInString:numbers] invertedSet];
+    }
+    else if ([delegate numbersTag:textField.tag])
     {
         
         characterSet = [[NSCharacterSet characterSetWithCharactersInString:numbers] invertedSet];   
@@ -971,7 +995,7 @@
 			
             // put a label and text field in the cell
             UILabel *label;
-            if (row != 12)
+            if (row != 13)
                 label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 75, 25)];
             else
                 label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 105, 25)];
@@ -983,7 +1007,7 @@
                 label.backgroundColor = [UIColor yellowColor];
             }
             [cell.contentView addSubview:label];
-            if (row != 12)
+            if (row != 13)
                 textFrame = CGRectMake(75, 12, 200, 25);
             else
                 textFrame = CGRectMake(110, 12, 170, 25);
@@ -1061,7 +1085,7 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
         }
-        if (row == 15)
+        if (row == 16)
         {
             UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 325, 44)];
             [button setBackgroundImage:[[UIImage imageNamed:@"delete_button.png"]

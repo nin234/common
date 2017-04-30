@@ -40,6 +40,7 @@
 -(double) getLongitude;
 -(double) getLatitude;
 -(NSString *) getName;
+- (BOOL)characterChk:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
 @end
 
 @interface AddViewController : UITableViewController <UIImagePickerControllerDelegate, UITextFieldDelegate, UITableViewDelegate, MKMapViewDelegate, AlbumContentsViewControllerDelegate>

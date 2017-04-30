@@ -33,6 +33,7 @@
 -(NSString *) getEditNotes;
 -(bool) changeCharacters:(NSInteger) tag;
 -(bool) rangeFourTag:(NSInteger) tag;
+-(bool) ratingsTag:(NSInteger) tag;
 -(bool) numbersTag:(NSInteger) tag;
 -(NSString *) getEditName;
 -(NSString *) getAlbumTitle;

@@ -196,7 +196,7 @@
 {
 
     // Return the number of rows in the section.
-    return 13;
+    return 14;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -212,7 +212,7 @@
     
     if (!fieldNames)
     {
-        fieldNames = [delegate getFieldNames];
+        fieldNames = [delegate getFieldDispNames];
         
     }
     
@@ -292,7 +292,7 @@
                 label.backgroundColor = [UIColor yellowColor];
             }
             [cell.contentView addSubview:label];
-            if (row != 11)
+            if (row != 12)
                 textFrame = CGRectMake(75, 12, 200, 25);
             else
                 textFrame = CGRectMake(110, 12, 170, 25);

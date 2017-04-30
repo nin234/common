@@ -16,11 +16,12 @@
 #define HOUSE_YEAR 3
 #define HOUSE_BEDS 4
 #define HOUSE_BATHS 5
-#define HOUSE_STREET 6
-#define HOUSE_CITY 7
-#define HOUSE_STATE 8
-#define HOUSE_COUNTRY 9
-#define HOUSE_ZIP 10
+#define HOUSE_RATINGS 6
+#define HOUSE_STREET 7
+#define HOUSE_CITY 8
+#define HOUSE_STATE 9
+#define HOUSE_COUNTRY 10
+#define HOUSE_ZIP 11
 
 #define CAR_NAME 0
 #define CAR_MODEL 1
@@ -29,11 +30,12 @@
 #define CAR_YEAR 4
 #define CAR_PRICE 5
 #define CAR_MILES 6
-#define CAR_STREET 7
-#define CAR_CITY 8
-#define CAR_STATE 9
-#define CAR_COUNTRY 10
-#define CAR_ZIP 11
+#define CAR_RATINGS 7
+#define CAR_STREET 8
+#define CAR_CITY 9
+#define CAR_STATE 10
+#define CAR_COUNTRY 11
+#define CAR_ZIP 12
 
 
 

@@ -12,7 +12,7 @@
 @protocol DisplayViewControllerDelegate <NSObject>
 
 -(void) itemEdit;
--(NSArray *) getFieldNames;
+-(NSArray *) getFieldDispNames;
 -(NSArray *) getSecondFieldNames;
 -(bool) isTwoFieldRow:(NSUInteger) row;
 -(void) populateDispTextFields:(UILabel *) textField textField1:(UILabel *) textField1 row:(NSUInteger)row;

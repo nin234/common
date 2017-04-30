@@ -483,8 +483,8 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize);
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-    NSLog(@"13 rows in section %ld of AddViewController\n" , (long)section);
-    return 14;
+    NSLog(@"15 rows in section %ld of AddViewController\n" , (long)section);
+    return 15;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -898,65 +898,9 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     
-    NSLog(@"Text field should change character %s %ld %lu %lu\n", [textField.text UTF8String], (long)textField.tag, (unsigned long)range.location , (unsigned long)range.length);
-    switch (textField.tag)
-    {
-        case HOUSE_PRICE:
-        case HOUSE_AREA:
-        case HOUSE_BATHS:
-        case HOUSE_BEDS:
-        case HOUSE_YEAR:
-        break;
-            
-        default:
-            return YES;
-            break;
-    }
+    return [delegate characterChk:textField shouldChangeCharactersInRange:range replacementString:string];
     
-    static NSString *numbers = @"0123456789";
-    static NSString *numbersPeriod = @"01234567890.";
-  
-    
-    //NSLog(@"%d %d %@", range.location, range.length, string);
-    if (range.length > 0 && [string length] == 0) {
-        // enable delete
-        return YES;
-    }
-    
-   // NSString *symbol = [[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator];
-     NSString *symbol = @".";
-    if (range.location == 0 && [string isEqualToString:symbol]) {
-        // decimalseparator should not be first
-        return NO;
-    }
-    NSCharacterSet *characterSet;
-    if (textField.tag == HOUSE_YEAR)
-    {
-        if (range.location >= 4)
-            return NO;
-        characterSet = [[NSCharacterSet characterSetWithCharactersInString:numbers] invertedSet];   
-    }
-    else
-    {
-    
-        NSRange separatorRange = [textField.text rangeOfString:symbol];
-        if (separatorRange.location == NSNotFound)
-        {
-            //  if ([symbol isEqualToString:@"."]) {
-            characterSet = [[NSCharacterSet characterSetWithCharactersInString:numbersPeriod] invertedSet];
-        }
-        else 
-        {
-            // allow 2 characters after the decimal separator
-            if (range.location > (separatorRange.location + 2)) 
-            {
-                return NO;
-            }
-            characterSet = [[NSCharacterSet characterSetWithCharactersInString:numbers] invertedSet];               
-        }
-    }
-    return ([[string stringByTrimmingCharactersInSet:characterSet] length] > 0);
-  //  return NO;
+      //  return NO;
 }
 
 
@@ -1070,7 +1014,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
                 if (row == 0)
                     label.backgroundColor = [UIColor yellowColor];
                 [cell.contentView addSubview:label];
-                if (row != 13)
+                if (row != 14)
                     textFrame = CGRectMake(75, 12, 200, 25);
                 else
                     textFrame = CGRectMake(110, 12, 170, 25);
