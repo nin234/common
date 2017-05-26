@@ -8,6 +8,7 @@
 
 #import "List1ViewController.h"
 #import "List.h"
+#import "LocalList.h"
 #import "AppCmnUtil.h"
 #import "EditViewController.h"
 #import "MasterList.h"
@@ -61,6 +62,7 @@
 @synthesize bDoubleParent;
 @synthesize list;
 @synthesize mlistName;
+@synthesize nameVw;
 
 
 -(void) cleanUpItemMp
@@ -71,7 +73,7 @@
     for (NSUInteger i=0; i < cnt; ++i)
     {
         NSNumber *rowNo = [keys objectAtIndex:i];
-        List *item = [itemMp objectForKey:rowNo];
+        LocalList *item = [itemMp objectForKey:rowNo];
         if ([item.item isEqualToString:@" "] == YES)
             [itemMp removeObjectForKey:rowNo];
     }
@@ -95,8 +97,8 @@
     
     NSInteger no_of_items = [keys count];
     
-    List  *prevItem = nil;
-    List *emptyItem = [[List alloc] init];
+    LocalList  *prevItem = nil;
+    LocalList *emptyItem = [[LocalList alloc] init];
     emptyItem.item  = @" ";
     
     NSUInteger lastIndx = -1;
@@ -107,7 +109,7 @@
         lastIndx = [rowNo1 unsignedIntegerValue];
         if (lastIndx < insrtedRowNo)
             continue;
-        List *item = prevItem;
+        LocalList *item = prevItem;
         
         prevItem = [itemMp objectForKey:rowNo1];
         if (insrtedRowNo != [rowNo1 unsignedIntegerValue])
@@ -177,13 +179,13 @@
         undoArry = [[NSMutableArray alloc] init];
         redoArry  = [[NSMutableArray alloc] init];
         rowTarget = [[NSMutableDictionary alloc] init];
-        bEasyGroc = true;
+        nameVw = @"Temp";
         bDoubleParent = false;
         nRows = 1;
         mInvMp = [[NSMutableDictionary alloc] init];
         mScrtchArr = nil;
        
-        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        
         if (editMode == eListModeAdd)
         {
             NSLog(@"Initializing List1ViewController in eListModeAdd\n");
@@ -218,12 +220,8 @@
             }
             else
             {
-                if (pAppCmnUtil.listName != nil)
-                {
                     NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
                     [self refreshList];
-
-                }
             }
         }
         
@@ -295,13 +293,13 @@
     NSLog(@"Master list %@ for name %@ %s %d\n", mlist, name, __FILE__, __LINE__);
     if (mlist != nil)
     {
-        int recrLstCnt = [mlist count];
+        int recrLstCnt = (int)[mlist count];
         
         itemMp = [NSMutableDictionary dictionaryWithCapacity:100];
         for (NSUInteger i=0; i < recrLstCnt; ++i)
         {
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
-            List *newItem = [[List alloc] init];
+            LocalList *newItem = [[LocalList alloc] init];
             MasterList *mitem =[mlist objectAtIndex:i];
             
             if (mitem.endMonth > mitem.startMonth)
@@ -339,7 +337,7 @@
         for (NSUInteger i=0; i < invArrCnt; ++i)
         {
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
-            List *newItem = [[List alloc] init];
+            LocalList *newItem = [[LocalList alloc] init];
             MasterList *mitem =[mInvArr objectAtIndex:i];
             NSNumber *invLstRowNo = [NSNumber numberWithUnsignedInteger:mitem.rowno];
             [mInvMp setObject:mitem forKey:invLstRowNo];
@@ -361,7 +359,7 @@
         for (NSUInteger i=0; i < scrtchArrCnt; ++i)
         {
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
-            List *newItem = [[List alloc] init];
+            LocalList *newItem = [[LocalList alloc] init];
             MasterList *mitem =[mScrtchArr objectAtIndex:i];
             newItem.rowno = nRows;
             ++nRows;
@@ -413,7 +411,8 @@
         for (NSUInteger i=0; i < nRows-1; ++i)
         {
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:i+1];
-            List *item = [list objectAtIndex:i];
+            List *itemNL = [list objectAtIndex:i];
+             LocalList *item = [[LocalList alloc] initFromList:itemNL];
             [itemMp setObject:item forKey:rowNm];
         }
         nRows += 3;
@@ -434,8 +433,8 @@
 {
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    list = [pAppCmnUtil.dataSync getList:pAppCmnUtil.listName];
-    name = pAppCmnUtil.listName;
+    list = [pAppCmnUtil.dataSync getList:name];
+    
     default_name = name;
     NSLog(@"list %@ for name %@ %s %d\n", list, name, __FILE__, __LINE__);
     if (list != nil)
@@ -446,21 +445,25 @@
         hiddenMp = [NSMutableDictionary dictionaryWithCapacity:nRows];
         for (NSUInteger i=0; i < nRows-1; ++i)
         {
-            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:i+1];
-            List *item = [list objectAtIndex:i];
+           
+            List *itemNL = [list objectAtIndex:i];
+            LocalList *item = [[LocalList alloc] initFromList:itemNL];
+             NSNumber *rowNm = [NSNumber numberWithLongLong:item.rowno];
             [itemMp setObject:item forKey:rowNm];
+     //       NSLog (@"Setting item %@ to itempMp %@", item.item, rowNm);
             if (editMode == eListModeDisplay)
             {
                 NSNumber *rowVal = [NSNumber numberWithBool:item.hidden];
                 [hiddenMp setObject:rowVal forKey:rowNm];
                 if (item.hidden == YES)
                 {
+                  //  NSLog (@"Setting hiddent item %@ to itempMp %@", item, rowNm);
                     [hiddenCells setObject:rowVal forKey:rowNm];
                 }
             }
         }
         if (editMode != eListModeDisplay)
-            nRows += 35;
+            nRows += 13;
         else
             nRows += 3;
         NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
@@ -513,18 +516,20 @@
 -(void)willMoveToParentViewController:(UIViewController *)parent
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    pAppCmnUtil.itemsMp = itemMp;
+   pAppCmnUtil.itemsMp = itemMp;
 }
 
 -(void)didMoveToParentViewController:(UIViewController *)parent
 {
+    
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     if (parent !=nil && bDoubleParent)
     {
        
             EditViewController *pEditView = (EditViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
-        if (pEditView != nil)
+        if (pEditView != nil && [pEditView isMemberOfClass:[List1ViewController class]])
         {
+            
             pEditView.itemMp = itemMp;
         }
         
@@ -535,12 +540,13 @@
         {
             EditViewController *pEditView = (EditViewController *)parent;
        
-            if (pEditView != nil)
+            if (pEditView != nil && [pEditView isMemberOfClass:[List1ViewController class]])
             {
                 pEditView.itemMp = itemMp;
             }
         }
     }
+     
 }
 
 -(void) itemDisplay:(NSString *)listname
@@ -550,6 +556,7 @@
     [pAppCmnUtil.dataSync selectedItem:listname];
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.editMode = eListModeDisplay;
+    
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     return;
@@ -573,10 +580,12 @@
     [pAppCmnUtil.dataSync selectedItem:itemname];
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.editMode = eListModeDisplay;
+     aViewController.name = itemname;
+    aViewController.bEasyGroc = pLst.bEasyGroc;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
-    [aViewController refreshListFromCpy:pLst];
-    [aViewController.tableView reloadData];
+  //  [aViewController refreshListFromCpy:pLst];
+  //  [aViewController.tableView reloadData];
     
     return;
 }
@@ -651,6 +660,7 @@
             UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemDispActions)];
         
             self.navigationItem.rightBarButtonItem = pBarItem;
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackGroundActions:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         }
         else
         {
@@ -658,6 +668,16 @@
             self.navigationItem.title = [NSString stringWithString:title];
         }
     }
+}
+
+- (void)applicationEnterBackGroundActions:(NSNotification *)notification
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (itemMp == nil || ![itemMp count] || hiddenMp == nil || ![hiddenMp count])
+        return;
+    NSLog(@"Updating hidden items in  application enter  background");
+    [pAppCmnUtil.dataSync editItem:name itemsDic:itemMp];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -669,8 +689,10 @@
 
 -(void) viewWillDisappear:(BOOL)animated
 {
+    
+   
     [super viewWillDisappear:animated];
-    NSLog(@"Updating hidden items in  view will disappear");
+    
     if (editMode == eListModeDisplay)
     {
         if (bSearchStr )
@@ -685,8 +707,12 @@
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (itemMp == nil || ![itemMp count] || hiddenMp == nil || ![hiddenMp count])
             return;
-        [pAppCmnUtil.dataSync hiddenItems:name itemsDic:itemMp hiddenDic:hiddenMp];
+        NSLog(@"Updating hidden items in  view will disappear");
+        [pAppCmnUtil.dataSync editItem:name itemsDic:itemMp];
+       
     }
+     
+    NSLog(@"In  view will disappear");
 }
 
 -(void) itemDispActions
@@ -795,6 +821,8 @@
             [redoArry addObject:undoIndx];
             NSNumber *hidden = [NSNumber numberWithBool:NO];
             [hiddenMp setObject:hidden forKey:undoIndx];
+            LocalList *item = [itemMp objectForKey:undoIndx];
+            item.hidden = NO;
             [self.tableView reloadData];
         }
         break;
@@ -808,6 +836,8 @@
             NSNumber *redoIndx1 = [NSNumber numberWithUnsignedInteger:[redoIndx unsignedIntegerValue]];
             [hiddenCells setObject:redoIndx1 forKey:redoIndx];
             NSNumber *hidden = [NSNumber numberWithBool:YES];
+            LocalList *item = [itemMp objectForKey:redoIndx];
+            item.hidden = YES;
             [hiddenMp setObject:hidden forKey:redoIndx];
             [self.tableView reloadData];
         }
@@ -822,6 +852,16 @@
                 NSNumber *hidden = [NSNumber numberWithBool:NO];
                 [hiddenMp setObject:hidden forKey:[NSNumber numberWithUnsignedInteger:i]];
 
+            }
+            NSUInteger cnt = [itemMp count];
+            for (NSUInteger i=0; i < cnt; ++i)
+            {
+                LocalList *item = [itemMp objectForKey:[NSNumber numberWithUnsignedInteger:i]];
+                if (item != nil)
+                {
+                    item.hidden = NO;
+                }
+                
             }
             [self.tableView reloadData];
             /*
@@ -853,10 +893,16 @@
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [pAppCmnUtil popView];
+     NSLog(@"Popped view controller");
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.editMode = eListModeEdit;
+    aViewController.name = name;
+    aViewController.bEasyGroc = bEasyGroc;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
+    aViewController.nameVw = @"Edited";
+    NSLog(@"Pushing view controller");
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+    NSLog(@"Pushed view controller");
     
     return;
 }
@@ -921,7 +967,7 @@
     NSUInteger rowno =0;
     for (NSUInteger i=0; i < cnt; ++i)
     {
-        List *item = [itemUnFiltrdMp objectForKey:[keys objectAtIndex:i]];
+        LocalList *item = [itemUnFiltrdMp objectForKey:[keys objectAtIndex:i]];
         NSStringCompareOptions  opt = NSCaseInsensitiveSearch;
         NSRange aR = [item.item rangeOfString:[searchBar text] options:opt];
         if (aR.location == NSNotFound && aR.length ==0)
@@ -978,6 +1024,7 @@
 {
 
     // Return the number of rows in the section.
+   // NSLog(@"Number of rows=%ld", (unsigned long)nRows);
     return nRows;
 }
 
@@ -988,7 +1035,9 @@
  
       NSNumber *swtchKey1 = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
     [hiddenCells setObject:swtchKey1 forKey:swtchKey];
-
+    
+     LocalList *item = [itemMp objectForKey:swtchKey];
+   item.hidden = YES;
     [undoArry addObject:swtchKey];
     
     NSNumber *hidden = [NSNumber numberWithBool:YES];
@@ -1020,15 +1069,22 @@
             NSUInteger len = [textField.text length];
             if (len)
             {
-                List *item = [itemMp objectForKey:rowNm];
+                LocalList *item = [itemMp objectForKey:rowNm];
                 if (item != NULL)
                 {
                     item.item = textField.text;
-                    if (indPath.row > nRows-3)
-                    {
-                        nRows+=35;
-                        [self.tableView reloadData];
-                    }
+                }
+                else
+                {
+                    item = [[LocalList alloc] init];
+                    item.item = textField.text;
+                    item.rowno = indPath.row;
+                    [itemMp setObject:item forKey:rowNm];
+                }
+                if (indPath.row > nRows-3)
+                {
+                    nRows+=35;
+                    [self.tableView reloadData];
                 }
             }
             else
@@ -1053,14 +1109,9 @@
     NSLog(@"List1ViewController:textFieldShouldEndEditing %ld %lu", (long)textFldRowNo, (unsigned long)nRows);
     if (editMode != eListModeDisplay)
     {
-        if (textFldRowNo != -1)
-        {
-           
-            self.tableView.editing = NO;
-            self.tableView.editing = YES;
-        }
-        [textField resignFirstResponder];
         
+        [textField resignFirstResponder];
+       
         return YES;
     }
     return NO;
@@ -1096,7 +1147,8 @@
 {
     if (editMode != eListModeDisplay)
     {
-        if ([itemMp objectForKey:[NSNumber numberWithInteger:indexPath.row]] != nil)
+        //if ([itemMp objectForKey:[NSNumber numberWithInteger:indexPath.row]] != nil)
+        if (indexPath.row)
             return YES;
     }
     
@@ -1111,8 +1163,8 @@
         return;
     
     NSNumber *soureRow = [NSNumber numberWithInteger:sourceIndexPath.row];
-    List *sourceItem = [itemMp objectForKey:soureRow];
-    List *prevItem;
+    LocalList *sourceItem = [itemMp objectForKey:soureRow];
+    LocalList *prevItem;
     
     NSArray *keys1 = [itemMp allKeys];
      NSArray *keys = [keys1 sortedArrayUsingSelector: @selector(compare:)];
@@ -1131,17 +1183,20 @@
                     continue;
                 else if ([rowNo unsignedIntegerValue] < destinationIndexPath.row)
                 {
-                    List *item = [itemMp objectForKey:rowNo];
+                    LocalList *item = [itemMp objectForKey:rowNo];
                     NSUInteger newKey = [rowNo unsignedIntegerValue];
                     --newKey;
+                    item.rowno = newKey;
                     [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
                 }
                 else
                 {
-                    List *item = [itemMp objectForKey:rowNo];
+                    LocalList *item = [itemMp objectForKey:rowNo];
                     NSUInteger newKey = [rowNo unsignedIntegerValue];
                     --newKey;
+                    item.rowno = newKey;
                     [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
+                    sourceItem.rowno = [rowNo unsignedIntegerValue];
                     [itemMp setObject:sourceItem forKey:rowNo];
                 }
         }
@@ -1150,11 +1205,13 @@
             if ([rowNo unsignedIntegerValue] == destinationIndexPath.row)
             {
                 prevItem = [itemMp objectForKey:rowNo];
+                sourceItem.rowno = [rowNo unsignedIntegerValue];
                 [itemMp setObject:sourceItem forKey:rowNo];
             }
             else
             {
-                List *tmpItem = [itemMp objectForKey:rowNo];
+                LocalList *tmpItem = [itemMp objectForKey:rowNo];
+                prevItem.rowno = [rowNo unsignedIntegerValue];
                 [itemMp setObject:prevItem forKey:rowNo];
                 prevItem = tmpItem;
             }
@@ -1183,7 +1240,7 @@
             NSNumber *rowNo = [keys objectAtIndex:i];
             if ([rowNo unsignedIntegerValue] < indexPath.row)
                 continue;
-            List *item = [itemMp objectForKey:rowNo];
+            LocalList *item = [itemMp objectForKey:rowNo];
             
                 
             [itemMp removeObjectForKey:rowNo];
@@ -1204,7 +1261,7 @@
 heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
+    NSNumber *key = [NSNumber numberWithInteger:indexPath.row-1];
     
     if ([hiddenCells objectForKey:key] != nil)
         return 0.0;
@@ -1227,14 +1284,17 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                     pAddBtn.hidden = NO;
             }
          
-        return UITableViewCellEditingStyleDelete;
+        
         }
+        if (indexPath.row)
+            return UITableViewCellEditingStyleDelete;
     }
     return UITableViewCellEditingStyleNone;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     static NSString *CellIdentifier = @"List1Cell";
     static NSArray* fieldNames = nil;
     if (!fieldNames)
@@ -1263,13 +1323,24 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
         cell.editingAccessoryView = nil;
     }
     
+    
     if (indexPath.section != 0)
         return nil;
     NSUInteger row = indexPath.row;
-    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
+    NSNumber *key = [NSNumber numberWithInteger:indexPath.row-1];
     
+  // NSLog(@"Cell for index at row %lu", (unsigned long)row);
    if ([hiddenCells objectForKey:key] != nil)
+   {
+       cell.hidden = YES;
         return cell;
+   }
+   else
+   {
+       cell.hidden = NO;
+   }
+   
+    // NSLog(@"Cell for index at row %lu", (unsigned long)row);
     switch (row)
     {
         case 0:
@@ -1313,10 +1384,11 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
             
         default:
         {
+            NSLog(@"Cell for index at row %lu %@", (unsigned long)row, nameVw);
             CGRect textFrame = CGRectMake(cell.bounds.origin.x+10, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
             UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
             textField.delegate = self;
-            if (!bEasyGroc && editMode != eListModeDisplay)
+            if (editMode != eListModeDisplay)
             {
                 [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
             }
@@ -1329,12 +1401,12 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                         textField.text = name;
                         [cell.contentView addSubview:textField];
                     }
-                  
+                  break;
                 }
-                break;
+                
             }
                 NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:editMode == eListModeDisplay?row-1: row];
-                List *item = [itemMp objectForKey:rowNm];
+                LocalList *item = [itemMp objectForKey:rowNm];
                 if (item != nil)
                 {
                     //Ignoring the space place holder for empty inserted rows
@@ -1344,56 +1416,20 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                     {
                         if (bEasyGroc)
                         {
-                            CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
-                            UISwitch *hideCell = [[UISwitch alloc] initWithFrame:switchFrame];
-                            [hideCell addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
-                            cell.accessoryView = hideCell;
-                            hideCell.on = YES;
-                        
-                            hideCell.tag = row;
+                            [self setHidelCellSwitch:cell rowU:row];
                         }
                         else
                         {
-                            if (item.hidden)
-                            {
-                                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                            }
-                            else
-                            {
-                                cell.accessoryType = UITableViewCellAccessoryNone;
-                            }
+                            [self setCheckMarkAccessory:item tableCell:cell];
+                            
                         }
-
-                        
                     }
                     else
                     {
-                       //cell.editing =YES;
-                        if (bEasyGroc)
+                        if (!bEasyGroc)
                         {
-                            cell.showsReorderControl = YES;
-                            UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-                        
-                            AddRowTarget *pBtnAct= [[AddRowTarget alloc] init];
-                            [rowTarget setObject:pBtnAct forKey:rowNm];
-                            pBtnAct.rowNo = row;
-                            pBtnAct.pLst1Vw = self;
-                            pBtnAct.rowAddButton = rowAddButton;
-                            [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
-                            cell.editingAccessoryView = rowAddButton;
+                            [self setCheckMarkAccessory:item tableCell:cell];
                         }
-                        else
-                        {
-                            if (item.hidden)
-                            {
-                                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                            }
-                            else
-                            {
-                                cell.accessoryType = UITableViewCellAccessoryNone;
-                            }
-                        }
-                        
                         
                     }
                 }
@@ -1416,10 +1452,13 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                     }
                     
                 }
+            
+                [self setAccessories:cell rowNo:rowNm rowU:row];
                 textField.tag = row;
+            
                 [cell.contentView addSubview:textField];
             
-                //NSLog(@"Adding textField %@ %f %f %f %f", textField.text, textFrame.origin.x, textFrame.origin.y, textFrame.size.height, textFrame.size.width);
+              //  NSLog(@"Adding textField %@ %f %f %f %f", textField.text, textFrame.origin.x, textFrame.origin.y, textFrame.size.height, textFrame.size.width);
                 
             }
             
@@ -1431,6 +1470,48 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
     // Configure the cell...
     
     return cell;
+}
+
+-(void) setCheckMarkAccessory:(LocalList *)item  tableCell:(UITableViewCell *) cell
+{
+    if (item.hidden)
+    {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
+    else
+    {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+
+}
+
+-(void) setHidelCellSwitch:(UITableViewCell *) cell rowU : (NSUInteger) row
+{
+    CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
+    UISwitch *hideCell = [[UISwitch alloc] initWithFrame:switchFrame];
+    [hideCell addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
+    cell.accessoryView = hideCell;
+    hideCell.on = YES;
+    
+    hideCell.tag = row-1;
+}
+
+-(void) setAccessories:(UITableViewCell *) cell rowNo:(NSNumber *)rowNm rowU : (NSUInteger) row
+{
+    if (bEasyGroc && editMode != eListModeDisplay)
+    {
+        cell.showsReorderControl = YES;
+        UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+        
+        AddRowTarget *pBtnAct= [[AddRowTarget alloc] init];
+        [rowTarget setObject:pBtnAct forKey:rowNm];
+        pBtnAct.rowNo = row;
+        pBtnAct.pLst1Vw = self;
+        pBtnAct.rowAddButton = rowAddButton;
+        [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
+        cell.editingAccessoryView = rowAddButton;
+    }
+
 }
 
 /*
@@ -1487,7 +1568,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
     NSUInteger row = indexPath.row;
     
     NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:editMode == eListModeDisplay?row-1: row];
-    List *item = [itemMp objectForKey:rowNm];
+    LocalList *item = [itemMp objectForKey:rowNm];
     if (!bEasyGroc && editMode != eListModeDisplay)
     {
         

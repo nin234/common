@@ -67,7 +67,12 @@
 -(void) popView
 {
     //putchar('N');
+    NSArray *vws = [self.navViewController viewControllers];
+    NSLog(@"No of view controllers %ld", (unsigned long)[vws count]);
     [self.navViewController popViewControllerAnimated:NO];
+    vws = [self.navViewController viewControllers];
+    NSLog(@"No of view controllers %ld", (unsigned long)[vws count]);
+    
    
 }
 

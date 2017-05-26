@@ -20,6 +20,7 @@
 #import "AppCmnUtil.h"
 #import "EasyViewController.h"
 #import "List1ViewController.h"
+#import "LocalList.h"
 
 
 @implementation DataOps
@@ -42,6 +43,7 @@
 @synthesize navViewController;
 @synthesize listCnt;
 @synthesize refreshMainLst;
+@synthesize appName;
 
 
 -(void) setRefreshNow:(bool)refNow
@@ -396,7 +398,20 @@
 }
 
 
-
+-(instancetype) init
+{
+    self = [super init];
+    if (self)
+    {
+        
+        appName = [[NSString alloc] init];
+        return self;
+        
+    }
+    
+    return nil;
+    
+}
 
 -(void) main
 {
@@ -464,10 +479,22 @@
     
     
     shareQ = dispatch_queue_create("P2P_SHAREQ", DISPATCH_QUEUE_SERIAL);
-    [self refreshData];
-    [self updateMainLstVwCntrl];
-    [self refreshTemplData];
-     [self refreshItemData];
+    if ([appName isEqualToString:@"EasyGrocList"])
+    {
+        [self refreshItemData];
+        [self updateEasyMainLstVwCntrl];
+        [self refreshTemplData];
+        
+        
+    }
+    else
+    {
+        [self refreshData];
+        [self updateMainLstVwCntrl];
+        [self refreshTemplData];
+        [self refreshItemData];
+    }
+   
     
     for(;;)
     {
@@ -567,10 +594,10 @@
         
         if (itemsEasyEdited)
         {
-            NSLog(@"Editing %d items\n", itemsEdited);
-            [self updateEasyEditedItems];
-            [self refreshItemData];
-            [self updateEasyMainLstVwCntrl];
+            NSLog(@"Editing %d items\n", itemsEasyEdited);
+           [self updateEasyEditedItems];
+           [self refreshItemData];
+           [self updateEasyMainLstVwCntrl];
             [self updateLstVwCntrl];
         }
         
@@ -740,6 +767,7 @@
             if ([[vws objectAtIndex:i] isMemberOfClass:[List1ViewController class]])
             {
                 List1ViewController *pLst = [vws objectAtIndex:i];
+                NSLog(@"updateLstVwCntrl refreshList ");
                 [pLst refreshList];
                 [pLst.tableView reloadData];
             }
@@ -975,7 +1003,7 @@
             NSUInteger valcnt = [keys count];
             for (NSUInteger j=0; j < valcnt; ++j)
             {
-                List *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+                LocalList *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
                 NSUInteger len = [itemstr.item length];
                 if (!len)
                 {
@@ -1949,8 +1977,7 @@
                 [pLst.pAllItms.tableView reloadData];
             }
         }
-        [pAppCmnUtil.aViewController1.pAllItms refreshList];
-        [pAppCmnUtil.aViewController1.pAllItms.tableView reloadData];
+       
     });
     return;
 }
@@ -2070,7 +2097,7 @@
     {
         return __managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Shopper" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:appName withExtension:@"momd"];
     __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return __managedObjectModel;
     

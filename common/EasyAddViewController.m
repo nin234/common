@@ -441,6 +441,7 @@
         
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
+        aViewController.bEasyGroc = true;
         aViewController.mlistName = [masterList objectAtIndex:indexPath.row];
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
@@ -451,6 +452,7 @@
         
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
+        aViewController.bEasyGroc = true;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         aViewController.mlistName = nil;
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];

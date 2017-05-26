@@ -382,10 +382,12 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 
 -(void) itemDisplay:(NSString *)listname
 {
+    NSLog(@"Displaying item %@", listname);
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    pAppCmnUtil.listName = listname;
     [pAppCmnUtil.dataSync selectedItem:listname];
     List1ViewController *aViewController = [List1ViewController alloc];
+    aViewController.bEasyGroc = true;
+    aViewController.name = listname;
     aViewController.editMode = eListModeDisplay;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];

@@ -151,6 +151,7 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *easyPersistentStoreCoordinator;
 
 @property (nonatomic, retain) UINavigationController *navViewController;
+@property (nonatomic, retain) NSString *appName;
 @property (nonatomic) bool refreshMainLst;
 
 - (void)saveContext;

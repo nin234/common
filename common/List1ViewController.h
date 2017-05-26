@@ -58,6 +58,9 @@ enum eDispActionItems
 @property (nonatomic, retain) NSMutableDictionary *hiddenCells;
 @property (nonatomic, retain)NSArray* list;
 
+//nameVw used just for debugging purposes
+@property (nonatomic, retain) NSString *nameVw;
+
 @property (nonatomic, retain) UISearchBar *pSearchBar;
 @property enum eListMode editMode;
 @property bool bEasyGroc;
