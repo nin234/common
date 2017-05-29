@@ -24,7 +24,7 @@ enum templateNameButtons
     
 };
 
-@interface TemplListViewController : UITableViewController<UIAlertViewDelegate>
+@interface TemplListViewController : UITableViewController<UIAlertViewDelegate, UIActionSheetDelegate>
 {
     NSInteger cnt;
     NSArray *masterList;

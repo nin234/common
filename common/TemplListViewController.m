@@ -121,6 +121,10 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     {
             
         case 0:
+            [self templItemAdd];
+            break;
+            
+        case 1:
             [delegate templShareMgrStartAndShow];
             break;
             
@@ -135,11 +139,9 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     
     
     UIActionSheet *pSh;
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     
-    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Share", nil];
-    EasyViewController *pMainVwCntrl = [pAppCmnUtil.navViewController.viewControllers objectAtIndex:0];
-    [pSh showInView:pMainVwCntrl.pAllItms.tableView];
+    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"New", @"Share", nil];
+        [pSh showInView:self.view];
     [pSh setDelegate:self];
     
     
@@ -164,14 +166,18 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         self.navigationItem.rightBarButtonItem = pBarItem;
         return;
     }
-    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(templItemAdd) ];
-    self.navigationItem.rightBarButtonItem = pBarItem;
+    
      AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
     if (appCmnUtil.bEasyGroc == true)
     {
         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(templScrnActions)];
     
-        self.navigationItem.leftBarButtonItem = pBarItem1;
+        self.navigationItem.rightBarButtonItem = pBarItem1;
+    }
+    else
+    {
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(templItemAdd) ];
+        self.navigationItem.rightBarButtonItem = pBarItem;
     }
 
     

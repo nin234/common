@@ -23,16 +23,13 @@ enum eEasyGrocType {
     eScratchLst
 };
 
-@interface ListViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface ListViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate>
 {
     bool inEditAction;
     NSInteger textFldRowNo;
     NSMutableDictionary *rowTarget;
     NSUInteger seasonPickerRowNo;
-    NSArray *_pickerData;
-    NSInteger startMonth;
-    NSInteger endMonth;
-}
+   }
 
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *mlistName;
@@ -42,7 +39,7 @@ enum eEasyGrocType {
 @property enum eEasyGrocType easyGrocLstType;
 @property NSUInteger nRows;
 @property (nonatomic, retain) NSArray* mlist;
-@property (nonatomic, retain) UIPickerView *seasonPicker;
+
 
 -(void) refreshMasterList;
 -(void) refreshMasterListCpyFromLstVwCntrl:(ListViewController *) pLst;

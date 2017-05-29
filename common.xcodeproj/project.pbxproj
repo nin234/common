@@ -23,6 +23,7 @@
 /* Begin PBXBuildFile section */
 		3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B1033B01E8752370021538A /* ComponentsViewController.m */; };
 		3B825ECC1ED305A70010339F /* LocalList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B825ECB1ED305A70010339F /* LocalList.m */; };
+		3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */; };
 		3BF7F7651E74396300419F8D /* TemplListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7631E74396300419F8D /* TemplListViewController.m */; };
 		3BF7F7691E74949A00419F8D /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7671E74949A00419F8D /* ListViewController.m */; };
 		3BF7F7791E74F75C00419F8D /* EasyDataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7781E74F75C00419F8D /* EasyDataOps.m */; };
@@ -87,6 +88,9 @@
 		3B1033BA1E8871410021538A /* SeasonSelctrView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SeasonSelctrView.xib; sourceTree = "<group>"; };
 		3B825ECA1ED305A70010339F /* LocalList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalList.h; sourceTree = "<group>"; };
 		3B825ECB1ED305A70010339F /* LocalList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalList.m; sourceTree = "<group>"; };
+		3BB193721EDCA33B00EC1B58 /* SeasonPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeasonPickerViewController.h; sourceTree = "<group>"; };
+		3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeasonPickerViewController.m; sourceTree = "<group>"; };
+		3BB193741EDCA33B00EC1B58 /* SeasonPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SeasonPickerViewController.xib; sourceTree = "<group>"; };
 		3BF7F7621E74396300419F8D /* TemplListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplListViewController.h; sourceTree = "<group>"; };
 		3BF7F7631E74396300419F8D /* TemplListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplListViewController.m; sourceTree = "<group>"; };
 		3BF7F7641E74396300419F8D /* TemplListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplListViewController.xib; sourceTree = "<group>"; };
@@ -242,6 +246,9 @@
 				3BF7F7881E74FC8700419F8D /* List1ViewController.xib */,
 				3BF7F7681E74949A00419F8D /* ListViewController.xib */,
 				3B1033BA1E8871410021538A /* SeasonSelctrView.xib */,
+				3BB193721EDCA33B00EC1B58 /* SeasonPickerViewController.h */,
+				3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */,
+				3BB193741EDCA33B00EC1B58 /* SeasonPickerViewController.xib */,
 				DB7061421CAA88350031C445 /* CommonDecoder.h */,
 				DB7061431CAA88350031C445 /* CommonDecoder.m */,
 				DB70614A1CAA88650031C445 /* CommonShareMgr.h */,
@@ -443,6 +450,7 @@
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
 				3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */,
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
+				3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */,
 				DB7061471CAA88350031C445 /* CommonDecoder.m in Sources */,
 				DB00E5331C7D24C300E898F7 /* AddressAnnotation.m in Sources */,
 				DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */,

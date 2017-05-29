@@ -7,7 +7,31 @@
 //
 
 #import "LocalMasterList.h"
+#import "MasterList.h"
 
 @implementation LocalMasterList
+
+@synthesize  name;
+@synthesize  item;
+@synthesize  rowno;
+@synthesize  startMonth;
+@synthesize  endMonth;
+@synthesize  inventory;
+
+-(instancetype) initFromMasterList:(MasterList *)mlist
+{
+    if (self)
+    {
+        self.rowno = mlist.rowno;
+        self.name = mlist.name;
+        self.item = mlist.item;
+        self.startMonth = mlist.startMonth;
+        self.endMonth = mlist.endMonth;
+        self.inventory = mlist.inventory;
+        return self;
+    }
+    return nil;
+
+}
 
 @end

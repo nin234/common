@@ -8,6 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class MasterList;
+
 @interface LocalMasterList : NSObject
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * item;
+@property long long rowno;
+@property int startMonth;
+@property int endMonth;
+@property int inventory;
+
+-(instancetype) initFromMasterList:(MasterList *)list;
 
 @end

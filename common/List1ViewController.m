@@ -1217,10 +1217,7 @@
             [itemMp removeObjectForKey:rowNo];
             NSLog(@"adding and removing item %lld %@", item.rowno, item.item);
         }
-        if ([rowNo unsignedIntegerValue] == destinationIndexPath.row)
-        {
-            
-        }
+        
         
     }
     if (sourceItem != nil)
@@ -1252,8 +1249,8 @@
             if ([rowNo unsignedIntegerValue] < indexPath.row)
                 continue;
             LocalList *item = [itemMp objectForKey:rowNo];
-            
-                
+            if (item == nil)
+                continue;
             [itemMp removeObjectForKey:rowNo];
             NSUInteger newKey = [rowNo unsignedIntegerValue];
             --newKey;

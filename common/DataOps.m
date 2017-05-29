@@ -21,6 +21,7 @@
 #import "EasyViewController.h"
 #import "List1ViewController.h"
 #import "LocalList.h"
+#import "LocalMasterList.h"
 
 
 @implementation DataOps
@@ -241,7 +242,7 @@
         NSUInteger valcnt = [keys count];
         for (NSUInteger j=0; j < valcnt; ++j)
         {
-            MasterList *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+            LocalMasterList *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
             NSUInteger len = [itemstr.item length];
             if (!len)
             {
@@ -1231,7 +1232,7 @@
             NSUInteger valcnt = [keys count];
             for (NSUInteger j=0; j < valcnt; ++j)
             {
-                MasterList *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+                LocalMasterList *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
                 NSUInteger len = [itemstr.item length];
                 if (!len)
                 {
