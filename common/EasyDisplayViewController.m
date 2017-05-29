@@ -69,6 +69,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @synthesize delconfirm;
 @synthesize picName;
 @synthesize listName;
+//@synthesize imageScrollView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -81,6 +82,21 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     return self;
 }
 
+- (void)loadView
+{
+    CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
+   EasySlideScrollView * scrollView=[[EasySlideScrollView alloc] initWithFrame:fullScreenRect];
+    scrollView.contentSize=CGSizeMake(fullScreenRect.size.width,fullScreenRect.size.height);
+    
+    // do any further configuration to the scroll view
+    // add a view, or views, as a subview of the scroll view.
+    
+    // release scrollView as self.view retains it
+    self.view=scrollView;
+    
+    NSLog(@"View loaded\n");
+}
+
 - (void)viewDidLoad
  {
     
@@ -88,24 +104,32 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
      UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(photoAction)];
      self.navigationItem.rightBarButtonItem = pBarItem;
 
-    photo_scale = 1.0;
+    
     self.title = @"List";
+     photo_scale = 1.0;
      [self displayPhoto];
-         NSLog(@"View loaded\n");
+    
 }
 
 -(void) displayPhoto
 {
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    EasySlideScrollView *imageScrollView = (EasySlideScrollView *)self.view;
+    CGRect mainScrn = [UIScreen mainScreen].applicationFrame;
+    CGRect tableRect = CGRectMake(mainScrn.origin.x, mainScrn.origin.y, mainScrn.size.width, mainScrn.size.height);
+   //EasySlideScrollView *imageScrollView = [[EasySlideScrollView alloc] initWithFrame:CGRectMake(0.000, 0.00, self.view.frame.size.width*2, self.view.frame.size.height*2)];
+    //imageScrollView = [[EasySlideScrollView alloc] initWithFrame:tableRect];
+    
+    EasySlideScrollView *imageScrollView = (EasySlideScrollView*) self.view;
+   // imageScrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+100);
+    
     NSLog(@"View dimensions frame x=%f y=%f height=%f width=%f bounds x=%f y=%f height = %f width=%f\n", [imageScrollView frame].origin.x, [imageScrollView frame].origin.y, [imageScrollView frame].size.height, [imageScrollView frame].size.width,
           [imageScrollView bounds].origin.x, [imageScrollView bounds].origin.y, [imageScrollView bounds].size.height, [imageScrollView bounds].size.width);
     [imageScrollView setBackgroundColor:[UIColor blackColor]];
     [imageScrollView setDelegate:self];
     [imageScrollView setBouncesZoom:NO];
     [imageScrollView setScrollEnabled:NO];
-    
+    self.view =imageScrollView;
     
     NSError *err;
     NSURL *albumurl = pAppCmnUtil.pPicsDir;
@@ -137,18 +161,22 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
         }
         currURL = imgUrl;
         bPhoto = true;
-        EasyTapDetectingImageView *imageView = [[EasyTapDetectingImageView alloc] initWithImage:fullScreenImage];
-        [imageView setDelegate:self];
+       // EasyTapDetectingImageView *imageView = [[EasyTapDetectingImageView alloc] initWithImage:fullScreenImage];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:fullScreenImage];
+       // [imageView setDelegate:self];
         [imageView setTag:ZOOM_VIEW_TAG];
-        [imageScrollView setContentSize:[imageView frame].size];
+       // [imageScrollView setContentSize:[imageView frame].size];
         [imageScrollView addSubview:imageView];
-        currView = imageView;
+      //  currView = imageView;
         
         // calculate minimum scale to perfectly fit image width, and begin at that scale
         float minimumScale = [imageScrollView frame].size.width  / [imageView frame].size.width;
         [imageScrollView setMinimumZoomScale:minimumScale];
+        [imageScrollView setMaximumZoomScale:minimumScale*15];
         
         [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, imageView.frame.size.width, imageView.frame.size.height) animated:NO];
+        NSLog(@"View dimensions frame x=%f y=%f height=%f width=%f bounds x=%f y=%f height = %f width=%f\n", [imageScrollView frame].origin.x, [imageScrollView frame].origin.y, [imageScrollView frame].size.height, [imageScrollView frame].size.width,
+              [imageScrollView bounds].origin.x, [imageScrollView bounds].origin.y, [imageScrollView bounds].size.height, [imageScrollView bounds].size.width);
     }
     else
     {
@@ -214,7 +242,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
                 NSLog(@"Failed to remove item at URL %@ reason %@\n", thumburl, err);
             
             delconfirm = false;
-            [pAppCmnUtil.dataSync deletedItem:listName];
+            [pAppCmnUtil.dataSync deletedEasyItem:listName];
             [pAppCmnUtil.navViewController popViewControllerAnimated:YES];
         }
         else 
@@ -265,6 +293,14 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 #pragma mark UIScrollViewDelegate methods
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    for (UIView *vw in self.view.subviews)
+    {
+            if ([vw isKindOfClass:[EasySlideScrollView class]])
+            {
+                NSLog(@"View for zooming in Scroll view\n");
+              return [vw viewWithTag:ZOOM_VIEW_TAG];
+            }
+    }
     return [(UIScrollView *)self.view viewWithTag:ZOOM_VIEW_TAG];
 }
 
@@ -295,20 +331,34 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 - (void)tapDetectingImageView:(EasyTapDetectingImageView *)view gotDoubleTapAtPoint:(CGPoint)tapPoint {
     printf("In double tap\n");
-    UIScrollView *imageScrollView = (UIScrollView *)self.view;
-    // double tap zooms in
-    float newScale = [imageScrollView zoomScale] * ZOOM_STEP;
-    CGRect zoomRect = [self zoomRectForScale:newScale withCenter:tapPoint];
-    [imageScrollView zoomToRect:zoomRect animated:YES];
-}
+    for (UIView *vw in self.view.subviews)
+    {
+        if ([vw isKindOfClass:[EasySlideScrollView class]])
+        {
+            EasySlideScrollView *imageScrollView = (EasySlideScrollView *)vw;
+            // double tap zooms in
+            float newScale = [imageScrollView zoomScale] * ZOOM_STEP;
+            CGRect zoomRect = [self zoomRectForScale:newScale withCenter:tapPoint];
+            [imageScrollView zoomToRect:zoomRect animated:YES];
+ 
+        }
+    }
+    }
 
 - (void)tapDetectingImageView:(EasyTapDetectingImageView *)view gotTwoFingerTapAtPoint:(CGPoint)tapPoint {
     printf("In two finger tap tap\n");
-    UIScrollView *imageScrollView = (UIScrollView *)self.view;
-    // two-finger tap zooms out
-    float newScale = [imageScrollView zoomScale] / ZOOM_STEP;
-    CGRect zoomRect = [self zoomRectForScale:newScale withCenter:tapPoint];
-    [imageScrollView zoomToRect:zoomRect animated:YES];
+    for (UIView *vw in self.view.subviews)
+    {
+        if ([vw isKindOfClass:[EasySlideScrollView class]])
+        {
+            EasySlideScrollView *imageScrollView = (EasySlideScrollView *)vw;
+
+            float newScale = [imageScrollView zoomScale] / ZOOM_STEP;
+            CGRect zoomRect = [self zoomRectForScale:newScale withCenter:tapPoint];
+            [imageScrollView zoomToRect:zoomRect animated:YES];
+        }
+    }
+
 }
 
 - (void)tapDetectingImageView:(EasyTapDetectingImageView *)view gotSwipe:(BOOL)left
@@ -321,21 +371,29 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 - (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center {
     
-    CGRect zoomRect;
     
-    UIScrollView *imageScrollView = (UIScrollView *)self.view;
-
+    for (UIView *vw in self.view.subviews)
+    {
+        if ([vw isKindOfClass:[EasySlideScrollView class]])
+        {
+            CGRect zoomRect;
+            EasySlideScrollView *imageScrollView = (EasySlideScrollView *)vw;
+    
     // the zoom rect is in the content view's coordinates. 
     //    At a zoom scale of 1.0, it would be the size of the imageScrollView's bounds.
     //    As the zoom scale decreases, so more content is visible, the size of the rect grows.
-    zoomRect.size.height = [imageScrollView frame].size.height / scale;
-    zoomRect.size.width  = [imageScrollView frame].size.width  / scale;
+            zoomRect.size.height = [imageScrollView frame].size.height / scale;
+            zoomRect.size.width  = [imageScrollView frame].size.width  / scale;
     
     // choose an origin so as to get the right center.
-    zoomRect.origin.x    = center.x - (zoomRect.size.width  / 2.0);
-    zoomRect.origin.y    = center.y - (zoomRect.size.height / 2.0);
+            zoomRect.origin.x    = center.x - (zoomRect.size.width  / 2.0);
+            zoomRect.origin.y    = center.y - (zoomRect.size.height / 2.0);
+            return zoomRect;
+        }
+    }
     
-    return zoomRect;
+    return CGRectMake(0.00, 0.00, 0.00, 0.00);
+    
 }
 
 

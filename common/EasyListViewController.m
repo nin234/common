@@ -9,6 +9,7 @@
 #import "EasyListViewController.h"
 #import "List1ViewController.h"
 #import "EasyDisplayViewController.h"
+#import "EasySlideScrollView.h"
 #import "AppCmnUtil.h"
 
 const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
@@ -369,6 +370,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
             photoVwCntrl.picName = pic;
             photoVwCntrl.listName = item;
             photoVwCntrl = [photoVwCntrl initWithNibName:nil bundle:nil];
+           //[photoVwCntrl.view addSubview:[[EasySlideScrollView alloc] init]];
             [pAppCmnUtil.navViewController pushViewController:photoVwCntrl animated:YES];
             
         }

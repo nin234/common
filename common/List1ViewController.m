@@ -257,6 +257,13 @@
         
         itemMp = pAppCmnUtil.itemsMp;
         nRows = [itemMp count] + 1;
+        for (id key in itemMp)
+        {
+            NSNumber *rowNo = (NSNumber *) key;
+            NSUInteger rowno = [rowNo unsignedIntegerValue];
+            if (rowno > nRows)
+                nRows = rowno +1;
+        }
     }
     else
     {
@@ -440,16 +447,18 @@
     if (list != nil)
     {
         nRows = [list count]+1;
-        
+        NSUInteger lstcnt = [list count];
         itemMp = [NSMutableDictionary dictionaryWithCapacity:nRows];
         hiddenMp = [NSMutableDictionary dictionaryWithCapacity:nRows];
-        for (NSUInteger i=0; i < nRows-1; ++i)
+        for (NSUInteger i=0; i < lstcnt; ++i)
         {
            
             List *itemNL = [list objectAtIndex:i];
             LocalList *item = [[LocalList alloc] initFromList:itemNL];
              NSNumber *rowNm = [NSNumber numberWithLongLong:item.rowno];
             [itemMp setObject:item forKey:rowNm];
+            if (item.rowno > nRows)
+                nRows = (NSUInteger)item.rowno;
      //       NSLog (@"Setting item %@ to itempMp %@", item.item, rowNm);
             if (editMode == eListModeDisplay)
             {
@@ -556,6 +565,8 @@
     [pAppCmnUtil.dataSync selectedItem:listname];
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.editMode = eListModeDisplay;
+    aViewController.bEasyGroc = bEasyGroc;
+    aViewController.name = listname;
     
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
@@ -569,6 +580,7 @@
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     List1ViewController *pListView = (List1ViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    NSLog(@"Edit cancelled for item %@", pListView.name);
     [self itemDisplay:pListView.name];
     return;
 }
@@ -1164,59 +1176,58 @@
     
     NSNumber *soureRow = [NSNumber numberWithInteger:sourceIndexPath.row];
     LocalList *sourceItem = [itemMp objectForKey:soureRow];
-    LocalList *prevItem;
+    if (sourceItem != nil)
+    {
+        [itemMp removeObjectForKey:soureRow];
+        NSLog(@"SourceItem %lld %@", sourceItem.rowno, sourceItem.item);
+    }
     
     NSArray *keys1 = [itemMp allKeys];
      NSArray *keys = [keys1 sortedArrayUsingSelector: @selector(compare:)];
     NSInteger no_of_items = [keys count];
+    NSArray *reversedKeys = [[keys reverseObjectEnumerator] allObjects];
+    //apple orange beets nil nil carrots nil mango cilantro nil
     for(NSUInteger i=0; i < no_of_items; ++i)
     {
-         NSNumber *rowNo = [keys objectAtIndex:i];
+        NSNumber *rowNo;
+        if (sourceIndexPath.row < destinationIndexPath.row)
+            rowNo = [keys objectAtIndex:i];
+        else
+            rowNo = [reversedKeys objectAtIndex:i];
+        NSLog(@"rowNo=%lu", (unsigned long)[rowNo unsignedIntegerValue]);
          if ([rowNo unsignedIntegerValue] < sourceIndexPath.row && [rowNo unsignedIntegerValue] < destinationIndexPath.row)
              continue;
         
         if ([rowNo unsignedIntegerValue] > sourceIndexPath.row && [rowNo unsignedIntegerValue] > destinationIndexPath.row)
             continue;
+        
+        if ([rowNo unsignedIntegerValue] == sourceIndexPath.row)
+            continue;
+        LocalList *item = [itemMp objectForKey:rowNo];
+        NSUInteger newKey = [rowNo unsignedIntegerValue];
         if (sourceIndexPath.row < destinationIndexPath.row)
-        {
-                if ([rowNo unsignedIntegerValue] == sourceIndexPath.row)
-                    continue;
-                else if ([rowNo unsignedIntegerValue] < destinationIndexPath.row)
-                {
-                    LocalList *item = [itemMp objectForKey:rowNo];
-                    NSUInteger newKey = [rowNo unsignedIntegerValue];
-                    --newKey;
-                    item.rowno = newKey;
-                    [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
-                }
-                else
-                {
-                    LocalList *item = [itemMp objectForKey:rowNo];
-                    NSUInteger newKey = [rowNo unsignedIntegerValue];
-                    --newKey;
-                    item.rowno = newKey;
-                    [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
-                    sourceItem.rowno = [rowNo unsignedIntegerValue];
-                    [itemMp setObject:sourceItem forKey:rowNo];
-                }
-        }
+            --newKey;
         else
+            ++newKey;
+        
+        if (item != nil)
         {
-            if ([rowNo unsignedIntegerValue] == destinationIndexPath.row)
-            {
-                prevItem = [itemMp objectForKey:rowNo];
-                sourceItem.rowno = [rowNo unsignedIntegerValue];
-                [itemMp setObject:sourceItem forKey:rowNo];
-            }
-            else
-            {
-                LocalList *tmpItem = [itemMp objectForKey:rowNo];
-                prevItem.rowno = [rowNo unsignedIntegerValue];
-                [itemMp setObject:prevItem forKey:rowNo];
-                prevItem = tmpItem;
-            }
+            item.rowno = newKey;
+            [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
+            [itemMp removeObjectForKey:rowNo];
+            NSLog(@"adding and removing item %lld %@", item.rowno, item.item);
+        }
+        if ([rowNo unsignedIntegerValue] == destinationIndexPath.row)
+        {
+            
         }
         
+    }
+    if (sourceItem != nil)
+    {
+        NSLog(@"Setting sourceItem %lld %@", sourceItem.rowno, sourceItem.item);
+        sourceItem.rowno = destinationIndexPath.row;
+        [itemMp setObject:sourceItem forKey:[NSNumber numberWithLongLong:sourceItem.rowno]];
     }
     [tableView reloadData];
     
@@ -1329,7 +1340,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
     NSUInteger row = indexPath.row;
     NSNumber *key = [NSNumber numberWithInteger:indexPath.row-1];
     
-  // NSLog(@"Cell for index at row %lu", (unsigned long)row);
+   NSLog(@"Cell for index at row %lu", (unsigned long)row);
    if ([hiddenCells objectForKey:key] != nil)
    {
        cell.hidden = YES;
@@ -1340,7 +1351,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
        cell.hidden = NO;
    }
    
-    // NSLog(@"Cell for index at row %lu", (unsigned long)row);
+     NSLog(@"Cell for index at row %lu", (unsigned long)row);
     switch (row)
     {
         case 0:
@@ -1384,7 +1395,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
             
         default:
         {
-            NSLog(@"Cell for index at row %lu %@", (unsigned long)row, nameVw);
+           // NSLog(@"Cell for index at row %lu %@", (unsigned long)row, nameVw);
             CGRect textFrame = CGRectMake(cell.bounds.origin.x+10, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
             UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
             textField.delegate = self;
@@ -1458,7 +1469,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
             
                 [cell.contentView addSubview:textField];
             
-              //  NSLog(@"Adding textField %@ %f %f %f %f", textField.text, textFrame.origin.x, textFrame.origin.y, textFrame.size.height, textFrame.size.width);
+               NSLog(@"Adding textField %@ %f %f %f %f", textField.text, textFrame.origin.x, textFrame.origin.y, textFrame.size.height, textFrame.size.width);
                 
             }
             

@@ -583,6 +583,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     [photoViewController setNavViewController:navViewController];
     [photoViewController setPAlName:pAlName];
     [photoViewController setPFlMgr:pFlMgr];
+    
     reload = false;
    
     [[self navigationController] pushViewController:photoViewController animated:YES];

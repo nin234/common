@@ -597,7 +597,14 @@
             NSLog(@"Editing %d items\n", itemsEasyEdited);
            [self updateEasyEditedItems];
            [self refreshItemData];
-           [self updateEasyMainLstVwCntrl];
+          
+            [workToDo lock];
+            if (!itemsEasyEdited)
+            {
+                [workToDo signal];
+            }
+            [workToDo unlock];
+            [self updateEasyMainLstVwCntrl];
             [self updateLstVwCntrl];
         }
         
@@ -611,11 +618,18 @@
 
         if (easyItemsToAdd)
         {
-            NSLog(@"Adding %d template items\n", itemsToAdd);
+            NSLog(@"Adding %d list items\n", easyItemsToAdd);
             [self storeNewEasyItems];
             [self refreshItemData];
+            [workToDo lock];
+            if (!easyItemsToAdd)
+            {
+                [workToDo signal];
+            }
+            [workToDo unlock];
             [self updateEasyMainLstVwCntrl];
             [self updateLstVwCntrl];
+            
         }
 
         
@@ -1035,6 +1049,7 @@
             
         }
     }
+     [self saveEasyContext];
     if (easyItemsToAdd > nItems)
     {
         NSRange aR;
@@ -1049,8 +1064,9 @@
         [listNames removeAllObjects];
     }
     easyItemsToAdd -= nItems;
+    
     [workToDo unlock];
-    [self saveEasyContext];
+   
     
     return;
 }
@@ -1302,7 +1318,7 @@
 {
     [workToDo lock];
     [listDeletedNames addObject:name];
-    ++itemsDeleted;
+    ++itemsEasyDeleted;
     NSLog(@"Added deleted item %@ %d and signalling work to do\n", name, itemsDeleted);
     [workToDo signal];
     [workToDo unlock];
@@ -1415,7 +1431,7 @@
             [self.easyManagedObjectContext deleteObject:[storeItems objectAtIndex:i]];
         }
     }
-    
+    [self saveEasyContext];
     if (itemsEasyEdited > ecnt)
     {
         NSRange aR;
@@ -1430,9 +1446,13 @@
         [listEditNames removeAllObjects];
     }
     itemsEasyEdited -= ecnt;
+    if (!itemsEasyEdited)
+    {
+        [workToDo signal];
+    }
     [workToDo unlock];
     
-    [self saveEasyContext];
+    
     
     return;
 }
@@ -1931,7 +1951,7 @@
     [listNames addObject:name];
     [listMps addObject:itmsMp];
     ++easyItemsToAdd;
-    NSLog(@"Added  new item %@ %d and signalling work to do\n", name, itemsToAdd);
+    NSLog(@"Added  new item %@ %d and signalling work to do\n", name, easyItemsToAdd);
     [workToDo signal];
     [workToDo unlock];
     return;
@@ -1940,22 +1960,33 @@
 
 -(NSArray *) getList: (NSString *)key
 {
-    [workToDo lock];
-    NSMutableArray* listarr =  [listArr objectForKey:key];
-    // NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n", listarr, key, listArr);
-    if (listarr != nil)
+    for (int i=0; i < 8; ++i)
     {
-        NSMutableArray *list = [[NSMutableArray alloc] init];
-        NSUInteger listcnt = [listarr count];
-        for (NSUInteger i=0; i < listcnt; ++i)
+        [workToDo lock];
+    
+            if (easyItemsToAdd || itemsEasyEdited)
+            {
+                NSLog (@"in getList easyItemsToAdd=%d itemsEasyEdited=%d", easyItemsToAdd, itemsEasyEdited);
+                NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:1];
+                [workToDo waitUntilDate:checkTime];
+            }
+        
+        NSMutableArray* listarr =  [listArr objectForKey:key];
+    // NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n", listarr, key, listArr);
+        if (listarr != nil)
         {
-            List *item = [listarr objectAtIndex:i];
-            [list addObject:item];
+            NSMutableArray *list = [[NSMutableArray alloc] init];
+            NSUInteger listcnt = [listarr count];
+            for (NSUInteger i=0; i < listcnt; ++i)
+            {
+                List *item = [listarr objectAtIndex:i];
+                [list addObject:item];
+            }
+            [workToDo unlock];
+            return list;
         }
         [workToDo unlock];
-        return list;
     }
-    [workToDo unlock];
     return nil;
     
 }

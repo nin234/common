@@ -50,7 +50,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 #import "EasyTapDetectingImageView.h"
 #import "EasyPhoto.h"
-
+#import "EasySlideScrollView.h"
 
 @interface EasyDisplayViewController : UIViewController<UIScrollViewDelegate, EasyTapDetectingImageViewDelegate, UIActionSheetDelegate> {
   //  ALAsset *asset;
@@ -68,6 +68,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, retain) NSString *picName;
 @property (nonatomic, retain) NSString *listName;
 @property (nonatomic, retain) NSURL *currURL;
+//@property (nonatomic, retain) EasySlideScrollView *imageScrollView;
 @property bool bPhoto;
 @property bool delconfirm;
 
