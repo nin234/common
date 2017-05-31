@@ -83,8 +83,11 @@
     NSArray *masterListTmp;
     NSMutableDictionary *masterListArr;
     int templItemsToAdd;
+    int templShareItemsToAdd;
     NSMutableArray *masterListNames;
+    NSMutableArray *shareMasterListNames;
     NSMutableArray *masterListMps;
+    NSMutableArray *shareMasterListMps;
     NSMutableArray *masterListEditNames;
     NSMutableArray *masterListEditMps;
     int templItemsEdited;
@@ -161,6 +164,7 @@
 - (void)saveEasyContext;
 -(NSArray *) getMasterList: (NSString *)key;
 -(void) addTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) addShareTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) editedTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) deletedTemplItem:(NSString *)name;
 -(void) addPicItem:(NSString *)name picItem:(NSString *)picUrl;
@@ -172,6 +176,7 @@
 -(NSArray *) getListNames;
 -(NSDictionary *) getPics;
 -(void) addTemplName:(NSString *)name;
+-(bool) checkMlistNameExist:(NSString *)name;
 
 
 @end

@@ -44,6 +44,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         NSLog (@"Master list name %@ count %ld", masterList, (long)cnt);
         bShareTemplView = false;
         seletedItems = [[NSMutableArray alloc] init];
+        uniqueNameAlert = false;
 
     }
     return self;
@@ -94,6 +95,11 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if (uniqueNameAlert)
+    {
+        uniqueNameAlert = false;
+        return;
+    }
     switch (buttonIndex)
     {
         case CANCEL_TEMPL_NAME_BUTTON:
@@ -104,6 +110,18 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         {
             NSString *templName =  [[alertView textFieldAtIndex:0] text];
              AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+            if (![pAppCmnUtil.dataSync checkMlistNameExist:templName])
+            {
+                uniqueNameAlert = true;
+                NSString *msg = @"Template list name ";
+                msg = [msg stringByAppendingString:templName];
+                msg = [msg stringByAppendingString:@" exists, Please choose a different name"];
+                
+                UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Name exists" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                
+                [pAvw show];
+                return;
+            }
             [pAppCmnUtil.dataSync addTemplName:templName];
         }
             break;

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LocalMasterList.h"
 
-@interface SeasonPickerViewController : UIViewController<UIPickerViewDelegate, UIPickerViewDataSource>
+@interface SeasonPickerViewController : UITableViewController<UIPickerViewDelegate, UIPickerViewDataSource>
 {
     NSArray *_pickerData;
     NSInteger startMonth;

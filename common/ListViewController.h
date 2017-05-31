@@ -29,6 +29,7 @@ enum eEasyGrocType {
     NSInteger textFldRowNo;
     NSMutableDictionary *rowTarget;
     NSUInteger seasonPickerRowNo;
+    bool reloadAfterSeasonPicked;
    }
 
 @property (nonatomic, retain) NSString *name;

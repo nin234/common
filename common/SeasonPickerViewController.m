@@ -48,7 +48,8 @@
         mitem.endMonth = (int)endMonth;
     }
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil popView];
+    [pAppCmnUtil.navViewController popViewControllerAnimated:YES];
+    
     
 }
 
@@ -62,6 +63,12 @@
     return 12;
 }
 
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    NSLog(@"SeasonPickerViewController will disappear");
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -70,7 +77,7 @@
         CGRect mainScrn = [UIScreen mainScreen].applicationFrame;
         CGRect  viewRect;
         viewRect = CGRectMake(mainScrn.origin.x, mainScrn.origin.y, mainScrn.size.width, mainScrn.size.height-50);
-        seasonPicker = [[UIPickerView alloc] initWithFrame:viewRect];
+       seasonPicker = [[UIPickerView alloc] initWithFrame:viewRect];
        
         [self.view addSubview:seasonPicker];
         

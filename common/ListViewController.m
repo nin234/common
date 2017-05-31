@@ -35,17 +35,13 @@
 
 -(void) addRow1
 {
-    CGPoint hitPoint = [rowAddButton convertPoint:CGPointZero toView:pLstVw.tableView];
-    NSIndexPath *hitIndex = [pLstVw.tableView indexPathForRowAtPoint:hitPoint];
-    [pLstVw addRow:hitIndex.row];
+    [pLstVw addRow:rowNo];
     return;
 }
 
 -(void) selectSeason
 {
-    CGPoint hitPoint = [rowAddButton convertPoint:CGPointZero toView:pLstVw.tableView];
-    NSIndexPath *hitIndex = [pLstVw.tableView indexPathForRowAtPoint:hitPoint];
-    [pLstVw showSeasonPicker:hitIndex.row];
+    [pLstVw showSeasonPicker:rowNo];
 }
 
 @end
@@ -69,15 +65,17 @@
 
 -(void) showSeasonPicker : (NSUInteger) rowNo
 {
-    self.tableView.hidden= YES;
+    
     seasonPickerRowNo = rowNo;
     SeasonPickerViewController *pPickerVwCntrl = [SeasonPickerViewController alloc];
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:rowNo];
     LocalMasterList *item = [itemMp objectForKey:rowNm];
     
-    pPickerVwCntrl.mitem = item;
-    pPickerVwCntrl = [pPickerVwCntrl initWithNibName:nil bundle:nil];
+   pPickerVwCntrl.mitem = item;
+   pPickerVwCntrl = [pPickerVwCntrl initWithNibName:nil bundle:nil];
+    reloadAfterSeasonPicked = true;
+    NSLog(@"Launching season picker for row %lu", (unsigned long)rowNo);
     [pAppCmnUtil.navViewController pushViewController:pPickerVwCntrl animated:NO];
     
 }
@@ -181,11 +179,14 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    inEditAction = false;
-    textFldRowNo = -1;
-    rowTarget = [[NSMutableDictionary alloc] init];
+   
     if (self)
     {
+        inEditAction = false;
+        textFldRowNo = -1;
+        rowTarget = [[NSMutableDictionary alloc] init];
+        reloadAfterSeasonPicked = false;
+        [self.tableView setEditing:YES animated:YES];
         [self refreshMasterList];
                 
     }
@@ -233,21 +234,22 @@
             LocalMasterList *item = [[LocalMasterList alloc] initFromMasterList:itemML];
               NSNumber *rowNm = [NSNumber numberWithLongLong:item.rowno];
             if (item.rowno > nRows)
-                nRows = item.rowno;
+                nRows = (NSUInteger) item.rowno;
             [itemMp setObject:item forKey:rowNm];
         }
         if (editMode != eViewModeDisplay)
             nRows += 13;
         else
             nRows += 3;
-        NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
+       
         
     }
     else
     {
-        nRows = 50;
+        nRows = 15;
         itemMp = [NSMutableDictionary dictionaryWithCapacity:50];
     }
+     NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
     NSLog(@"itemMp dictionary to set view %@\n", itemMp);
 }
 
@@ -267,6 +269,7 @@
     ListViewController *aViewController = [ListViewController alloc];
     aViewController.editMode = eViewModeEdit;
     aViewController.easyGrocLstType = easyGrocLstType;
+    aViewController.mlistName = mlistName;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     return;
@@ -323,6 +326,7 @@
             break;
             
         default:
+            title = @"Template List";
             break;
     }
     
@@ -334,14 +338,12 @@
         self.navigationItem.rightBarButtonItem = pBarItem;
         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemEditCancel) ];
         self.navigationItem.leftBarButtonItem = pBarItem1;
-        NSString *title = @"Template List";
         self.navigationItem.title = [NSString stringWithString:title];
     }
     else if (editMode == eViewModeDisplay)
     {
         UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(templItemEdit) ];
         self.navigationItem.rightBarButtonItem = pBarItem;
-        NSString *title = @"Template List";
         self.navigationItem.title = [NSString stringWithString:title];
     }
     else
@@ -399,7 +401,16 @@
 -(void) itemEditActions
 {
     inEditAction = true;
-    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Save", @"Delete", nil];
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    UIActionSheet *pSh;
+    if (pAppCmnUtil.bEasyGroc)
+    {
+        pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Save", nil];
+    }
+    else
+    {
+        pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Save", @"Delete", nil];
+    }
     
     [pSh showInView:self.tableView];
     [pSh setDelegate:self];
@@ -409,12 +420,18 @@
 }
 
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-   if(editMode != eViewModeDisplay)
-        [self.tableView setEditing:YES animated:YES];
+    [super viewWillAppear:animated];
+    NSLog (@"In view will appear");
+    if (reloadAfterSeasonPicked)
+    {
+        self.tableView.editing = YES;
+        [self.tableView reloadData];
+        reloadAfterSeasonPicked = false;
+    }
 }
+
 
 
 
@@ -455,11 +472,17 @@
                     item.startMonth = 1;
                     item.endMonth =12;
                     item.inventory =10;
+                    item.item = textField.text;
+                     [itemMp setObject:item forKey:rowNm];
                 }
-                [itemMp setObject:item forKey:rowNm];
+                else
+                {
+                    item.item = textField.text;
+                }
+               
                 if (indPath.row > nRows-3)
                 {
-                    nRows+=35;
+                    nRows+=13;
                     [self.tableView reloadData];
                 }
 
@@ -535,10 +558,7 @@
     printf("Clicked button at index %ld in delete template list\n", (long)buttonIndex);
     if (buttonIndex == 0)
     {
-      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-        [pAppCmnUtil.dataSync deletedTemplItem:name];
-        [pAppCmnUtil popView];
-    }
+          }
     
 }
 
@@ -741,6 +761,7 @@
     
     if (indexPath.section != 0)
         return nil;
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     NSUInteger row = indexPath.row;
     switch (row)
     {
@@ -753,7 +774,7 @@
             if (name == nil)
             {
                 NSString *pListName = @"List";
-                 AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+                
                 long listno = pAppCmnUtil.dataSync.masterListCnt+1;
                 NSString *intStr = [[NSNumber numberWithLongLong:listno] stringValue];
                 pListName = [pListName stringByAppendingString:intStr];
@@ -765,6 +786,23 @@
             else
             {
                 textField.text = name;
+                if (pAppCmnUtil.bEasyGroc)
+                {
+                    switch (easyGrocLstType)
+                    {
+                        case eInvntryLst:
+                            textField.text = [name substringToIndex:[name length]-4];
+                        break;
+                            
+                        case eScratchLst:
+                            textField.text = [name substringToIndex:[name length]-7];
+                            break;
+
+                    default:
+                        break;
+                }
+                }
+                
             }
             [cell.contentView addSubview:textField];
         }
@@ -794,6 +832,7 @@
                 {
                     [self setEditAccessories:cell rowNm:row];
                 }
+              NSLog(@"cell for row at index path in row %lu edit mode = %d text=%@", (unsigned long)row, editMode, textField.text);
                 [cell.contentView addSubview:textField];
         }
         break;

@@ -29,6 +29,7 @@ enum templateNameButtons
     NSInteger cnt;
     NSArray *masterList;
     NSMutableArray *seletedItems;
+    bool uniqueNameAlert;
 }
 
 -(void) refreshMasterList;

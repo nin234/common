@@ -55,6 +55,31 @@
     
     NSString *title = masterListName;
     self.navigationItem.title = [NSString stringWithString:title];
+    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(deleteTemplateList)];
+    
+    self.navigationItem.rightBarButtonItem = pBarItem1;
+}
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (!buttonIndex)
+    {
+        NSLog (@"In action sheet deleting list");
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        [pAppCmnUtil.dataSync deletedTemplItem:masterInvListName];
+        [pAppCmnUtil.dataSync deletedTemplItem:masterScrathListName];
+        [pAppCmnUtil.dataSync deletedTemplItem:masterListName];
+        
+        [pAppCmnUtil popView];
+
+    }
+}
+
+- (void) deleteTemplateList
+{
+    NSLog(@"Touched delete list button\n");
+    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete List" otherButtonTitles:nil];
+    [pSh showInView:self.tableView];
+    [pSh setDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning {

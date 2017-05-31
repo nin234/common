@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ComponentsViewController : UITableViewController
+@interface ComponentsViewController : UITableViewController<UIActionSheetDelegate>
 
 @property (nonatomic, retain) NSString *masterListName;
 @property (nonatomic, retain) NSString *masterInvListName;

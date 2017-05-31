@@ -36,9 +36,7 @@
 -(void) addRow1
 {
  
-    CGPoint hitPoint = [rowAddButton convertPoint:CGPointZero toView:pLst1Vw.tableView];
-    NSIndexPath *hitIndex = [pLst1Vw.tableView indexPathForRowAtPoint:hitPoint];
-    [pLst1Vw addRow:hitIndex.row];
+    [pLst1Vw addRow:rowNo];
 
     return;
 }

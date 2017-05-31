@@ -431,6 +431,7 @@
     itemsEdited = 0;
     templItemsEdited = 0;
      templItemsToAdd = 0;
+    templShareItemsToAdd = 0;
     itemSelectedChanged = false;
     itemsToShare = 0;
     itemsToDownload = 0;
@@ -464,6 +465,8 @@
     loginTaskId = UIBackgroundTaskInvalid;
     masterListNames = [[NSMutableArray alloc] init];
     masterListMps = [[NSMutableArray alloc] init];
+    shareMasterListNames = [[NSMutableArray alloc] init];
+    shareMasterListMps = [[NSMutableArray alloc] init];
      picItemsToAdd = 0;
     listNames = [[NSMutableArray alloc] init];
     listPicUrls = [[NSMutableArray alloc] init];
@@ -500,7 +503,7 @@
     for(;;)
     {
         [workToDo lock];
-        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd  || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
+        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd || templShareItemsToAdd || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
         {
            // NSLog(@"Waiting for work\n");
             NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:waitTime];
@@ -519,6 +522,15 @@
         {
             NSLog(@"Adding %d template items\n", templItemsToAdd);
             [self storeNewTemplItems];
+            [self refreshTemplData];
+            [self updateMasterLstVwCntrl];
+            
+        }
+        
+        if (templShareItemsToAdd)
+        {
+            NSLog(@"Adding %d template Share items\n", templShareItemsToAdd);
+            [self storeNewTemplShareItems];
             [self refreshTemplData];
             [self updateMasterLstVwCntrl];
             
@@ -1152,12 +1164,14 @@
     }
     
     [workToDo lock];
-    NSUInteger nTotCnt=0;
+    
     for (int i=0; i <nItems; ++i)
     {
         NSString *name = [masterListNamesOnly objectAtIndex:i];
         MasterListNames *mname = [storeNames objectAtIndex:i];
         mname.name = name;
+        mname.share_id = 0;
+        mname.share_name = @"0";
         // NSLog(@"Storing master list name %@\n", mname);
         
     }
@@ -1182,15 +1196,15 @@
 
 
 
--(void) storeNewTemplItems
+-(void) storeNewTemplShareItems
 {
     
-    int nItems = templItemsToAdd;
+    int nItems = templShareItemsToAdd;
     int nStoreCnt=0;
     [workToDo lock];
     for (int i=0; i < nItems; ++i)
     {
-        nStoreCnt += [[masterListMps objectAtIndex:i] count];
+        nStoreCnt += [[shareMasterListMps objectAtIndex:i] count];
     }
     [workToDo unlock];
     
@@ -1226,9 +1240,9 @@
     {
         for (int i=0; i <nItems; ++i)
         {
-            NSArray *keys = [[masterListMps objectAtIndex:i] allKeys];
-            NSMutableDictionary *rowitems = [masterListMps objectAtIndex:i];
-            NSString *name = [masterListNames objectAtIndex:i];
+            NSArray *keys = [[shareMasterListMps objectAtIndex:i] allKeys];
+            NSMutableDictionary *rowitems = [shareMasterListMps objectAtIndex:i];
+            NSString *name = [shareMasterListNames objectAtIndex:i];
             NSUInteger valcnt = [keys count];
             for (NSUInteger j=0; j < valcnt; ++j)
             {
@@ -1261,6 +1275,86 @@
             
         }
     }
+    if (templShareItemsToAdd > nItems)
+    {
+        NSRange aR;
+        aR.location = 0;
+        aR.length = nItems;
+        [shareMasterListNames removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+        [shareMasterListMps removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:aR]];
+    }
+    else
+    {
+        [shareMasterListMps removeAllObjects];
+        [shareMasterListNames removeAllObjects];
+    }
+    templShareItemsToAdd -= nItems;
+    [workToDo unlock];
+    [self saveEasyContext];
+    
+    return;
+}
+
+-(void) storeNewTemplItems
+{
+    
+    int nItems = templItemsToAdd;
+    int nStoreCnt=0;
+    [workToDo lock];
+    for (int i=0; i < nItems; ++i)
+    {
+        nStoreCnt += [[masterListMps objectAtIndex:i] count];
+    }
+    [workToDo unlock];
+    
+    NSMutableArray *storeItems = [[NSMutableArray alloc] initWithCapacity:nStoreCnt];
+ 
+    
+    NSManagedObjectModel *managedObjectModel =
+    [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
+    NSDictionary *ent = [managedObjectModel entitiesByName];
+    printf("entity count %lu\n", (unsigned long)[[ent allKeys] count]);
+    NSEntityDescription *entity =
+    [ent objectForKey:@"MasterList"];
+    
+    for (int i=0 ; i < nStoreCnt; ++i)
+    {
+        MasterList *newItem = [[MasterList alloc]
+                               initWithEntity:entity insertIntoManagedObjectContext:[self easyManagedObjectContext]];
+        [storeItems addObject:newItem];
+    }
+    
+    [workToDo lock];
+    NSUInteger nTotCnt=0;
+    if (nStoreCnt)
+    {
+        for (int i=0; i <nItems; ++i)
+        {
+            NSArray *keys = [[masterListMps objectAtIndex:i] allKeys];
+            NSMutableDictionary *rowitems = [masterListMps objectAtIndex:i];
+            NSString *name = [masterListNames objectAtIndex:i];
+            NSUInteger valcnt = [keys count];
+            for (NSUInteger j=0; j < valcnt; ++j)
+            {
+                LocalMasterList *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+                NSUInteger len = [itemstr.item length];
+                if (!len)
+                {
+                    continue;
+                }
+                MasterList *item = [storeItems objectAtIndex:nTotCnt];
+                item.name = name;
+                item.item = itemstr.item;
+                item.startMonth = itemstr.startMonth;
+                item.endMonth = itemstr.endMonth;
+                item.inventory = itemstr.inventory;
+                item.rowno = [[keys objectAtIndex:j] intValue];
+                ++nTotCnt;
+                //  NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
+            }
+            
+        }
+    }
     if (templItemsToAdd > nItems)
     {
         NSRange aR;
@@ -1283,6 +1377,15 @@
 
 
 
+-(bool) checkMlistNameExist:(NSString *)name
+{
+    for (NSString *nm in masterListNamesArr)
+    {
+        if ([nm isEqualToString:name])
+            return false;
+    }
+    return true;
+}
 
 
 -(NSArray *) getMasterListNames
@@ -1297,6 +1400,9 @@
     {
         return nil;
     }
+    
+    //Two questions 1) how to uniquely identify a name (with share id ) and how to display name
+    // ie should share Id be displayed for a name clash
     NSMutableArray* mlistarr =  [masterListArr objectForKey:key];
     //NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n", mlistarr, key, masterListArr);
     if (mlistarr != nil)
@@ -1535,6 +1641,18 @@
     [workToDo unlock];
     return;
 }
+-(void) addShareTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+{
+    [workToDo lock];
+    [shareMasterListNames addObject:name];
+    [shareMasterListMps addObject:itmsMp];
+    ++templShareItemsToAdd;
+    NSLog(@"Added  new template item %@ %d and signalling work to do\n", name, templShareItemsToAdd);
+    [workToDo signal];
+    [workToDo unlock];
+    return;
+}
+
 
 -(void) addTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
 {
