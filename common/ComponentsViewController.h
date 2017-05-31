@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface ComponentsViewController : UITableViewController<UIActionSheetDelegate>
 
 @property (nonatomic, retain) NSString *masterListName;
@@ -16,5 +17,8 @@
 @property (nonatomic, retain) NSArray* mlist;
 @property (nonatomic, retain) NSArray* mlistInv;
 @property (nonatomic, retain) NSArray* mlistScrtch;
+@property  bool recrLstExists;
+@property bool invLstExists;
+@property bool scrtchLstExists;
 
 @end

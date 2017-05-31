@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-
+#import "ComponentsViewController.h"
 
 
 enum eViewMode {
@@ -40,6 +40,7 @@ enum eEasyGrocType {
 @property enum eEasyGrocType easyGrocLstType;
 @property NSUInteger nRows;
 @property (nonatomic, retain) NSArray* mlist;
+@property (nonatomic, retain) ComponentsViewController *pCompVwCntrl;
 
 
 -(void) refreshMasterList;

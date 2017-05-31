@@ -61,6 +61,7 @@
 @synthesize default_name;
 @synthesize mlistName;
 @synthesize easyGrocLstType;
+@synthesize pCompVwCntrl;
 
 
 -(void) showSeasonPicker : (NSUInteger) rowNo
@@ -299,6 +300,27 @@
     [self templItemDisplay:pListView.name lstcntr:pListView];
     [pListView cleanUpItemMp];
     [pAppCmnUtil.dataSync addTemplItem:pListView.name itemsDic:pListView.itemMp];
+    if (pAppCmnUtil.bEasyGroc && [pListView.itemMp count])
+    {
+        switch (easyGrocLstType)
+        {
+            case eInvntryLst:
+                pCompVwCntrl.invLstExists = true;
+                break;
+                
+            case eScratchLst:
+                pCompVwCntrl.scrtchLstExists = true;
+                break;
+                
+            case eRecurrngLst:
+                pCompVwCntrl.recrLstExists = true;
+                break;
+                
+            default:
+                break;
+        }
+ 
+    }
 }
 
 - (void)viewDidLoad
@@ -800,7 +822,7 @@
 
                     default:
                         break;
-                }
+                    }
                 }
                 
             }

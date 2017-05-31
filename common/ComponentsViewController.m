@@ -23,6 +23,9 @@
 @synthesize masterScrathListName;
 @synthesize mlistInv;
 @synthesize mlistScrtch;
+@synthesize invLstExists;
+@synthesize scrtchLstExists;
+@synthesize recrLstExists;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,10 +37,23 @@
         if (masterListName != nil)
         {
             mlist = [pAppCmnUtil.dataSync getMasterList:masterListName];
+            if (mlist)
+                recrLstExists = true;
+            else
+                recrLstExists = false;
             masterScrathListName = [masterListName stringByAppendingString:@":SCRTCH"];
             masterInvListName = [masterListName stringByAppendingString:@":INV"];
             mlistScrtch = [pAppCmnUtil.dataSync getMasterList:masterScrathListName];
+            if (mlistScrtch)
+                scrtchLstExists = true;
+            else
+                scrtchLstExists = false;
+            
             mlistInv = [pAppCmnUtil.dataSync getMasterList:masterInvListName];
+            if (mlistInv)
+                invLstExists = true;
+            else
+                invLstExists = false;
             
         }
     }
@@ -237,7 +253,7 @@
     if (indexPath.section == 0)
     {
         aViewController.easyGrocLstType = eRecurrngLst;
-        if (mlist == nil)
+        if (!recrLstExists)
         {
             aViewController.editMode = eViewModeAdd;
         }
@@ -251,7 +267,7 @@
     else if (indexPath.section ==1)
     {
         aViewController.easyGrocLstType = eInvntryLst;
-        if (mlistInv == nil)
+        if (!invLstExists)
         {
             aViewController.editMode = eViewModeAdd;
         }
@@ -264,7 +280,7 @@
     else if (indexPath.section ==2)
     {
         aViewController.easyGrocLstType = eScratchLst;
-        if (mlistScrtch == nil)
+        if (!scrtchLstExists)
         {
             aViewController.editMode = eViewModeAdd;
         }
@@ -280,6 +296,7 @@
     }
     
     aViewController = [aViewController initWithNibName:nil bundle:nil];
+    aViewController.pCompVwCntrl = self;
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
 }
 
