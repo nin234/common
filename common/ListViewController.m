@@ -113,55 +113,33 @@
     
     NSInteger no_of_items = [keys count];
     
-    NSString  *prevItem = nil;
-    
-    NSUInteger lastIndx = -1;
     NSLog(@"Inserting row at index=%lu no_of_items=%ld", (unsigned long)insrtedRowNo, (long)no_of_items);
+    NSMutableDictionary *itemMpCpy = [[NSMutableDictionary alloc] initWithDictionary:itemMp];
+    [itemMp removeAllObjects];
     for(NSUInteger i=0; i < no_of_items; ++i)
     {
         NSNumber *rowNo1 = [keys objectAtIndex:i];
-        lastIndx = [rowNo1 unsignedIntegerValue];
-        if (lastIndx < insrtedRowNo)
-            continue;
-        NSString *item = prevItem;
-        
-        prevItem = [itemMp objectForKey:rowNo1];
-        if (insrtedRowNo != [rowNo1 unsignedIntegerValue])
+        NSUInteger row = [rowNo1 unsignedIntegerValue];
+        LocalMasterList *item = [itemMpCpy objectForKey:rowNo1];
+        if (row < insrtedRowNo)
         {
-            NSLog(@"Setting object %@ for key %@", item, rowNo1);
             [itemMp setObject:item forKey:rowNo1];
+            continue;
         }
         else
         {
-            [itemMp setObject:@" " forKey:rowNo1];
-            NSLog(@"Removing object %@ for key %@", item, rowNo1);
+            ++row;
+            item.rowno = row;
+            [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:row]];
         }
-        AddRowTargetTmpl *pBtnAct = [rowTarget objectForKey:rowNo1];
-        if (pBtnAct != nil)
-        {
-            pBtnAct.rowNo = pBtnAct.rowNo+1;
-            NSLog(@"Setting pBtnAct rowNo=%ld in rowNo1=%@ item=%@", (unsigned long)pBtnAct.rowNo, rowNo1, item);
-        }
-        
-    }
-    
-    if (prevItem != nil && lastIndx != -1)
-    {
-        ++lastIndx;
-        NSLog(@"Setting last object %@ for key %ld", prevItem, (long)lastIndx);
-        [itemMp setObject:prevItem forKey:[NSNumber numberWithUnsignedInteger:lastIndx]];
-    }
-    
-    if (insrtedRowNo == (no_of_items+1))
-    {
-        [itemMp setObject:@" " forKey:[NSNumber numberWithInteger:insrtedRowNo]];
     }
     
     
-    [tv beginUpdates];
+   [tv beginUpdates];
     [tv insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationRight];
-    [tv endUpdates];
+   [tv endUpdates];
     [tv reloadData];
+   
     return;
 }
 
@@ -187,7 +165,8 @@
         textFldRowNo = -1;
         rowTarget = [[NSMutableDictionary alloc] init];
         reloadAfterSeasonPicked = false;
-        [self.tableView setEditing:YES animated:YES];
+        if (editMode != eViewModeDisplay)
+            [self.tableView setEditing:YES animated:YES];
         [self refreshMasterList];
                 
     }
@@ -297,7 +276,7 @@
     
     ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
     
-    [self templItemDisplay:pListView.name lstcntr:pListView];
+    //[self templItemDisplay:pListView.name lstcntr:pListView];
     [pListView cleanUpItemMp];
     [pAppCmnUtil.dataSync addTemplItem:pListView.name itemsDic:pListView.itemMp];
     if (pAppCmnUtil.bEasyGroc && [pListView.itemMp count])
@@ -742,6 +721,7 @@
             [itemMp removeObjectForKey:rowNo];
             NSUInteger newKey = [rowNo unsignedIntegerValue];
             --newKey;
+            item.rowno = newKey;
             [itemMp setObject:item forKey:[NSNumber numberWithUnsignedInteger:newKey]];
         }
         NSLog(@"Commit editing style keys %@ itemMp %@ %ld for row %ld", keys, itemMp, (long)editingStyle, (long)indexPath.row);
@@ -847,14 +827,15 @@
                 //Ignoring the space place holder for empty inserted rows
                     if ([item.item isEqualToString:@" "] == NO)
                         textField.text = item.item;
-                    if(editMode == eViewModeDisplay)
+                                    
+                    if(pAppCmnUtil.bEasyGroc && editMode == eViewModeDisplay && easyGrocLstType == eInvntryLst)
                         [self setHideSwitch:cell rowNm:row mitem:item];
                 }
                 if (editMode != eViewModeDisplay)
                 {
                     [self setEditAccessories:cell rowNm:row];
                 }
-              NSLog(@"cell for row at index path in row %lu edit mode = %d text=%@", (unsigned long)row, editMode, textField.text);
+              //NSLog(@"cell for row at index path in row %lu edit mode = %d text=%@", (unsigned long)row, editMode, textField.text);
                 [cell.contentView addSubview:textField];
         }
         break;
@@ -867,12 +848,13 @@
 
 -(void) setHideSwitch :(UITableViewCell *) cell rowNm:(NSUInteger)row mitem:(LocalMasterList *)item
 {
+    NSLog(@"Setting inventory switch for row = %lu", (unsigned long)row);
     CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
     UISwitch *invOnOffSwtch = [[UISwitch alloc] initWithFrame:switchFrame];
     [invOnOffSwtch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
     cell.accessoryView = invOnOffSwtch;
-    invOnOffSwtch.onTintColor = [UIColor greenColor];
-    invOnOffSwtch.tintColor = [UIColor redColor];
+   invOnOffSwtch.onTintColor = [UIColor greenColor];
+   invOnOffSwtch.tintColor = [UIColor redColor];
     if (item.inventory)
     {
         invOnOffSwtch.on = YES;

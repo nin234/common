@@ -125,8 +125,9 @@
 
 -(void) updateMasterLstVwCntrl
 {
-    
+    NSLog(@"Updating MasterLstVwCntrl waiting for main queue");
     dispatch_sync(dispatch_get_main_queue(), ^{
+        NSLog(@"Updating MasterLstVwCntrl in main queue");
         NSArray *vws = [navViewController viewControllers];
         NSUInteger vwcnt = [vws count];
         //NSLog(@"No of view controllers EasyDataOps:updateMasterLstVwCntrl %lu", (unsigned long)vwcnt);
@@ -151,7 +152,9 @@
                 // NSLog(@"View controller class EasyDataOps:updateMasterLstVwCntrl %@", NSStringFromClass([[vws objectAtIndex:i] class]));
             }
         }
+       
     });
+   
     return;
 }
 
@@ -182,23 +185,11 @@
     
     
     
-    NSUInteger mlnmcnt = [masterListNamesArr count];
-    for (NSUInteger i=0; i < mecnt; ++i)
-    {
-        NSString *name = [masterListEditNames objectAtIndex:i];
-        for (NSUInteger j=0; j < mlnmcnt; ++j)
-        {
-            if ([name isEqualToString:[masterListNamesArr objectAtIndex:j]])
-            {
-                [self.easyManagedObjectContext deleteObject:[masterListNamesTmp objectAtIndex:j]];
-            }
-        }
-    }
     [workToDo unlock];
     
     
     NSMutableArray *storeItems = [[NSMutableArray alloc] initWithCapacity:nStoreCnt];
-    NSMutableArray *storeNames = [[NSMutableArray alloc] initWithCapacity:mecnt];
+    
     
     NSManagedObjectModel *managedObjectModel =
     [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
@@ -213,30 +204,14 @@
                                initWithEntity:entity insertIntoManagedObjectContext:self.easyManagedObjectContext];
         [storeItems addObject:newItem];
     }
-    NSEntityDescription *nameEntity = [ent objectForKey:@"MasterListNames"];
-    for (int i=0; i<mecnt; ++i)
-    {
-        MasterListNames *newName = [[MasterListNames alloc] initWithEntity:nameEntity insertIntoManagedObjectContext:self.easyManagedObjectContext];
-        [storeNames addObject:newName];
-    }
     
     
     [workToDo lock];
+    NSLog(@"Update Edited templ item aquired lock 1");
     NSUInteger nTotCnt=0;
     for (int i=0; i <mecnt; ++i)
     {
         NSArray *keys = [[masterListEditMps objectAtIndex:i] allKeys];
-        /*
-         NSArray *keys = [keystmp sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-         
-         NSUInteger num1 = [obj1 intValue];
-         NSUInteger num2 = [obj2 intValue];
-         if(num1<num2) return NSOrderedAscending;
-         if(num1>num2) return NSOrderedDescending;
-         
-         return NSOrderedSame;
-         }];
-         */
         NSMutableDictionary *rowitems = [masterListEditMps objectAtIndex:i];
         NSString *name = [masterListEditNames objectAtIndex:i];
         NSUInteger valcnt = [keys count];
@@ -258,10 +233,6 @@
             ++nTotCnt;
             // NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
         }
-        MasterListNames *mname = [storeNames objectAtIndex:i];
-        mname.name = name;
-        // NSLog(@"Storing master list name %@\n", mname);
-        
     }
     
     if (nTotCnt < nStoreCnt)
@@ -287,6 +258,8 @@
     }
     templItemsEdited -= mecnt;
     [workToDo unlock];
+    
+    NSLog(@"Update Edited templ item released lock 1");
     
     [self saveEasyContext];
     return;
@@ -505,13 +478,13 @@
         [workToDo lock];
         if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd || templShareItemsToAdd || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
         {
-           // NSLog(@"Waiting for work\n");
+          // NSLog(@"Waiting for work\n");
             NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:waitTime];
             [workToDo waitUntilDate:checkTime];
         }
         [workToDo unlock];
         
-        
+       // NSLog(@"Doing work\n");
         if (dontRefresh)
         {
           //  NSLog(@"Dont refresh set to true continuing\n");
@@ -572,7 +545,7 @@
 
         if (templItemsEdited)
         {
-            NSLog(@"Editing %d items\n", templItemsEdited);
+            NSLog(@"Editing %d templ items\n", templItemsEdited);
             [self updateTemplEditedItems];
             [self refreshTemplData];
             [self updateMasterLstVwCntrl];
@@ -610,14 +583,7 @@
             NSLog(@"Editing %d items\n", itemsEasyEdited);
            [self updateEasyEditedItems];
            [self refreshItemData];
-          
-            [workToDo lock];
-            if (!itemsEasyEdited)
-            {
-                [workToDo signal];
-            }
-            [workToDo unlock];
-            [self updateEasyMainLstVwCntrl];
+           [self updateEasyMainLstVwCntrl];
             [self updateLstVwCntrl];
         }
         
@@ -634,12 +600,6 @@
             NSLog(@"Adding %d list items\n", easyItemsToAdd);
             [self storeNewEasyItems];
             [self refreshItemData];
-            [workToDo lock];
-            if (!easyItemsToAdd)
-            {
-                [workToDo signal];
-            }
-            [workToDo unlock];
             [self updateEasyMainLstVwCntrl];
             [self updateLstVwCntrl];
             
@@ -703,6 +663,7 @@
             NSLog(@"Updating main screen contents and setting dontRefresh to true in DataOps.m\n");
             
         }
+       // NSLog(@"Waiting for lock in main queue");
         
     }
     
@@ -766,7 +727,7 @@
     [listEditNames addObject:name];
     [listEditMps addObject:itmsMp];
     ++itemsEasyEdited;
-    NSLog(@"Added  new item %@ %d and signalling work to do\n", name, itemsEdited);
+    NSLog(@"Signalling work to do for Updating item %@ %d", name, itemsEasyEdited);
     [workToDo signal];
     [workToDo unlock];
     return;
@@ -1460,24 +1421,28 @@
     }
     
     
-    
     NSUInteger mlnmcnt = [listNamesArr count];
     for (NSUInteger i=0; i < ecnt; ++i)
     {
         NSString *name = [listEditNames objectAtIndex:i];
+        
         for (NSUInteger j=0; j < mlnmcnt; ++j)
         {
             if ([name isEqualToString:[listNamesArr objectAtIndex:j]])
             {
-                [self.easyManagedObjectContext deleteObject:[listNamesTmp objectAtIndex:j]];
+                ListNames *lname = [listNamesTmp objectAtIndex:j];
+                
+                [self.easyManagedObjectContext deleteObject:lname];
             }
         }
+        
     }
     [workToDo unlock];
     
     
     NSMutableArray *storeItems = [[NSMutableArray alloc] initWithCapacity:nStoreCnt];
     NSMutableArray *storeNames = [[NSMutableArray alloc] initWithCapacity:ecnt];
+    
     
     NSManagedObjectModel *managedObjectModel =
     [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
@@ -1506,14 +1471,18 @@
     {
         NSArray *keys = [[listEditMps objectAtIndex:i] allKeys];
         NSMutableDictionary *rowitems = [listEditMps objectAtIndex:i];
+        
         NSString *name = [listEditNames objectAtIndex:i];
         NSUInteger valcnt = [keys count];
+        NSLog(@"Number of items to store %lu (no of keys)valcnt = %lu in list %@", (unsigned long)[rowitems count], (unsigned long)valcnt, name);
+        
         for (NSUInteger j=0; j < valcnt; ++j)
         {
-            List *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
+            LocalList *itemstr = [rowitems objectForKey:[keys objectAtIndex:j]];
             NSUInteger len = [itemstr.item length];
             if (!len)
             {
+                NSLog(@"Zero length for key %@", [keys objectAtIndex:j]);
                 continue;
             }
             List *item = [storeItems objectAtIndex:nTotCnt];
@@ -1522,11 +1491,12 @@
             item.rowno = itemstr.rowno;
             item.hidden = itemstr.hidden;
             ++nTotCnt;
-            // NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
+            NSLog(@"Storing item at index %@ %lld in list %@ hidden=%d", item.item, item.rowno, name, item.hidden);
         }
         ListNames *mname = [storeNames objectAtIndex:i];
         mname.name = name;
         mname.current = YES;
+        
         //NSLog(@"Storing master list name %@\n", mname);
         
     }
@@ -1553,10 +1523,7 @@
         [listEditNames removeAllObjects];
     }
     itemsEasyEdited -= ecnt;
-    if (!itemsEasyEdited)
-    {
-        [workToDo signal];
-    }
+   
     [workToDo unlock];
     
     
@@ -1583,6 +1550,7 @@
     masterListNamesTmp = [[moc executeFetchRequest:req error:&error]sortedArrayUsingDescriptors:sortDescriptors];
     
     [workToDo lock];
+    NSLog(@"Refresh templ data acquired  lock");
     masterListCnt = [masterListNamesTmp count];
     masterListNamesArr = [[NSMutableArray alloc] initWithCapacity:masterListCnt];
     for (NSInteger i=0; i < masterListCnt; ++i)
@@ -1595,6 +1563,8 @@
     //NSLog(@"Refreshing templ data count=%ld %@\n", (long)masterListCnt, masterListNamesArr);
     [workToDo unlock];
     
+   // NSLog(@"Refresh templ data release first lock");
+    
     descr = [NSEntityDescription entityForName:@"MasterList" inManagedObjectContext:moc];
     [req setEntity:descr];
     NSSortDescriptor* masterlistDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name"
@@ -1605,6 +1575,7 @@
     masterListTmp = [[moc executeFetchRequest:req error:&error]sortedArrayUsingDescriptors:sortDescriptors];
     NSUInteger mlistcnt = [masterListTmp count];
     [workToDo lock];
+  //  NSLog(@"Refresh templ data acquired  second lock");
     // NSLog(@"No of items in Masterlist %lu", (unsigned long)mlistcnt);
     masterListArr = [NSMutableDictionary dictionaryWithCapacity:mlistcnt];
     for (NSUInteger i=0; i < mlistcnt; ++i)
@@ -1626,7 +1597,7 @@
         
     }
     [workToDo unlock];
-    
+    NSLog(@"Refresh templ data release second lock and done");
     return;
 }
 
@@ -2079,8 +2050,6 @@
 
 -(NSArray *) getList: (NSString *)key
 {
-    for (int i=0; i < 8; ++i)
-    {
         [workToDo lock];
     
             if (easyItemsToAdd || itemsEasyEdited)
@@ -2105,7 +2074,6 @@
             return list;
         }
         [workToDo unlock];
-    }
     return nil;
     
 }
