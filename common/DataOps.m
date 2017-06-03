@@ -104,7 +104,7 @@
     [masterListEditNames addObject:name];
     [masterListEditMps addObject:itmsMp];
     ++templItemsEdited;
-    NSLog(@"Added edit item %@ %d and signalling work to do\n", name, templItemsEdited);
+    NSLog(@"Added edit templ item %@ %d and signalling work to do\n", name, templItemsEdited);
     [workToDo signal];
     [workToDo unlock];
     return;

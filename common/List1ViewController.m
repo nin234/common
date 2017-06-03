@@ -158,7 +158,7 @@
         nRows = 1;
         mInvMp = [[NSMutableDictionary alloc] init];
         mScrtchArr = nil;
-       
+        bInvChanged = false;
         
         if (editMode == eListModeAdd)
         {
@@ -325,8 +325,7 @@
             
             if (mitem.inventory)
                 continue;
-            else
-                mitem.inventory = 10;
+            bInvChanged = true;
             newItem.rowno = nRows;
             ++nRows;
             newItem.item = mitem.item;
@@ -484,8 +483,15 @@
     [pAppCmnUtil.dataSync addItem:pListView.name itemsDic:pListView.itemMp];
     if (bEasyGroc)
     {
-        if ([mInvMp count])
+        if (bInvChanged)
+        {
+            for (NSNumber *key in mInvMp)
+            {
+                MasterList *mitem = [mInvMp objectForKey:key];
+                mitem.inventory = 10;
+            }
             [pAppCmnUtil.dataSync editedTemplItem:mInvListName itemsDic:mInvMp];
+        }
         if (mScrtchArr != nil && [mScrtchArr count])
         {
             [pAppCmnUtil.dataSync deletedTemplItem:mScrtchListName];

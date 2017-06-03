@@ -48,6 +48,7 @@ enum eDispActionItems
     bool bSearchStr;
     NSInteger textFldRowNo;
     NSMutableDictionary *rowTarget;
+    bool bInvChanged;
 }
 
 @property (nonatomic, retain) NSString *name;

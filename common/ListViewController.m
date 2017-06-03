@@ -770,9 +770,7 @@
         case 0:
         {
           CGRect textFrame = CGRectMake(cell.bounds.origin.x, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
-            UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
-            textField.delegate = self;
-            [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
+            UILabel *textField = [[UILabel alloc] initWithFrame:textFrame];
             if (name == nil)
             {
                 NSString *pListName = @"List";
@@ -848,7 +846,7 @@
 
 -(void) setHideSwitch :(UITableViewCell *) cell rowNm:(NSUInteger)row mitem:(LocalMasterList *)item
 {
-    NSLog(@"Setting inventory switch for row = %lu", (unsigned long)row);
+    
     CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
     UISwitch *invOnOffSwtch = [[UISwitch alloc] initWithFrame:switchFrame];
     [invOnOffSwtch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
@@ -863,7 +861,7 @@
     {
         invOnOffSwtch.on = NO;
     }
-    
+    NSLog(@"Setting inventory switch for row = %lu item=%@ inventory=%d", (unsigned long)row, item.item, item.inventory);
     invOnOffSwtch.tag = row;
 }
 
