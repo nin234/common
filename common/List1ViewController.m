@@ -270,13 +270,13 @@
     NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [calendar  components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
     NSInteger month = [components month];
-    
+    itemMp = [NSMutableDictionary dictionaryWithCapacity:100];
     NSLog(@"Master list %@ for name %@ %s %d\n", mlist, name, __FILE__, __LINE__);
     if (mlist != nil)
     {
         int recrLstCnt = (int)[mlist count];
         
-        itemMp = [NSMutableDictionary dictionaryWithCapacity:100];
+        
         for (NSUInteger i=0; i < recrLstCnt; ++i)
         {
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
