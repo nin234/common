@@ -273,8 +273,7 @@
 
 -(void) itemEditDone
 {
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil.dataSync editItem:[delegate getEditName] itemsDic:itemMp];
+
     [delegate itemEditDone];
     return;
 }
@@ -1176,6 +1175,8 @@
         NotesViewController *notesViewController = [[NotesViewController alloc] initWithNibName:@"NotesViewController" bundle:nil];
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
         //  albumContentsViewController.assetsGroup = group_;
+        notesViewController.delegate =  delegate;
+        notesViewController.mode = eNotesModeEdit;
         notesViewController.title = [delegate getEditItemTitle];
         notesViewController.notesTxt = [delegate getEditNotes];
         [self.navigationController pushViewController:notesViewController animated:NO];   

@@ -73,7 +73,7 @@
 
 @property (nonatomic, retain)  UINavigationController *navViewController;
 
-@property (nonatomic, weak) id<EditViewControllerDelegate> delegate;
+@property (nonatomic, retain) id<EditViewControllerDelegate> delegate;
 
 
 @end

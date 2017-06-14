@@ -18,6 +18,7 @@
 -(void) itemAdd;
 -(void) iCloudOrEmail;
 -(void) shareContactsAdd;
+-(NSString* ) mainVwCntrlTitle;
 
 @end
 

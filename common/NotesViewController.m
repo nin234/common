@@ -13,6 +13,8 @@
 
 @synthesize notes;
 @synthesize notesTxt;
+@synthesize mode;
+@synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,6 +49,12 @@
 {
     notesTxt = textView.text;
     NSLog(@"Notes changed to %@", textView.text);
+    if (mode == eNotesModeAdd)
+        [delegate setAddNotes:textView.text];
+    else if (mode == eNotesModeEdit)
+        [delegate setEditNotes:textView.text];
+    else
+        NSLog(@"Invalid notes mode");
     return;
     
 }

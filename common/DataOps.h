@@ -30,6 +30,7 @@
 -(NSString *)getAddtionalPredStr:(NSUInteger) scnt predStrng:(NSString *)predStr;
 -(bool ) isEqualToLclItem:(id) item local:(id) litem;
 -(MainViewController *) getMainViewController;
+-(NSString *) getEntityName;
 
 
 @end

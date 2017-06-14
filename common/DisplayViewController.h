@@ -22,6 +22,7 @@
 -(double) getDispLongitude;
 -(NSString *) getDispNotes;
 -(NSString *) getDispName;
+-(NSString*) setTitle;
 
 @end
 
@@ -40,6 +41,6 @@
 @property (nonatomic, retain) NSString *pAlName;
 @property (nonatomic, retain) NSFileManager *pFlMgr;
 @property (nonatomic, retain)  UINavigationController *navViewController;
-@property (nonatomic, weak) id<DisplayViewControllerDelegate> delegate;
+@property (nonatomic, retain) id<DisplayViewControllerDelegate> delegate;
 
 @end

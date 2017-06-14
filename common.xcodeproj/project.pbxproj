@@ -144,7 +144,6 @@
 		DB00E4FA1C7BCC9E00E898F7 /* TapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapDetectingImageView.h; sourceTree = "<group>"; };
 		DB00E5071C7BF96100E898F7 /* NotesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesViewController.h; sourceTree = "<group>"; };
 		DB00E5081C7BF96100E898F7 /* NotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotesViewController.m; sourceTree = "<group>"; };
-		DB00E50C1C7C85FB00E898F7 /* NotesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotesViewController.xib; sourceTree = "<group>"; };
 		DB00E51B1C7C8ED600E898F7 /* MySlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MySlider.h; sourceTree = "<group>"; };
 		DB00E51C1C7C8ED600E898F7 /* MySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MySlider.m; sourceTree = "<group>"; };
 		DB00E5261C7C912000E898F7 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
@@ -153,7 +152,6 @@
 		DB00E5321C7D24C300E898F7 /* AddressAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressAnnotation.m; sourceTree = "<group>"; };
 		DB00E53C1C7D27F600E898F7 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		DB00E53D1C7D27F600E898F7 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
-		DB00E5471C7DD6E000E898F7 /* MapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapViewController.xib; sourceTree = "<group>"; };
 		DB00E5481C7DD6F300E898F7 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		DB00E54A1C7DD70E00E898F7 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		DB00E5551C7DDB2600E898F7 /* textdefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textdefs.h; sourceTree = "<group>"; };
@@ -171,7 +169,6 @@
 		DBD16A9B1C830F7900052A03 /* AlbumContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumContentsViewController.h; sourceTree = "<group>"; };
 		DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDisplayViewController.m; sourceTree = "<group>"; };
 		DBD16A9F1C830FA000052A03 /* PhotoDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoDisplayViewController.h; sourceTree = "<group>"; };
-		DBD16AA01C830FC300052A03 /* AlbumContentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumContentsViewController.xib; sourceTree = "<group>"; };
 		DBD16AA11C830FF600052A03 /* PhotoDisplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoDisplayViewController.xib; sourceTree = "<group>"; };
 		DBD16AB61C844E6F00052A03 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		DBD16AB71C844E6F00052A03 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
@@ -186,7 +183,6 @@
 		DBD16AF61C8DD17E00052A03 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
 		DBD16AF81C8DD19800052A03 /* EditViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditViewController.xib; sourceTree = "<group>"; };
 		DBD16B031C8EE94100052A03 /* DisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayViewController.h; sourceTree = "<group>"; };
-		DBD16B041C8EE94100052A03 /* DisplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayViewController.xib; sourceTree = "<group>"; };
 		DBD16B051C8EE95400052A03 /* DisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayViewController.m; sourceTree = "<group>"; };
 		DBD16B0F1C90547A00052A03 /* DataOps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataOps.h; sourceTree = "<group>"; };
 		DBD16B101C90549300052A03 /* DataOps.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataOps.m; sourceTree = "<group>"; };
@@ -264,7 +260,6 @@
 				DB00E4EE1C7BC9E300E898F7 /* SlideScrollView.m */,
 				DB00E5071C7BF96100E898F7 /* NotesViewController.h */,
 				DB00E5081C7BF96100E898F7 /* NotesViewController.m */,
-				DB00E50C1C7C85FB00E898F7 /* NotesViewController.xib */,
 				DBD16B0F1C90547A00052A03 /* DataOps.h */,
 				DBD16B101C90549300052A03 /* DataOps.m */,
 				DB00E51B1C7C8ED600E898F7 /* MySlider.h */,
@@ -274,7 +269,6 @@
 				DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */,
 				DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */,
 				DBD16AA11C830FF600052A03 /* PhotoDisplayViewController.xib */,
-				DBD16AA01C830FC300052A03 /* AlbumContentsViewController.xib */,
 				DBD16A9F1C830FA000052A03 /* PhotoDisplayViewController.h */,
 				DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */,
 				DBD16A9A1C830F7900052A03 /* AlbumContentsViewController.m */,
@@ -288,11 +282,9 @@
 				DBD16AF81C8DD19800052A03 /* EditViewController.xib */,
 				3BF7F7771E74F74800419F8D /* EasyDataOps.h */,
 				3BF7F7781E74F75C00419F8D /* EasyDataOps.m */,
-				DBD16B041C8EE94100052A03 /* DisplayViewController.xib */,
 				DBD16AB61C844E6F00052A03 /* MainViewController.h */,
 				DBD16AB71C844E6F00052A03 /* MainViewController.m */,
 				DBD16AB81C844E6F00052A03 /* MainViewController.xib */,
-				DB00E5471C7DD6E000E898F7 /* MapViewController.xib */,
 				DB00E53C1C7D27F600E898F7 /* KeychainItemWrapper.h */,
 				DB00E53D1C7D27F600E898F7 /* KeychainItemWrapper.m */,
 				DB00E5311C7D24C300E898F7 /* AddressAnnotation.h */,

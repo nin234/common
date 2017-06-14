@@ -41,6 +41,8 @@
 -(double) getLatitude;
 -(NSString *) getName;
 - (BOOL)characterChk:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
+
+
 @end
 
 @interface AddViewController : UITableViewController <UIImagePickerControllerDelegate, UITextFieldDelegate, UITableViewDelegate, MKMapViewDelegate, AlbumContentsViewControllerDelegate>
@@ -82,6 +84,6 @@
 @property int locCnt;
 @property (nonatomic, retain) NSFileManager *pFlMgr;
 @property (nonatomic, retain)  UINavigationController *navViewController;
-@property (nonatomic, weak) id<AddViewControllerDelegate> delegate;
+@property (nonatomic, retain) id<AddViewControllerDelegate> delegate;
 
 @end

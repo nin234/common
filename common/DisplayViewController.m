@@ -111,17 +111,16 @@
 
 -(void) itemEdit
 {
-    
+    [delegate itemEdit];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"House Info" style:UIBarButtonItemStylePlain target:self action:nil];
-    self.navigationItem.backBarButtonItem = pBarItem1;
-    NSString *title = @"House Info";
-    //printf("%s", [title UTF8String]);
-    self.navigationItem.title = [NSString stringWithString:title];
+    /*UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"House Info" style:UIBarButtonItemStylePlain target:self action:nil];
+    self.navigationItem.backBarButtonItem = pBarItem1;*/
+   
+    self.navigationItem.title = [NSString stringWithString:[delegate setTitle]];
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(itemEdit) ];
     self.navigationItem.rightBarButtonItem = pBarItem;
 
@@ -208,13 +207,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSArray* fieldNames = nil;
+   static  NSArray* fieldNames = nil;
     
     if (!fieldNames)
     {
         fieldNames = [delegate getFieldDispNames];
         
     }
+    
     
     static NSArray *secondFieldNames = nil;
     
@@ -223,7 +223,7 @@
         secondFieldNames = [delegate getSecondFieldNames];
       
     }
-
+    
    
     NSUInteger row = indexPath.row;
     static NSString *CellIdentifier = @"itemdetail";
@@ -462,6 +462,8 @@
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
         //  albumContentsViewController.assetsGroup = group_;
         notesViewController.notes.editable = NO;
+        notesViewController.mode = eNotesModeDisplay;
+        
         notesViewController.title = [delegate getDispItemTitle];
         notesViewController.notesTxt = [delegate getDispNotes];
         [self.navigationController pushViewController:notesViewController animated:NO];   

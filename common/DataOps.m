@@ -1803,7 +1803,7 @@
         NSDictionary *ent = [managedObjectModel entitiesByName];
         printf("entity count %lu\n", (unsigned long)[[ent allKeys] count]);
         NSEntityDescription *entity =
-        [ent objectForKey:@"Item"];
+        [ent objectForKey:[delegate getEntityName]];
         id newItem = [delegate getNewItem:entity context:self.managedObjectContext];
         
         [storeItems addObject:newItem];
@@ -1840,7 +1840,7 @@
 {
     
     NSManagedObjectContext *moc = self.managedObjectContext;
-    NSEntityDescription *descr = [NSEntityDescription entityForName:@"Item" inManagedObjectContext:moc];
+    NSEntityDescription *descr = [NSEntityDescription entityForName:[delegate getEntityName] inManagedObjectContext:moc];
     NSFetchRequest *req = [[NSFetchRequest alloc] init];
     [req setEntity:descr];
     NSString *pSearchStr = [delegate getSearchStr];
@@ -2180,10 +2180,12 @@
 
 - (NSManagedObjectContext *)managedObjectContext {
     
+    NSLog(@"getting moc");
+    
     if (__managedObjectContext != nil) {
         return __managedObjectContext;
     }
-    
+    NSLog(@"getting moc1");
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     
     if (coordinator != nil)
@@ -2216,6 +2218,7 @@
         return __managedObjectModel;
     }
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:appName withExtension:@"momd"];
+    NSLog(@"Setting modelURL to %@", modelURL);
     __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return __managedObjectModel;
     
@@ -2228,13 +2231,15 @@
  */
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
+    NSLog(@"getting psc");
     if (__persistentStoreCoordinator != nil)
     {
         return __persistentStoreCoordinator;
     }
-    
+    NSLog(@"getting psc1");
     NSError *error = nil;
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Shopper.sqlite"];
+    NSString *storeUrlPath = [appName stringByAppendingString:@".sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:storeUrlPath];
     
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     

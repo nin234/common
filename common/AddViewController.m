@@ -67,7 +67,7 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize);
         locCnt = 0;
         ingeorevcoding = false;
         locArry = [[NSMutableArray alloc] init];
-        self.tableView.delegate = self;
+        
         imagePickerController = [[UIImagePickerController alloc] init];
         pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(takePhoto) ];
         pBarItem.width = 30;
@@ -993,8 +993,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
                 textField1.delegate = self;
                 [textField1 addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
                 [cell.contentView addSubview:textField1];
-                textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-                
+                                
                 [delegate populateTextFields:textField textField1:textField1 row:row];
             }
             else if ([delegate isSingleFieldRow:row])
@@ -1135,18 +1134,14 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
 
 -(void) itemAddCancel
 {
-    [delegate itemAddDone];
+    
+    [delegate itemAddCancel];
     return;
 }
 
 -(void) itemAddDone
 {
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil.dataSync addItem:[delegate getName] itemsDic:pAppCmnUtil.itemsMp];
-    pAppCmnUtil.itemsMp = nil;
-  
-
-    [delegate itemAddCancel];
+    [delegate itemAddDone];
     return;
 }
 #pragma mark - View lifecycle
@@ -1155,6 +1150,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
 
     self.navigationItem.title = [NSString stringWithString:[delegate setTitle]];
     
@@ -1238,7 +1234,10 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
     else if (indexPath.row == 6)
     {
         NotesViewController *notesViewController = [NotesViewController alloc];
+        notesViewController.delegate =  delegate;
+        notesViewController.mode = eNotesModeAdd;
         notesViewController.notesTxt = [delegate getNotes];
+        
         notesViewController = [notesViewController initWithNibName:@"NotesViewController" bundle:nil];
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
         //  albumContentsViewController.assetsGroup = group_;

@@ -134,7 +134,7 @@
     [super viewDidLoad];
    
     // Do any additional setup after loading the view from its nib.
-    NSString *title = @"House List";
+    NSString *title = [delegate mainVwCntrlTitle];
     self.navigationItem.title = [NSString stringWithString:title];
     if (self.bShareView)
     {
