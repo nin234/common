@@ -234,7 +234,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"DisplayViewController will appear\n");
+    NSLog(@"EditViewController will appear\n");
     if (query != nil)
     {
         
@@ -251,7 +251,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    NSLog(@"DisplayViewController will disappear\n");
+    NSLog(@"EditViewController will disappear\n");
     if (query != nil)
     {
         
@@ -1141,7 +1141,7 @@
      */
     if (indexPath.row == 7)
     {
-        AlbumContentsViewController *albumContentsViewController = [[AlbumContentsViewController alloc] initWithNibName:@"AlbumContentsViewController" bundle:nil];
+        AlbumContentsViewController *albumContentsViewController = [AlbumContentsViewController alloc];
         NSLog(@"Pushing AlbumContents view controller %s %d\n" , __FILE__, __LINE__);
         //  albumContentsViewController.assetsGroup = group_;
         [albumContentsViewController setDelphoto:true];
@@ -1149,6 +1149,7 @@
         [albumContentsViewController setPAlName:pAlName];
         [albumContentsViewController setNavViewController:navViewController];
         [albumContentsViewController setDelegate:self];
+        albumContentsViewController = [albumContentsViewController initWithNibName:@"AlbumContentsViewController" bundle:nil];
         [self.navigationController pushViewController:albumContentsViewController animated:NO];
         [albumContentsViewController  setTitle:[delegate getEditItemTitle]];
         
@@ -1172,13 +1173,13 @@
     }
     else if (indexPath.row == 6)
     {
-        NotesViewController *notesViewController = [[NotesViewController alloc] initWithNibName:@"NotesViewController" bundle:nil];
+        NotesViewController *notesViewController = [NotesViewController alloc];
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
-        //  albumContentsViewController.assetsGroup = group_;
         notesViewController.delegate =  delegate;
         notesViewController.mode = eNotesModeEdit;
         notesViewController.title = [delegate getEditItemTitle];
         notesViewController.notesTxt = [delegate getEditNotes];
+        notesViewController = [notesViewController initWithNibName:@"NotesViewController" bundle:nil];
         [self.navigationController pushViewController:notesViewController animated:NO];   
     }
     else if (indexPath.row == 5)

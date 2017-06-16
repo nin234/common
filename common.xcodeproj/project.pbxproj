@@ -68,7 +68,35 @@
 		DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B4E1C9A407900052A03 /* AppUtil.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		3B9CF8BE1EF2AAE6004F009D /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+		3B9CF8BF1EF2AAE8004F009D /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		3B9CF8C61EF34230004F009D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DB00E4AF1C7A9FF700E898F7 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -157,7 +185,6 @@
 		DB00E5551C7DDB2600E898F7 /* textdefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textdefs.h; sourceTree = "<group>"; };
 		DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumContentsTableViewCell.m; sourceTree = "<group>"; };
 		DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumContentsTableViewCell.h; sourceTree = "<group>"; };
-		DB00E5631C7DE1FC00E898F7 /* AlbumContentsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumContentsTableViewCell.xib; sourceTree = "<group>"; };
 		DB7061421CAA88350031C445 /* CommonDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonDecoder.h; sourceTree = "<group>"; };
 		DB7061431CAA88350031C445 /* CommonDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonDecoder.m; sourceTree = "<group>"; };
 		DB7061441CAA88350031C445 /* CommonShareMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonShareMgr.m; sourceTree = "<group>"; };
@@ -265,7 +292,6 @@
 				DB00E51B1C7C8ED600E898F7 /* MySlider.h */,
 				DB00E51C1C7C8ED600E898F7 /* MySlider.m */,
 				DB00E5551C7DDB2600E898F7 /* textdefs.h */,
-				DB00E5631C7DE1FC00E898F7 /* AlbumContentsTableViewCell.xib */,
 				DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */,
 				DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */,
 				DBD16AA11C830FF600052A03 /* PhotoDisplayViewController.xib */,
@@ -339,8 +365,12 @@
 				DB00E4AD1C7A9FF700E898F7 /* Sources */,
 				DB00E4AE1C7A9FF700E898F7 /* Frameworks */,
 				DB00E4AF1C7A9FF700E898F7 /* CopyFiles */,
+				3B9CF8C51EF34066004F009D /* Run Script */,
+				3B9CF8C61EF34230004F009D /* CopyFiles */,
 			);
 			buildRules = (
+				3B9CF8BF1EF2AAE8004F009D /* PBXBuildRule */,
+				3B9CF8BE1EF2AAE6004F009D /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -385,6 +415,20 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3B9CF8C51EF34066004F009D /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "";
+		};
 		DB00E4C41C7AAC5700E898F7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

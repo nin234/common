@@ -81,6 +81,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     lastSelectedRow = NSNotFound;
 }
 
@@ -313,7 +314,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     
     AlbumContentsTableViewCell *cell = (AlbumContentsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        [[NSBundle mainBundle] loadNibNamed:@"AlbumContentsTableViewCell" owner:self options:nil];
+        [[NSBundle bundleForClass:[AlbumContentsTableViewCell class]] loadNibNamed:@"AlbumContentsTableViewCell" owner:self options:nil];
         cell = tmpCell;
         tmpCell = nil;
     }
@@ -574,7 +575,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
         return;
     }
     
-    PhotoDisplayViewController *photoViewController = [[PhotoDisplayViewController alloc] initWithNibName:nil bundle:nil];
+    PhotoDisplayViewController *photoViewController = [PhotoDisplayViewController alloc];
    // [photoViewController setAsset:[assets objectAtIndex:nAsstIndx]];
     [photoViewController setCurrIndx:nAsstIndx];
     [photoViewController setDelphoto:delphoto];
@@ -584,7 +585,9 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     [photoViewController setPAlName:pAlName];
     [photoViewController setPFlMgr:pFlMgr];
     
+    
     reload = false;
+      photoViewController = [photoViewController initWithNibName:nil bundle:nil];
    
     [[self navigationController] pushViewController:photoViewController animated:YES];
     

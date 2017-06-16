@@ -115,8 +115,8 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 {
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    CGRect mainScrn = [UIScreen mainScreen].applicationFrame;
-    CGRect tableRect = CGRectMake(mainScrn.origin.x, mainScrn.origin.y, mainScrn.size.width, mainScrn.size.height);
+  
+   
    //EasySlideScrollView *imageScrollView = [[EasySlideScrollView alloc] initWithFrame:CGRectMake(0.000, 0.00, self.view.frame.size.width*2, self.view.frame.size.height*2)];
     //imageScrollView = [[EasySlideScrollView alloc] initWithFrame:tableRect];
     

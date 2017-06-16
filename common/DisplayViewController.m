@@ -423,7 +423,7 @@
      */
     if (indexPath.row == 6)
     {
-        AlbumContentsViewController *albumContentsViewController = [[AlbumContentsViewController alloc] initWithNibName:@"AlbumContentsViewController" bundle:nil];
+        AlbumContentsViewController *albumContentsViewController = [AlbumContentsViewController alloc] ;
         NSLog(@"Pushing AlbumContents view controller %s %d\n" , __FILE__, __LINE__);
       //  albumContentsViewController.assetsGroup = group_;
         
@@ -431,6 +431,7 @@
         [albumContentsViewController setPFlMgr:pFlMgr];
         [albumContentsViewController setPAlName:pAlName];
         [albumContentsViewController setNavViewController:navViewController];
+        albumContentsViewController = [albumContentsViewController initWithNibName:@"AlbumContentsViewController" bundle:nil];
         [self.navigationController pushViewController:albumContentsViewController animated:NO];
         
         [albumContentsViewController  setTitle:[delegate getDispItemTitle]];
@@ -458,7 +459,7 @@
     }
     else if (indexPath.row == 5)
     {
-        NotesViewController *notesViewController = [[NotesViewController alloc] initWithNibName:@"NotesViewController" bundle:nil];
+        NotesViewController *notesViewController = [NotesViewController alloc] ;
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
         //  albumContentsViewController.assetsGroup = group_;
         notesViewController.notes.editable = NO;
@@ -466,6 +467,7 @@
         
         notesViewController.title = [delegate getDispItemTitle];
         notesViewController.notesTxt = [delegate getDispNotes];
+        notesViewController = [notesViewController initWithNibName:@"NotesViewController" bundle:nil];
         [self.navigationController pushViewController:notesViewController animated:NO];   
     }
     else if (indexPath.row == 4)

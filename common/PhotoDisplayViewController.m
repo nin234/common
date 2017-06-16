@@ -76,7 +76,20 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @synthesize pFlMgr;
 @synthesize navViewController;
 
-
+- (void)loadView
+{
+    CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
+    SlideScrollView * scrollView=[[SlideScrollView alloc] initWithFrame:fullScreenRect];
+    scrollView.contentSize=CGSizeMake(fullScreenRect.size.width,fullScreenRect.size.height);
+    
+    // do any further configuration to the scroll view
+    // add a view, or views, as a subview of the scroll view.
+    
+    // release scrollView as self.view retains it
+    self.view=scrollView;
+    
+    NSLog(@"View loaded\n");
+}
 - (void)viewDidLoad
 {
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(photoAction) ];
