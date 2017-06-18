@@ -46,6 +46,17 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (bShareView)
+    {
+        NSLog(@"Refreshing list in view will appear");
+        [self refreshList];
+    }
+    
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -104,6 +115,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 
 -(void) refreshList
 {
+    
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     NSArray *listNames = [pAppCmnUtil.dataSync getListNames];
     list = [[listNames reverseObjectEnumerator] allObjects];
@@ -111,9 +123,17 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     picDic = [pAppCmnUtil.dataSync getPics];
     unFiltrdList = [NSArray arrayWithArray:list];
     NSUInteger cnt = [list count];
+    seletedItems = [[NSMutableArray alloc] initWithCapacity:cnt];
     for (NSUInteger i=0; i < cnt ; ++i)
     {
         [seletedItems addObject:[NSNumber numberWithBool:NO]];
+    }
+    
+    NSLog(@"refreshList %lu %s %d", (unsigned long)[seletedItems count], __FILE__, __LINE__);
+    if (bShareView)
+    {
+        NSLog(@"Reloading tableview %s %d", __FILE__, __LINE__);
+        [self.tableView reloadData];
     }
     return;
 }

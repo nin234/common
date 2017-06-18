@@ -26,7 +26,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        bShareView  = false;
+        
        
     }
     return self;
@@ -45,8 +45,8 @@
         [self.pSearchBar setDelegate:self];
         [self.view addSubview:self.pSearchBar];
     }
-    self.pAllItms = [[EasyListViewController alloc]
-                     initWithNibName:nil bundle:nil];
+    self.pAllItms = [EasyListViewController alloc];
+    
     self.pAllItms.bShareView = bShareView;
     CGFloat yoffset;
     if(bShareView)
@@ -56,6 +56,7 @@
       CGRect tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + yoffset, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     self.pAllItms.tableView = pTVw;
+    self.pAllItms = [self.pAllItms initWithNibName:nil bundle:nil];
     [self.view addSubview:self.pAllItms.tableView];
     
 }
@@ -141,6 +142,7 @@
         
         case 1:
         {
+            NSLog(@"Calling shareMgrStartAndShow %s %d", __FILE__, __LINE__);
             [delegate shareMgrStartAndShow];
         }
         break;
@@ -153,7 +155,7 @@
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"Clicked button Index %ld", (long)buttonIndex);
+    NSLog(@"Clicked button Index %ld, %s %d", (long)buttonIndex, __FILE__, __LINE__);
     
     switch (eAction)
     {
