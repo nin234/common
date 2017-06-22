@@ -25,10 +25,9 @@
 
 
 @implementation DataOps
-@synthesize dontRefresh;
+
 @synthesize refreshNow;
 @synthesize updateNow;
-@synthesize updateNowSetDontRefresh;
 @synthesize loginNow;
 @synthesize shareQ;
 @synthesize delegate;
@@ -69,15 +68,6 @@
 
 }
 
--(void) setDontRefresh:(bool)dontRef
-{
-    [workToDo lock];
-    dontRefresh = dontRef;
-    if (dontRefresh == false)
-        [workToDo signal];
-    [workToDo unlock];
-    return;
-}
 
 -(void) setUpdateNow:(bool)upNow
 {
@@ -88,14 +78,7 @@
     return;
 }
 
--(void) setUpdateNowSetDontRefresh:(bool)upNow
-{
-    [workToDo lock];
-    updateNowSetDontRefresh = upNow;
-    [workToDo signal];
-    [workToDo unlock];
-    return;
-}
+
 
 -(void) editedTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
 
@@ -136,14 +119,14 @@
             if ([[vws objectAtIndex:i] isMemberOfClass:[ListViewController class]])
             {
                 ListViewController *pLst = [vws objectAtIndex:i];
-                // NSLog(@"Refreshing ListViewController at index %lu", (unsigned long)i);
+                 NSLog(@"Refreshing ListViewController at index %lu", (unsigned long)i);
                 [pLst refreshMasterList];
                 [pLst.tableView reloadData];
             }
             else if ([[vws objectAtIndex:i] isMemberOfClass:[TemplListViewController class]])
             {
                 TemplListViewController *pLst = [vws objectAtIndex:i];
-                // NSLog(@"Refreshing TemplListViewController at index %lu", (unsigned long)i);
+                 NSLog(@"Refreshing TemplListViewController at index %lu", (unsigned long)i);
                 [pLst refreshMasterList];
                 [pLst.tableView reloadData];
             }
@@ -396,7 +379,6 @@
     workToDo = [[NSCondition alloc]init];
     templItemsDeleted = 0;
     masterListDeletedNames = [[NSMutableArray alloc] init];
-    dontRefresh = false;
     refreshNow = false;
     itemsToAdd = 0;
      listMps = [[NSMutableArray alloc] init];
@@ -422,7 +404,6 @@
     masterListNamesArr =[[NSMutableArray alloc] init];
      masterListArr = [[NSMutableDictionary alloc] init];
     updateNow = false;
-    updateNowSetDontRefresh = false;
     bInitRefresh = true;
     bInUpload = false;
     bRedColor = false;
@@ -476,7 +457,7 @@
     for(;;)
     {
         [workToDo lock];
-        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd || templShareItemsToAdd || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || dontRefresh || !updateNowSetDontRefresh || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
+        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd || templShareItemsToAdd || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
         {
           // NSLog(@"Waiting for work\n");
             NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:waitTime];
@@ -484,12 +465,6 @@
         }
         [workToDo unlock];
         
-       // NSLog(@"Doing work\n");
-        if (dontRefresh)
-        {
-          //  NSLog(@"Dont refresh set to true continuing\n");
-            continue;
-        }
         
         if (templItemsToAdd)
         {
@@ -655,14 +630,7 @@
             NSLog(@"Updating main screen contents in DataOps.m\n");
             [self updateMainLstVwCntrl];
         }
-        if (updateNowSetDontRefresh)
-        {
-            updateNowSetDontRefresh = false;
-            [self updateMainLstVwCntrl];
-            dontRefresh = true;
-            NSLog(@"Updating main screen contents and setting dontRefresh to true in DataOps.m\n");
-            
-        }
+        
        // NSLog(@"Waiting for lock in main queue");
         
     }
@@ -1311,7 +1279,7 @@
                 item.inventory = itemstr.inventory;
                 item.rowno = [[keys objectAtIndex:j] intValue];
                 ++nTotCnt;
-                //  NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
+                 NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
             }
             
         }
@@ -1886,12 +1854,19 @@
             
         }
         
+        
+        
         if ([delegate respondsToSelector:@selector(getAddtionalPredStr:predStrng:)])
         {
             predStr = [delegate getAddtionalPredStr:scnt predStrng:predStr];
         }
             
+        int noOfPredicates = 3;
         
+        if ([delegate respondsToSelector:@selector(getAdditionalPredArgs)])
+        {
+            noOfPredicates += [delegate getAdditionalPredArgs];
+        }
         predStr = [predStr stringByAppendingString:@" OR "];
         for (NSUInteger i=0; i < scnt; ++i)
         {
@@ -1907,9 +1882,9 @@
         }
         
         
-        
-        NSMutableArray *predArr = [NSMutableArray arrayWithCapacity:scnt*3];
-        for (int i=0; i < 3; ++i)
+        unsigned long predArrCnt = scnt*noOfPredicates;
+        NSMutableArray *predArr = [NSMutableArray arrayWithCapacity:predArrCnt];
+        for (int i=0; i < predArrCnt; ++i)
         {
             [predArr addObjectsFromArray:srchStrs];
         }
@@ -2102,11 +2077,7 @@
 
 -(void) updateMainLstVwCntrl
 {
-    if (dontRefresh)
-    {
-        NSLog(@"Dont refresh set to true, not updating mainlstvwcntrl\n");
-        return;
-    }
+    
    
     MainViewController *pMainVwCntrl = [delegate getMainViewController];
     if (pMainVwCntrl == nil)

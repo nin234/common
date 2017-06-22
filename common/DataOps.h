@@ -28,6 +28,7 @@
 -(NSString *)getAlbumName:(long long) shareId itemName:(NSString *) name item:(id)itm;
 
 -(NSString *)getAddtionalPredStr:(NSUInteger) scnt predStrng:(NSString *)predStr;
+-(int ) getAdditionalPredArgs;
 -(bool ) isEqualToLclItem:(id) item local:(id) litem;
 -(MainViewController *) getMainViewController;
 -(NSString *) getEntityName;
@@ -126,11 +127,11 @@
 -(void) main;
 @property NSInteger listCnt;
 @property(nonatomic) dispatch_queue_t shareQ;
-@property (nonatomic) bool dontRefresh;
+
 @property (nonatomic) bool refreshNow;
 @property (nonatomic) bool updateNow;
 @property (nonatomic) bool loginNow;
-@property (nonatomic) bool updateNowSetDontRefresh;
+
 
 
 -(void) lock;

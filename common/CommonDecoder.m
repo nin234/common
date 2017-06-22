@@ -54,7 +54,7 @@
 -(bool) processShareItemMessage:(char *)buffer msglen:(ssize_t)mlen
 {
    
-    int namelen;
+    int namelen=0;
     memcpy(buffer + 2*sizeof(int), &namelen, sizeof(int));
     NSString *list = [NSString stringWithCString:(buffer + 4*sizeof(int) + namelen + sizeof (long long)) encoding:NSASCIIStringEncoding];
     

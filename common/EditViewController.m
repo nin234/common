@@ -848,7 +848,7 @@
             return NO;
         }
         NSString *proposedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
-        if (proposedText.length > 2)
+        if (proposedText.length > 1)
         {
             return NO;
         }
@@ -1011,7 +1011,7 @@
             else
                 textFrame = CGRectMake(110, 12, 170, 25);
             UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
-                    
+            [delegate populateEditTextFields:textField textField1:nil row:row];
             textField.delegate = self;
             [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
             [cell.contentView addSubview:textField];

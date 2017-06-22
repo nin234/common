@@ -66,6 +66,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 
 - (void)awakeFromNib {
+    [super awakeFromNib] ;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     photo1.delegate = self;
     photo2.delegate = self;

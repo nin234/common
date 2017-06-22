@@ -173,7 +173,7 @@
     pMainVwCntrl.pAllItms.bInICloudSync = false;
     [pMainVwCntrl.pAllItms unlockItems];
     [pMainVwCntrl.pAllItms attchmentsClear];
-    self.dataSync.dontRefresh = false;
+    
     UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
     pMainVwCntrl.pAllItms.tableView.tableFooterView = nil;
     
@@ -233,7 +233,7 @@
                                    flexibleSpaceButtonItem,
                                    nil]
                          animated:YES];
-    self.dataSync.updateNowSetDontRefresh = true;
+    
     //[pMainVwCntrl.pAllItms.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationLeft];
     return;
     
