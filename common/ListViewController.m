@@ -33,6 +33,7 @@
 
 
 
+
 -(void) addRow1
 {
     [pLstVw addRow:rowNo];
@@ -62,6 +63,7 @@
 @synthesize mlistName;
 @synthesize easyGrocLstType;
 @synthesize pCompVwCntrl;
+@synthesize bCheckListView;
 
 
 -(void) showSeasonPicker : (NSUInteger) rowNo
@@ -161,6 +163,7 @@
    
     if (self)
     {
+        bCheckListView = false;
         inEditAction = false;
         textFldRowNo = -1;
         rowTarget = [[NSMutableDictionary alloc] init];
@@ -278,6 +281,11 @@
     
     //[self templItemDisplay:pListView.name lstcntr:pListView];
     [pListView cleanUpItemMp];
+    if (bCheckListView)
+    {
+        [pAppCmnUtil.dataSync addTemplName:pListView.name];
+    }
+    
     [pAppCmnUtil.dataSync addTemplItem:pListView.name itemsDic:pListView.itemMp];
     if (pAppCmnUtil.bEasyGroc && [pListView.itemMp count])
     {
@@ -312,53 +320,6 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    NSString *title;
-    switch (easyGrocLstType) {
-        case eInvntryLst:
-            title = @"Inventory List";
-        break;
-            
-        case eScratchLst:
-             title =@"Scratch Pad";
-        break;
-            
-        case eRecurrngLst:
-            title = @"Recurring List";
-            break;
-            
-        default:
-            title = @"Template List";
-            break;
-    }
-    
-    
-    if (editMode == eViewModeEdit)
-    {
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemEditActions)];
-        
-        self.navigationItem.rightBarButtonItem = pBarItem;
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemEditCancel) ];
-        self.navigationItem.leftBarButtonItem = pBarItem1;
-        self.navigationItem.title = [NSString stringWithString:title];
-    }
-    else if (editMode == eViewModeDisplay)
-    {
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(templItemEdit) ];
-        self.navigationItem.rightBarButtonItem = pBarItem;
-        self.navigationItem.title = [NSString stringWithString:title];
-    }
-    else
-    {
-        
-        self.navigationItem.title = [NSString stringWithString:title];
-        
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(templItemAddDone) ];
-        self.navigationItem.rightBarButtonItem = pBarItem;
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemAddCancel) ];
-        self.navigationItem.leftBarButtonItem = pBarItem1;
-
-    }
-
 }
 
 - (void) templItemAddCancel
@@ -424,13 +385,63 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog (@"In view will appear");
+    NSLog (@"In view will appear %s %d", __FILE__, __LINE__);
+    NSString *title;
+    switch (easyGrocLstType) {
+        case eInvntryLst:
+            title = @"Inventory List";
+            break;
+            
+        case eScratchLst:
+            title =@"Scratch Pad";
+            break;
+            
+        case eRecurrngLst:
+            title = @"Recurring List";
+            break;
+            
+        default:
+            title = @"Template List";
+            break;
+    }
+    
+    
+    if (editMode == eViewModeEdit)
+    {
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemEditActions)];
+        
+        self.navigationItem.rightBarButtonItem = pBarItem;
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemEditCancel) ];
+        self.navigationItem.leftBarButtonItem = pBarItem1;
+        self.navigationItem.title = [NSString stringWithString:title];
+    }
+    else if (editMode == eViewModeDisplay)
+    {
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(templItemEdit) ];
+        self.navigationItem.rightBarButtonItem = pBarItem;
+        self.navigationItem.title = [NSString stringWithString:title];
+    }
+    else
+    {
+        
+        self.navigationItem.title = [NSString stringWithString:title];
+        
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(templItemAddDone) ];
+        self.navigationItem.rightBarButtonItem = pBarItem;
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemAddCancel) ];
+        self.navigationItem.leftBarButtonItem = pBarItem1;
+        
+    }
+    
+
     if (reloadAfterSeasonPicked)
     {
         self.tableView.editing = YES;
         [self.tableView reloadData];
         reloadAfterSeasonPicked = false;
     }
+    
+    
 }
 
 

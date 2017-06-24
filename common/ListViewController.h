@@ -41,6 +41,7 @@ enum eEasyGrocType {
 @property NSUInteger nRows;
 @property (nonatomic, retain) NSArray* mlist;
 @property (nonatomic, retain) ComponentsViewController *pCompVwCntrl;
+@property bool bCheckListView;
 
 
 -(void) refreshMasterList;

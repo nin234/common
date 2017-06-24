@@ -191,11 +191,11 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
             NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
             if ([numbr boolValue] == YES)
             {
-                text = @"\u2705";
+                text = @"\u2705   ";
             }
             else
             {
-                text = @"\u2B1C";
+                text = @"\u2B1C   ";
             }
             NSString *lstName = [list objectAtIndex:indexPath.row];
             origtext = lstName;
@@ -345,12 +345,12 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
         {
 
             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:NO]];
-            textField.text = @"\u2B1C";
+            textField.text = @"\u2B1C   ";
             textField.text = [textField.text stringByAppendingString:[list objectAtIndex:indexPath.row]];
         }
         else
         {
-            textField.text = @"\u2705";
+            textField.text = @"\u2705   ";
             textField.text = [textField.text stringByAppendingString:[list objectAtIndex:indexPath.row]];
             NSUInteger crnt = indexPath.row;
             

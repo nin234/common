@@ -13,6 +13,8 @@
 #import "EditViewController.h"
 #import "MasterList.h"
 
+const NSInteger TEXTFIELD_TAG = 54325;
+
 @interface AddRowTarget : NSObject
 
 @property (nonatomic) NSUInteger rowNo;
@@ -159,49 +161,57 @@
         mInvMp = [[NSMutableDictionary alloc] init];
         mScrtchArr = nil;
         bInvChanged = false;
-        
-        if (editMode == eListModeAdd)
-        {
-            NSLog(@"Initializing List1ViewController in eListModeAdd\n");
-            if (bEasyGroc)
-            {
-                if (mlistName != nil)
-                {
-                    [self refreshMasterList];
-                }
-                else
-                {
-                    [self createNewList];
-                }
-            }
-            else
-            {
-                if (mlistName != nil)
-                {
-                    [self refreshMasterList];
-                }
-                else
-                {
-                    [self createListFromBkUp];
-                }
-            }
-        }
-        else
-        {
-            if (!bEasyGroc)
-            {
-                [self populateCheckList];
-            }
-            else
-            {
-                    NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
-                    [self refreshList];
-            }
-        }
+        [self populateData];
         
     }
     return self;
     
+}
+
+#pragma mark - Data initialization
+
+-(void) populateData
+{
+    if (editMode == eListModeAdd)
+    {
+        NSLog(@"Initializing List1ViewController in eListModeAdd\n");
+        if (bEasyGroc)
+        {
+            if (mlistName != nil)
+            {
+                [self refreshMasterList];
+            }
+            else
+            {
+                [self createNewList];
+            }
+        }
+        else
+        {
+            if (mlistName != nil)
+            {
+                [self refreshMasterList];
+            }
+            else
+            {
+                [self createListFromBkUp];
+            }
+        }
+    }
+    else
+    {
+        if (!bEasyGroc)
+        {
+            [self populateCheckList];
+        }
+        else
+        {
+            NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
+            [self refreshList];
+        }
+    }
+    
+
 }
 
 -(void) createNewList
@@ -282,22 +292,24 @@
             NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
             LocalList *newItem = [[LocalList alloc] init];
             MasterList *mitem =[mlist objectAtIndex:i];
-            
-            if (mitem.endMonth > mitem.startMonth)
+            if (bEasyGroc)
             {
-                if (month > mitem.endMonth || month < mitem.startMonth)
-                    continue;
-                
-            }
-            else if (mitem.endMonth == mitem.startMonth)
-            {
-                if (month != mitem.endMonth)
-                    continue;
-            }
-            else
-            {
-                if (month < mitem.startMonth && month > mitem.endMonth)
-                    continue;
+                if (mitem.endMonth > mitem.startMonth)
+                {
+                    if (month > mitem.endMonth || month < mitem.startMonth)
+                        continue;
+                    
+                }
+                else if (mitem.endMonth == mitem.startMonth)
+                {
+                    if (month != mitem.endMonth)
+                        continue;
+                }
+                else
+                {
+                    if (month < mitem.startMonth && month > mitem.endMonth)
+                        continue;
+                }
             }
             newItem.rowno = nRows;
             ++nRows;
@@ -591,7 +603,7 @@
 }
 
 
-
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
@@ -676,7 +688,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if(editMode != eListModeDisplay)
+    if(bEasyGroc && editMode != eListModeDisplay)
         [self.tableView setEditing:YES animated:YES];
 }
 
@@ -928,6 +940,8 @@
     }
 }
 
+#pragma mark - Search bar functions
+
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     
@@ -1049,22 +1063,7 @@
     return nRows;
 }
 
-- (void)switchToggled:(id)sender
-{
-    UISwitch *toggleSwitch = (UISwitch *)sender;
-       NSNumber *swtchKey = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
- 
-      NSNumber *swtchKey1 = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
-    [hiddenCells setObject:swtchKey1 forKey:swtchKey];
-    
-     LocalList *item = [itemMp objectForKey:swtchKey];
-   item.hidden = YES;
-    [undoArry addObject:swtchKey];
-    
-    NSNumber *hidden = [NSNumber numberWithBool:YES];
-    [hiddenMp setObject:hidden forKey:swtchKey];
-    [self.tableView reloadData];
-}
+#pragma mark - Text Edit functions
 
 - (void)textChanged:(id)sender
 {
@@ -1142,6 +1141,8 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+    if (!bEasyGroc)
+        return NO;
     if (editMode == eListModeEdit)
     {
         UITableViewCell *cell = (UITableViewCell *)[[textField superview] superview];
@@ -1164,10 +1165,123 @@
     return NO;
 }
 
+-(void) setTextFieldVal:(UITextField*) textField itm:(LocalList *)item
+{
+    
+    if (bEasyGroc)
+    {
+        textField.text = item.item;
+        return;
+        
+    }
+    [textField setUserInteractionEnabled:NO];
+    if (item.hidden == YES)
+    {
+        textField.text = @"\u2705   ";
+        textField.text = [textField.text stringByAppendingString:item.item];
+    }
+    else
+    {
+        
+        textField.text = @"\u2B1C   ";
+        textField.text = [textField.text stringByAppendingString:item.item];
+    }
+}
+
+#pragma mark - Table view cellForRowIndex helper fns
+
+-(void) setAccessories:(UITableViewCell *) cell rowNo:(NSNumber *)rowNm rowU : (NSUInteger) row
+{
+    if (bEasyGroc && editMode != eListModeDisplay)
+    {
+        cell.showsReorderControl = YES;
+        UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+        
+        AddRowTarget *pBtnAct= [[AddRowTarget alloc] init];
+        [rowTarget setObject:pBtnAct forKey:rowNm];
+        pBtnAct.rowNo = row;
+        pBtnAct.pLst1Vw = self;
+        pBtnAct.rowAddButton = rowAddButton;
+        [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
+        cell.editingAccessoryView = rowAddButton;
+    }
+    
+}
+
+
+- (void)switchToggled:(id)sender
+{
+    UISwitch *toggleSwitch = (UISwitch *)sender;
+    NSNumber *swtchKey = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
+    
+    NSNumber *swtchKey1 = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
+    [hiddenCells setObject:swtchKey1 forKey:swtchKey];
+    
+    LocalList *item = [itemMp objectForKey:swtchKey];
+    item.hidden = YES;
+    [undoArry addObject:swtchKey];
+    
+    NSNumber *hidden = [NSNumber numberWithBool:YES];
+    [hiddenMp setObject:hidden forKey:swtchKey];
+    [self.tableView reloadData];
+}
+
+
+-(void) setCheckMarkAccessory:(LocalList *)item  tableCell:(UITableViewCell *) cell
+{
+    if (item.hidden)
+    {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
+    else
+    {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    
+}
+
+-(bool) setCellHiddenBool:(UITableViewCell *) cell rowU : (NSUInteger) row
+
+{
+    if (!bEasyGroc)
+    {
+        cell.hidden = NO;
+        return false;
+    }
+    NSNumber *key = [NSNumber numberWithInteger:row-1];
+    if ([hiddenCells objectForKey:key] != nil)
+    {
+        cell.hidden = YES;
+        return true;
+    }
+    else
+    {
+        cell.hidden = NO;
+    }
+    return false;
+}
+
+-(void) setHidelCellSwitch:(UITableViewCell *) cell rowU : (NSUInteger) row
+{
+    CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
+    UISwitch *hideCell = [[UISwitch alloc] initWithFrame:switchFrame];
+    [hideCell addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
+    cell.accessoryView = hideCell;
+    hideCell.on = YES;
+    
+    hideCell.tag = row-1;
+}
+
+
+
+
+
 #pragma mark - Table view delegate
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (!bEasyGroc)
+        return NO;
     if (editMode != eListModeDisplay)
     {
         //if ([itemMp objectForKey:[NSNumber numberWithInteger:indexPath.row]] != nil)
@@ -1297,6 +1411,9 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
 editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (!bEasyGroc)
+        return UITableViewCellEditingStyleNone;
+    
     if(editMode != eListModeDisplay)
     {
         if ([itemMp objectForKey:[NSNumber numberWithInteger:indexPath.row]] != nil)
@@ -1352,19 +1469,13 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
     if (indexPath.section != 0)
         return nil;
     NSUInteger row = indexPath.row;
-    NSNumber *key = [NSNumber numberWithInteger:indexPath.row-1];
+    
     
   // NSLog(@"Cell for index at row %lu", (unsigned long)row);
-   if ([hiddenCells objectForKey:key] != nil)
-   {
-       cell.hidden = YES;
+    
+    if ([self setCellHiddenBool:cell rowU:row])
         return cell;
-   }
-   else
-   {
-       cell.hidden = NO;
-   }
-   
+    
      //NSLog(@"Cell for index at row %lu", (unsigned long)row);
     switch (row)
     {
@@ -1410,13 +1521,19 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
         default:
         {
            // NSLog(@"Cell for index at row %lu %@", (unsigned long)row, nameVw);
-            CGRect textFrame = CGRectMake(cell.bounds.origin.x+10, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
+            CGRect textFrame;
+            if (bEasyGroc)
+                textFrame= CGRectMake(cell.bounds.origin.x+10, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
+            else
+                textFrame= CGRectMake(cell.bounds.origin.x+10, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
             UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
             textField.delegate = self;
-            if (editMode != eListModeDisplay)
+            if (bEasyGroc && editMode != eListModeDisplay)
             {
                 [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
             }
+            
+            
             if(editMode == eListModeDisplay)
             {
                 if (row == 1)
@@ -1436,52 +1553,21 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                 {
                     //Ignoring the space place holder for empty inserted rows
                     if ([item.item isEqualToString:@" "] == NO)
-                        textField.text = item.item;
+                        [self setTextFieldVal:textField itm:item];
                     if (editMode == eListModeDisplay)
                     {
                         if (bEasyGroc)
                         {
                             [self setHidelCellSwitch:cell rowU:row];
                         }
-                        else
-                        {
-                            [self setCheckMarkAccessory:item tableCell:cell];
-                            
-                        }
                     }
-                    else
-                    {
-                        if (!bEasyGroc)
-                        {
-                            [self setCheckMarkAccessory:item tableCell:cell];
-                        }
-                        
-                    }
-                }
-                else
-                {
-                    
-                    if (editMode != eListModeDisplay && !bEasyGroc)
-                    {
-                        
-                        UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-                        
-                        AddRowTarget *pBtnAct= [[AddRowTarget alloc] init];
-                        [rowTarget setObject:pBtnAct forKey:rowNm];
-                        pBtnAct.rowNo = row;
-                        pBtnAct.pLst1Vw = self;
-                        [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
-                        cell.editingAccessoryView = rowAddButton;
-                        rowAddButton.hidden = YES;
-
-                    }
-                    
-                }
+                 }
             
                 [self setAccessories:cell rowNo:rowNm rowU:row];
                 textField.tag = row;
             
                 [cell.contentView addSubview:textField];
+            
             
           //     NSLog(@"Adding textField %@ row= %lu", textField.text, (unsigned long)row);
                 
@@ -1497,47 +1583,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
     return cell;
 }
 
--(void) setCheckMarkAccessory:(LocalList *)item  tableCell:(UITableViewCell *) cell
-{
-    if (item.hidden)
-    {
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    }
-    else
-    {
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
 
-}
-
--(void) setHidelCellSwitch:(UITableViewCell *) cell rowU : (NSUInteger) row
-{
-    CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
-    UISwitch *hideCell = [[UISwitch alloc] initWithFrame:switchFrame];
-    [hideCell addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
-    cell.accessoryView = hideCell;
-    hideCell.on = YES;
-    
-    hideCell.tag = row-1;
-}
-
--(void) setAccessories:(UITableViewCell *) cell rowNo:(NSNumber *)rowNm rowU : (NSUInteger) row
-{
-    if (bEasyGroc && editMode != eListModeDisplay)
-    {
-        cell.showsReorderControl = YES;
-        UIButton *rowAddButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-        
-        AddRowTarget *pBtnAct= [[AddRowTarget alloc] init];
-        [rowTarget setObject:pBtnAct forKey:rowNm];
-        pBtnAct.rowNo = row;
-        pBtnAct.pLst1Vw = self;
-        pBtnAct.rowAddButton = rowAddButton;
-        [rowAddButton addTarget:pBtnAct action:@selector(addRow1) forControlEvents:UIControlEventTouchDown];
-        cell.editingAccessoryView = rowAddButton;
-    }
-
-}
 
 /*
 // Override to support conditional editing of the table view.
@@ -1584,29 +1630,44 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
     /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+     <#DetailViewController#> *detailViewController = [[DetailViewController alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
      // ...
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
     
+    
+    NSLog(@"Did select row %ld %s %d", (long)indexPath.row, __FILE__, __LINE__);
+    
     NSUInteger row = indexPath.row;
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:editMode == eListModeDisplay?row-1: row];
     LocalList *item = [itemMp objectForKey:rowNm];
+    if (item == nil)
+        return;
+    
     if (!bEasyGroc && editMode != eListModeDisplay)
     {
         
         UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
-        if (selectedCell.accessoryType == UITableViewCellAccessoryNone) {
-            selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-            //hidden is a misnomer comes from EasyGroc code . false is the default
-            item.hidden = true;
-           
-        }
-        else{
-            selectedCell.accessoryType = UITableViewCellAccessoryNone;
-            item.hidden = false;
+        UILabel *textField = (UILabel *)[selectedCell.contentView viewWithTag:row];
+        if (textField != nil)
+        {
+            if (item.hidden == YES)
+            {
+                item.hidden= NO;
+                textField.text = @"\u2B1C   ";
+                
+                textField.text = [textField.text stringByAppendingString:item.item];
+            }
+            else
+            {
+                item.hidden = YES;
+                textField.text = @"\u2705   ";
+                textField.text = [textField.text stringByAppendingString:item.item];
+            }
+            
         }
     }
 }

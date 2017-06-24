@@ -38,6 +38,6 @@ enum templateNameButtons
 
 @property bool bShareTemplView;
 -(NSString *) getSelectedItem;
-
+@property bool bCheckListView;
 
 @end

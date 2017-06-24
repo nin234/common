@@ -75,6 +75,26 @@
     
 }
 
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    NSString *title = [delegate mainVwCntrlTitle];
+    self.navigationItem.title = [NSString stringWithString:title];
+    if (self.bShareView)
+    {
+        
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"\U0001F46A\U0001F46A" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
+        self.navigationItem.rightBarButtonItem = pBarItem;
+        return;
+    }
+    
+    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
+    self.navigationItem.rightBarButtonItem = pBarItem;
+    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
+    
+    self.navigationItem.leftBarButtonItem = pBarItem1;
+}
+
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -134,21 +154,7 @@
     [super viewDidLoad];
    
     // Do any additional setup after loading the view from its nib.
-    NSString *title = [delegate mainVwCntrlTitle];
-    self.navigationItem.title = [NSString stringWithString:title];
-    if (self.bShareView)
-    {
-        
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"\U0001F46A\U0001F46A" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
-        self.navigationItem.rightBarButtonItem = pBarItem;
-        return;
-    }
-
-    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
-    self.navigationItem.rightBarButtonItem = pBarItem;
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
-    
-    self.navigationItem.leftBarButtonItem = pBarItem1;
+   
     //pDlg.dataSync.refreshNow = true;
    //  pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"Email" style:UIBarButtonItemStyleBordered target:pDlg action:@selector(emailNow)];
 

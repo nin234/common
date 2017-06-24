@@ -1146,12 +1146,9 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
 }
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
+-(void) viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
-
+    [super viewWillAppear:animated];
     self.navigationItem.title = [NSString stringWithString:[delegate setTitle]];
     
     UIBarButtonItem *pBarItemAddDone = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(itemAddDone) ];
@@ -1159,6 +1156,12 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
     UIBarButtonItem *pBarItemAddCancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemAddCancel) ];
     self.navigationItem.leftBarButtonItem = pBarItemAddCancel;
 
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
     
 }
 

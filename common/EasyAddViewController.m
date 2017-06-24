@@ -24,6 +24,8 @@
 @synthesize imagePickerController;
 
 
+#pragma mark - view lifecycle
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -57,24 +59,36 @@
 {
     [super viewDidLoad];
 
+    
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
- 
+    
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     UITableViewHeaderFooterView *aTableViewHeaderFooterView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:@"TableViewSectionHeaderViewIdentifier"];
     // Register the above class for a header view reuse.
     [self.tableView registerClass:[aTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"TableViewSectionHeaderViewIdentifier"];
     
-   
+    
     
     
     NSString *title = @"New List";
     self.navigationItem.title = [NSString stringWithString:title];
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemAddOptionsCancel) ];
-    self.navigationItem.leftBarButtonItem = pBarItem1;
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (pAppCmnUtil.bEasyGroc)
+    {
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(itemAddOptionsCancel) ];
+        self.navigationItem.leftBarButtonItem = pBarItem1;
+    }
 
 }
+
+#pragma mark - Helper functions
 
 - (void) itemAddOptionsCancel
 {
@@ -91,6 +105,99 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    
+    UIImage* image = (UIImage *) [info objectForKey:
+                                  UIImagePickerControllerOriginalImage];
+    struct timeval tv;
+    gettimeofday(&tv, 0);
+    long filno = tv.tv_sec/2;
+    NSString *pFlName = [[NSNumber numberWithInt:(int)filno] stringValue];
+    pFlName = [pFlName stringByAppendingString:@".jpg"];
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    NSURL *pFlUrl;
+    NSError *err;
+    NSURL *albumurl = pAppCmnUtil.pPicsDir;
+    if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
+    {
+        
+        pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
+    }
+    
+    NSDictionary *dict = [pAppCmnUtil.pFlMgr attributesOfItemAtPath:[pFlUrl path] error:&err];
+    if (dict != nil)
+        NSLog (@"Loading image in DisplayViewController %@ file size %lld\n", pFlUrl, [dict fileSize]);
+    else
+        NSLog (@"Loading image in DisplayViewController %@ file size not obtained\n", pFlUrl);
+    
+    
+    
+    
+    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+    if ([data writeToURL:pFlUrl atomically:YES] == NO)
+    {
+        NSLog(@"Failed to write to file %ld %@\n", filno, pFlUrl);
+        return;
+        // --nAlNo;
+        
+    }
+    else
+    {
+        NSLog(@"Save file %@\n", pFlUrl);
+        
+    }
+    
+    CGSize oImgSize;
+    oImgSize.height = 71;
+    oImgSize.width = 71;
+    UIGraphicsBeginImageContext(oImgSize);
+    [image drawInRect:CGRectMake(0, 0, oImgSize.width, oImgSize.height)];
+    UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    //  CGImageRef thumbnailImageRef = MyCreateThumbnailImageFromData (data, 5);
+    // UIImage *thumbnail = [UIImage imageWithCGImage:thumbnailImageRef];
+    CGSize pImgSiz = [thumbnail size];
+    NSLog(@"Added thumbnail Image height = %f width=%f \n", pImgSiz.height, pImgSiz.width);
+    
+    NSData *thumbnaildata = UIImageJPEGRepresentation(thumbnail, 0.3);
+    
+    albumurl = pAppCmnUtil.pThumbNailsDir;
+    if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
+    {
+        
+        pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
+    }
+    
+    if ([thumbnaildata writeToURL:pFlUrl atomically:YES] == NO)
+    {
+        NSLog (@"Failed to write to thumbnail file %ld %@\n", filno, pFlUrl);
+        return;
+        // --nAlNo;
+        
+    }
+    else
+    {
+        NSLog(@"Save thumbnail file %@\n", pFlUrl);
+    }
+    
+    NSString *name = @"List";
+    NSDate *today = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    NSString *formattedDateString = [dateFormatter stringFromDate:today];
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:formattedDateString];
+    
+    [pAppCmnUtil.dataSync addPicItem:name picItem:pFlName];
+    [pAppCmnUtil showPicList:name pictName:pFlName imagePicker:imagePickerController];
+    return;
+}
+
+
 
 #pragma mark - Table view data source
 
@@ -231,97 +338,6 @@
     return cell;
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    
-    UIImage* image = (UIImage *) [info objectForKey:
-                                  UIImagePickerControllerOriginalImage];
-    struct timeval tv;
-    gettimeofday(&tv, 0);
-    long filno = tv.tv_sec/2;
-    NSString *pFlName = [[NSNumber numberWithInt:(int)filno] stringValue];
-    pFlName = [pFlName stringByAppendingString:@".jpg"];
-    
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    NSURL *pFlUrl;
-    NSError *err;
-    NSURL *albumurl = pAppCmnUtil.pPicsDir;
-    if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
-    {
-        
-        pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
-    }
-       
-    NSDictionary *dict = [pAppCmnUtil.pFlMgr attributesOfItemAtPath:[pFlUrl path] error:&err];
-    if (dict != nil)
-        NSLog (@"Loading image in DisplayViewController %@ file size %lld\n", pFlUrl, [dict fileSize]);
-    else
-        NSLog (@"Loading image in DisplayViewController %@ file size not obtained\n", pFlUrl);
-    
-    
-    
-    
-    NSData *data = UIImageJPEGRepresentation(image, 1.0);
-    if ([data writeToURL:pFlUrl atomically:YES] == NO)
-    {
-        NSLog(@"Failed to write to file %ld %@\n", filno, pFlUrl);
-        return;
-        // --nAlNo;
-        
-    }
-    else
-    {
-        NSLog(@"Save file %@\n", pFlUrl);
-       
-    }
-    
-    CGSize oImgSize;
-    oImgSize.height = 71;
-    oImgSize.width = 71;
-    UIGraphicsBeginImageContext(oImgSize);
-    [image drawInRect:CGRectMake(0, 0, oImgSize.width, oImgSize.height)];
-    UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    //  CGImageRef thumbnailImageRef = MyCreateThumbnailImageFromData (data, 5);
-    // UIImage *thumbnail = [UIImage imageWithCGImage:thumbnailImageRef];
-    CGSize pImgSiz = [thumbnail size];
-    NSLog(@"Added thumbnail Image height = %f width=%f \n", pImgSiz.height, pImgSiz.width);
-    
-    NSData *thumbnaildata = UIImageJPEGRepresentation(thumbnail, 0.3);
-    
-    albumurl = pAppCmnUtil.pThumbNailsDir;
-    if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
-    {
-        
-        pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
-    }
-    
-    if ([thumbnaildata writeToURL:pFlUrl atomically:YES] == NO)
-    {
-        NSLog (@"Failed to write to thumbnail file %ld %@\n", filno, pFlUrl);
-        return;
-        // --nAlNo;
-        
-    }
-    else
-    {
-        NSLog(@"Save thumbnail file %@\n", pFlUrl);
-    }
-    
-    NSString *name = @"List";
-    NSDate *today = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
-    NSString *formattedDateString = [dateFormatter stringFromDate:today];
-    name = [name stringByAppendingString:@" "];
-    name = [name stringByAppendingString:formattedDateString];
-    
-    [pAppCmnUtil.dataSync addPicItem:name picItem:pFlName];
-    [pAppCmnUtil showPicList:name pictName:pFlName imagePicker:imagePickerController];
-    return;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
@@ -418,7 +434,7 @@
             NSLog(@"Row count greater than template list items");
             return;
         }
-       
+        [pAppCmnUtil popView];
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
         aViewController.bEasyGroc = false;

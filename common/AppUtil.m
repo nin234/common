@@ -214,9 +214,11 @@
     
     else if (buttonIndex == 1)
     {
-        TemplListViewController *aViewController = [[TemplListViewController alloc]
-                                                    initWithNibName:nil bundle:nil];
         
+        TemplListViewController *aViewController = [TemplListViewController alloc];
+        
+        aViewController = [aViewController initWithNibName:nil bundle:nil];
+        aViewController.bCheckListView = true;
         [self.navViewController pushViewController:aViewController animated:YES];
         
         

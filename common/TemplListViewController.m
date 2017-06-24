@@ -20,6 +20,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 
 @synthesize delegate;
 @synthesize bShareTemplView;
+@synthesize bCheckListView;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -45,6 +46,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         bShareTemplView = false;
         seletedItems = [[NSMutableArray alloc] init];
         uniqueNameAlert = false;
+        bCheckListView = false;
 
     }
     return self;
@@ -88,6 +90,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         aViewController.editMode = eViewModeAdd;
         aViewController.mlistName = nil;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
+        aViewController.bCheckListView = bCheckListView;
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     }
     return;
@@ -165,16 +168,10 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     
     return;
 }
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     NSString *title = @"Template Lists";
     self.navigationItem.title = [NSString stringWithString:title];
     if (self.bShareTemplView)
@@ -185,11 +182,11 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         return;
     }
     
-     AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
+    AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
     if (appCmnUtil.bEasyGroc == true)
     {
         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(templScrnActions)];
-    
+        
         self.navigationItem.rightBarButtonItem = pBarItem1;
     }
     else
@@ -198,6 +195,19 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         self.navigationItem.rightBarButtonItem = pBarItem;
     }
 
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    // Uncomment the following line to preserve selection between presentations.
+    // self.clearsSelectionOnViewWillAppear = NO;
+ 
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    
     
 
 }
@@ -282,11 +292,11 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
         if ([numbr boolValue] == YES)
         {
-            text = @"\u2705";
+            text = @"\u2705  ";
         }
         else
         {
-            text = @"\u2B1C";
+            text = @"\u2B1C  ";
         }
         
         text = [text stringByAppendingString:textLstName];
@@ -368,12 +378,12 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         {
             
             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:NO]];
-            textField.text = @"\u2B1C";
+            textField.text = @"\u2B1C  ";
             textField.text = [textField.text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
         }
         else
         {
-            textField.text = @"\u2705";
+            textField.text = @"\u2705  ";
             textField.text = [textField.text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
             NSUInteger crnt = indexPath.row;
             
