@@ -267,14 +267,27 @@
 
 -(void) itemEditCancel
 {
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [delegate itemEditCancel];
+    pAppCmnUtil.itemsMp = nil;
     return;
 }
 
 -(void) itemEditDone
 {
-
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [delegate itemEditDone];
+    NSString *name = [delegate getEditName];
+
+    if (pAppCmnUtil.itemsMp != nil &&  name != nil)
+    {
+        NSLog(@"Persisting checklist in itemAddDone %s %d", __FILE__, __LINE__);
+        [pAppCmnUtil.dataSync editItem:name itemsDic:pAppCmnUtil.itemsMp];
+        pAppCmnUtil.itemsMp = nil;
+        
+    }
+    
+
     return;
 }
 
@@ -1197,9 +1210,10 @@
             if (checkListArr == nil)
             {
             
-                EasyAddViewController *aViewController = [[EasyAddViewController alloc]
-                                                      initWithNibName:nil bundle:nil];
-            
+                EasyAddViewController *aViewController = [EasyAddViewController alloc];
+                aViewController.listMode = eListModeEdit;
+                
+                aViewController = [aViewController initWithNibName:nil bundle:nil];
                 pAppCmnUtil.listName = [delegate getAlbumTitle];
             
                 [self.navigationController pushViewController:aViewController animated:YES];

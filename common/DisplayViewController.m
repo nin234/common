@@ -229,7 +229,7 @@
     static NSString *CellIdentifier = @"itemdetail";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    printf("Drawing row %ld\n", (long)indexPath.row);
+    
     
     if(indexPath.section == 0) 
     {
@@ -475,6 +475,7 @@
             AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (checkListArr == nil)
         {
+            NSLog(@"Getting checklist for %@ %s %d", [delegate getDispName], __FILE__, __LINE__);
             checkListArr = [pAppCmnUtil.dataSync getList:[delegate getDispName]];
         }
         
@@ -487,8 +488,9 @@
             aViewController.mlistName = nil;
             aViewController.bDoubleParent = false;
             aViewController.list = checkListArr;
+            //need to check how listName being used should ideally be assigned getDispItemTitle
             pAppCmnUtil.listName = [delegate getDispName];
-            aViewController.name = [delegate getDispName];
+            aViewController.name = [delegate getDispItemTitle];
             aViewController = [aViewController initWithNibName:nil bundle:nil];
             
             [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];

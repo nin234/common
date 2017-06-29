@@ -1134,14 +1134,24 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
 
 -(void) itemAddCancel
 {
-    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [delegate itemAddCancel];
+    pAppCmnUtil.itemsMp = nil;
     return;
 }
 
 -(void) itemAddDone
 {
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    NSString *name = [delegate getName];
     [delegate itemAddDone];
+    if (pAppCmnUtil.itemsMp != nil &&  name != nil)
+    {
+        NSLog(@"Persisting checklist in itemAddDone %s %d", __FILE__, __LINE__);
+        [pAppCmnUtil.dataSync addItem:name itemsDic:pAppCmnUtil.itemsMp];
+        pAppCmnUtil.itemsMp = nil;
+    }
+    
     return;
 }
 #pragma mark - View lifecycle
@@ -1201,7 +1211,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
     
     if (indexPath.row == 7)
     {
-        AlbumContentsViewController *albumContentsViewController = [[AlbumContentsViewController alloc] initWithNibName:@"AlbumContentsViewController" bundle:nil];
+        AlbumContentsViewController *albumContentsViewController = [AlbumContentsViewController alloc];
         NSLog(@"Pushing AlbumContents view controller %s %d\n" , __FILE__, __LINE__);
         //  albumContentsViewController.assetsGroup = group_;
         [albumContentsViewController setDelphoto:true];
@@ -1209,6 +1219,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
         [albumContentsViewController setPAlName:pAlName];
         [albumContentsViewController setNavViewController:navViewController];
         [albumContentsViewController setDelegate:self];
+        albumContentsViewController = [albumContentsViewController initWithNibName:@"AlbumContentsViewController" bundle:nil];
         [self.navigationController pushViewController:albumContentsViewController animated:NO];
      
         [albumContentsViewController  setTitle:[delegate getAlbumTitle]];
@@ -1252,8 +1263,11 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (pAppCmnUtil.itemsMp == nil)
         {
-                EasyAddViewController *aViewController = [[EasyAddViewController alloc]
-                                                  initWithNibName:nil bundle:nil];
+            
+            EasyAddViewController *aViewController = [EasyAddViewController alloc];
+            aViewController.listMode = eListModeAdd;
+            
+            aViewController = [aViewController initWithNibName:nil bundle:nil];
         
                 pAppCmnUtil.listName = [delegate getAlbumTitle];
 

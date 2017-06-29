@@ -172,11 +172,11 @@ const NSInteger TEXTFIELD_TAG = 54325;
 
 -(void) populateData
 {
-    if (editMode == eListModeAdd)
+    if (bEasyGroc)
     {
-        NSLog(@"Initializing List1ViewController in eListModeAdd\n");
-        if (bEasyGroc)
+        if (editMode == eListModeAdd)
         {
+            NSLog(@"Initializing List1ViewController in eListModeAdd\n");
             if (mlistName != nil)
             {
                 [self refreshMasterList];
@@ -188,6 +188,14 @@ const NSInteger TEXTFIELD_TAG = 54325;
         }
         else
         {
+            NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
+            [self refreshList];
+        }
+    }
+    else
+    {
+        if (editMode == eListModeAdd)
+        {
             if (mlistName != nil)
             {
                 [self refreshMasterList];
@@ -196,22 +204,25 @@ const NSInteger TEXTFIELD_TAG = 54325;
             {
                 [self createListFromBkUp];
             }
+
         }
-    }
-    else
-    {
-        if (!bEasyGroc)
+        else if (editMode == eListModeEdit)
         {
-            [self populateCheckList];
+            if (mlistName != nil)
+            {
+                [self refreshMasterList];
+            }
+            else
+            {
+               [self populateCheckList];
+            }
         }
         else
         {
-            NSLog(@"Initializing List1ViewController in eListModeDisplay\n");
-            [self refreshList];
+              [self populateCheckList];
         }
     }
     
-
 }
 
 -(void) createNewList
@@ -480,6 +491,8 @@ const NSInteger TEXTFIELD_TAG = 54325;
     return;
 }
 
+#pragma mark - Callback functions and Action Sheet
+
 - (void)itemAddDone
 {
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
@@ -513,42 +526,6 @@ const NSInteger TEXTFIELD_TAG = 54325;
     
     
     return;
-}
-
--(void)willMoveToParentViewController:(UIViewController *)parent
-{
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-   pAppCmnUtil.itemsMp = itemMp;
-}
-
--(void)didMoveToParentViewController:(UIViewController *)parent
-{
-    
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    if (parent !=nil && bDoubleParent)
-    {
-       
-            EditViewController *pEditView = (EditViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
-        if (pEditView != nil && [pEditView isMemberOfClass:[List1ViewController class]])
-        {
-            
-            pEditView.itemMp = itemMp;
-        }
-        
-    }
-    else if (parent != nil)
-    {
-        if (editMode == eListModeEdit)
-        {
-            EditViewController *pEditView = (EditViewController *)parent;
-       
-            if (pEditView != nil && [pEditView isMemberOfClass:[List1ViewController class]])
-            {
-                pEditView.itemMp = itemMp;
-            }
-        }
-    }
-     
 }
 
 -(void) itemDisplay:(NSString *)listname
@@ -602,8 +579,101 @@ const NSInteger TEXTFIELD_TAG = 54325;
     
 }
 
+-(void) itemDispActions
+{
+    
+    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Undo", @"Redo", @"Show All", @"Edit", nil];
+    
+    [pSh showInView:self.tableView];
+    [pSh setDelegate:self];
+    
+    
+    return;
+}
+
+-(void) itemEditActions
+{
+    inEditAction = true;
+    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Save", @"Delete", nil];
+    
+    [pSh showInView:self.tableView];
+    [pSh setDelegate:self];
+    
+    
+    return;
+}
+
+-(void) DeleteConfirm
+{
+    
+    //printf("Launch UIActionSheet");
+    NSLog(@"Touched delete list button\n");
+    inDeleteAction = true;
+    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete List" otherButtonTitles:nil];
+    [pSh showInView:self.tableView];
+    [pSh setDelegate:self];
+    
+}
+
+-(void) itemEditDone
+{
+    for (NSNumber *key in itemMp)
+    {
+        LocalList *item = [itemMp objectForKey:key];
+        NSLog(@"itemEditDone itemMp item=%@ row=%ld", item.item, (unsigned long)[key unsignedIntegerValue]);
+    }
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    List1ViewController *pListView = (List1ViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    [pAppCmnUtil popView];
+    [pListView cleanUpItemMp];
+    /*
+     for (NSNumber *key in pListView.itemMp)
+     {
+     LocalList *item = [pListView.itemMp objectForKey:key];
+     NSLog(@"itemEditDone1 itemMp item=%@ row=%ld item.row=%lld", item.item, (unsigned long)[key unsignedIntegerValue], item.rowno);
+     }
+     */
+    [pAppCmnUtil.dataSync editItem:pListView.name itemsDic:pListView.itemMp];
+    
+    return;
+}
+
+
+
 
 #pragma mark - View lifecycle
+
+-(void)willMoveToParentViewController:(UIViewController *)parent
+{
+    if (!bEasyGroc && (editMode == eListModeEdit || editMode == eListModeAdd))
+    {
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        pAppCmnUtil.itemsMp = itemMp;
+    }
+}
+
+-(void)didMoveToParentViewController:(UIViewController *)parent
+{
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (editMode == eListModeEdit && !bEasyGroc)
+    {
+        EditViewController *pEditView = nil;
+        NSArray *pVwCntrls =  [pAppCmnUtil.navViewController viewControllers];
+        for (id pVwCntrl in pVwCntrls)
+        {
+            if ([pVwCntrl isMemberOfClass:[EditViewController class]])
+                pEditView = pVwCntrl;
+        }
+        if (pEditView != nil )
+        {
+            pEditView.itemMp = itemMp;
+            [pEditView populateCheckListArrFromItemMp];
+        }
+    }
+    
+}
+
 
 - (void)viewDidLoad
 {
@@ -698,7 +768,7 @@ const NSInteger TEXTFIELD_TAG = 54325;
    
     [super viewWillDisappear:animated];
     
-    if (editMode == eListModeDisplay)
+    if (bEasyGroc && editMode == eListModeDisplay)
     {
         if (bSearchStr )
         {
@@ -720,70 +790,12 @@ const NSInteger TEXTFIELD_TAG = 54325;
     NSLog(@"In  view will disappear");
 }
 
--(void) itemDispActions
-{
-    
-    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Undo", @"Redo", @"Show All", @"Edit", nil];
-    
-    [pSh showInView:self.tableView];
-    [pSh setDelegate:self];
-    
-
-    return;
-}
-
--(void) itemEditActions
-{
-    inEditAction = true;
-    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Save", @"Delete", nil];
-    
-    [pSh showInView:self.tableView];
-    [pSh setDelegate:self];
-    
-    
-    return;
-}
 
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
--(void) DeleteConfirm
-{
-    
-    //printf("Launch UIActionSheet");
-    NSLog(@"Touched delete list button\n");
-    inDeleteAction = true;
-    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete List" otherButtonTitles:nil];
-    [pSh showInView:self.tableView];
-    [pSh setDelegate:self];
-    
-}
-
--(void) itemEditDone
-{
-    for (NSNumber *key in itemMp)
-    {
-        LocalList *item = [itemMp objectForKey:key];
-        NSLog(@"itemEditDone itemMp item=%@ row=%ld", item.item, (unsigned long)[key unsignedIntegerValue]);
-    }
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    List1ViewController *pListView = (List1ViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
-    [pAppCmnUtil popView];
-    [pListView cleanUpItemMp];
-    /*
-    for (NSNumber *key in pListView.itemMp)
-    {
-        LocalList *item = [pListView.itemMp objectForKey:key];
-        NSLog(@"itemEditDone1 itemMp item=%@ row=%ld item.row=%lld", item.item, (unsigned long)[key unsignedIntegerValue], item.rowno);
-    }
-     */
-    [pAppCmnUtil.dataSync editItem:pListView.name itemsDic:pListView.itemMp];
-   
-    return;
 }
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

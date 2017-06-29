@@ -7,7 +7,6 @@
 //
 
 #import "EasyAddViewController.h"
-#import "List1ViewController.h"
 #import "AppCmnUtil.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 #include <sys/types.h>
@@ -22,6 +21,7 @@
 @implementation EasyAddViewController
 
 @synthesize imagePickerController;
+@synthesize listMode;
 
 
 #pragma mark - view lifecycle
@@ -436,9 +436,10 @@
         }
         [pAppCmnUtil popView];
         List1ViewController *aViewController = [List1ViewController alloc];
-        aViewController.editMode = eListModeAdd;
+        aViewController.editMode = listMode;
         aViewController.bEasyGroc = false;
         aViewController.mlistName = [masterList objectAtIndex:indexPath.row];
+        NSLog(@"Setting List1ViewController masterlistname = %@ %s %d", aViewController.mlistName, __FILE__, __LINE__);
         aViewController.bDoubleParent = true;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         

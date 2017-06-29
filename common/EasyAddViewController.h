@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "List1ViewController.h"
 
 
 @interface EasyAddViewController : UITableViewController <UIImagePickerControllerDelegate>
@@ -17,6 +18,6 @@
 
 @property (nonatomic, retain) UIImagePickerController *imagePickerController;
 
-
+@property enum eListMode listMode;
 
 @end

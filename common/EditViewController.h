@@ -74,6 +74,7 @@
 @property (nonatomic, retain)  UINavigationController *navViewController;
 
 @property (nonatomic, retain) id<EditViewControllerDelegate> delegate;
+-(void) populateCheckListArrFromItemMp;
 
 
 @end
