@@ -437,10 +437,13 @@ const NSInteger TEXTFIELD_TAG = 54325;
 {
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    list = [pAppCmnUtil.dataSync getList:name];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = name;
+    itk.share_id = share_id;
+    list = [pAppCmnUtil.dataSync getList:itk];
     
     default_name = name;
-    NSLog(@"list %@ for name %@ %s %d\n", list, name, __FILE__, __LINE__);
+    NSLog(@"list %@ for name=%@ share_id=%lld %s %d\n", list, name,  share_id, __FILE__, __LINE__);
     if (list != nil)
     {
         nRows = [list count]+1;
@@ -532,15 +535,16 @@ const NSInteger TEXTFIELD_TAG = 54325;
     return;
 }
 
--(void) itemDisplay:(NSString *)listname
+-(void) itemDisplay:(ItemKey *) itk
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    pAppCmnUtil.listName = listname;
-    [pAppCmnUtil.dataSync selectedItem:listname];
+    pAppCmnUtil.listName = itk.name;
+    [pAppCmnUtil.dataSync selectedItem:itk];
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.editMode = eListModeDisplay;
     aViewController.bEasyGroc = bEasyGroc;
-    aViewController.name = listname;
+    aViewController.name = itk.name;
+    aViewController.share_id = itk.share_id;
     
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
@@ -555,26 +559,14 @@ const NSInteger TEXTFIELD_TAG = 54325;
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     List1ViewController *pListView = (List1ViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
     NSLog(@"Edit cancelled for item %@", pListView.name);
-    [self itemDisplay:pListView.name];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = pListView.name;
+    itk.share_id = pListView.share_id;
+    
+    [self itemDisplay:itk];
     return;
 }
 
--(void) itemDisplay:(NSString *)itemname lstcntr:(List1ViewController *)pLst
-{
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    pAppCmnUtil.listName = itemname;
-    [pAppCmnUtil.dataSync selectedItem:itemname];
-    List1ViewController *aViewController = [List1ViewController alloc];
-    aViewController.editMode = eListModeDisplay;
-     aViewController.name = itemname;
-    aViewController.bEasyGroc = pLst.bEasyGroc;
-    aViewController = [aViewController initWithNibName:nil bundle:nil];
-    [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
-  //  [aViewController refreshListFromCpy:pLst];
-  //  [aViewController.tableView reloadData];
-    
-    return;
-}
 
 - (void) itemAddCancel
 {
@@ -845,7 +837,11 @@ const NSInteger TEXTFIELD_TAG = 54325;
         if (!buttonIndex)
         {
             AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-            [pAppCmnUtil.dataSync deletedEasyItem:name];
+            ItemKey *itk = [[ItemKey alloc] init];
+            itk.name = name;
+            itk.share_id = share_id;
+
+            [pAppCmnUtil.dataSync deletedEasyItem:itk];
             [pAppCmnUtil popView];
 
         }

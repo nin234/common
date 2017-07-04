@@ -306,12 +306,14 @@
     for (NSInteger i=0; i < listCnt; ++i)
     {
         ListNames *mnameRow = [listNamesTmp objectAtIndex:i];
-        NSString *mname = mnameRow.name;
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name = mnameRow.name;
+        itk.share_id = mnameRow.share_id;
         
-        [listNamesArr addObject:mname];
+        [listNamesArr addObject:itk];
         if (mnameRow.picurl != nil)
         {
-            [picDic setObject:mnameRow.picurl forKey:mname];
+            [picDic setObject:mnameRow.picurl forKey:itk];
         }
     }
     // NSLog(@"Refreshing list data count=%ld %@ %@\n", (long)listCnt, listNamesArr, picDic);
@@ -335,7 +337,11 @@
     {
         List *item = [listTmp objectAtIndex:i];
         // NSLog(@"Adding item to master list %@\n", item);
-        NSMutableArray* listarr =  [listArr objectForKey:item.name];
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name = item.name;
+        itk.share_id = item.share_id;
+
+        NSMutableArray* listarr =  [listArr objectForKey:itk];
         if (listarr != nil)
         {
             [listarr addObject:item];
@@ -344,7 +350,7 @@
         {
             listarr = [[NSMutableArray alloc] init];
             [listarr addObject:item];
-            [listArr setObject:listarr forKey:item.name];
+            [listArr setObject:listarr forKey:itk];
             
         }
         
@@ -646,8 +652,8 @@
     NSUInteger mecnt = [listDeletedNames count];
     for (NSUInteger i=0; i < mecnt; ++i)
     {
-        NSString *name = [listDeletedNames objectAtIndex:i];
-        NSMutableArray* listarr =  [listArr objectForKey:name];
+        ItemKey* itk = [listDeletedNames objectAtIndex:i];
+        NSMutableArray* listarr =  [listArr objectForKey:itk];
         if (listarr != nil)
         {
             NSUInteger enmcnt = [listarr count];
@@ -661,10 +667,11 @@
     NSUInteger mlnmcnt = [listNamesArr count];
     for (NSUInteger i=0; i < mecnt; ++i)
     {
-        NSString *name = [listDeletedNames objectAtIndex:i];
+        ItemKey* itk = [listDeletedNames objectAtIndex:i];
         for (NSUInteger j=0; j < mlnmcnt; ++j)
         {
-            if ([name isEqualToString:[listNamesArr objectAtIndex:j]])
+            ItemKey *itr = [listNamesArr objectAtIndex:j];
+            if ([itk.name isEqualToString:itr.name] && itk.share_id == itr.share_id)
             {
                 [self.easyManagedObjectContext deleteObject:[listNamesTmp objectAtIndex:j]];
             }
@@ -1009,7 +1016,7 @@
     return;
 }
 
--(void) selectedItem: (NSString *) selectedItm
+-(void) selectedItem: (ItemKey *) selectedItm
 {
     [workToDo lock];
     itemSelectedChanged = true;
@@ -1346,7 +1353,7 @@
     return nil;
 }
 
--(void) deletedEasyItem:(NSString *)name
+-(void) deletedEasyItem:(ItemKey *)name
 {
     [workToDo lock];
     [listDeletedNames addObject:name];
@@ -2022,7 +2029,7 @@
 }
 
 
--(NSArray *) getList: (NSString *)key
+-(NSArray *) getList: (ItemKey *)key
 {
         [workToDo lock];
     

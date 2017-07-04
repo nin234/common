@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ItemKey : NSObject
+@interface ItemKey : NSObject<NSCopying>
 
 @property (nonatomic, retain) NSString *name;
-@property NSUInteger share_id;
+@property long long share_id;
 
 
 - (id)copyWithZone:(NSZone *)zone;
+
 - (BOOL)isEqual:(id)anObject;
 - (NSUInteger)hash;
 

@@ -110,7 +110,7 @@
     int easyItemsToAdd;
     NSMutableArray *listMps;
     //the two parameters below are used to update the selected item in the list for apple watch
-    NSString *selectedItem;
+    ItemKey *selectedItem;
     bool itemSelectedChanged;
     NSMutableArray *listEditNames;
     NSMutableArray *listEditMps;
@@ -171,11 +171,11 @@
 -(void) editedTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) deletedTemplItem:(NSString *)name;
 -(void) addPicItem:(NSString *)name picItem:(NSString *)picUrl;
--(NSArray *) getList: (NSString *)key;
--(void) selectedItem: (NSString *) selectedItem;
+-(NSArray *) getList: (ItemKey *)key;
+-(void) selectedItem: (ItemKey *) selectedItem;
 -(void) hiddenItems:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp hiddenDic:(NSMutableDictionary*) hiddensMp;
 -(void) editItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
--(void) deletedEasyItem:(NSString *)name;
+-(void) deletedEasyItem:(ItemKey *)name;
 -(NSArray *) getListNames;
 -(NSDictionary *) getPics;
 -(void) addTemplName:(NSString *)name;

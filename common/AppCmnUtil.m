@@ -48,6 +48,7 @@
         EasyDisplayViewController *photoVwCntrl = [EasyDisplayViewController alloc];
         photoVwCntrl.picName = picName;
         photoVwCntrl.listName = name;
+        photoVwCntrl.share_id = share_id;
         photoVwCntrl = [photoVwCntrl initWithNibName:nil bundle:nil];
         [self.navViewController pushViewController:photoVwCntrl animated:YES];
     }];

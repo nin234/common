@@ -790,7 +790,10 @@
         
         [delegate deleteEditItem];
          AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-        [pAppCmnUtil.dataSync deletedEasyItem:[delegate getEditName] ];
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name = [delegate getEditName];
+        itk.share_id = [delegate getEditItemShareId];
+        [pAppCmnUtil.dataSync deletedEasyItem:itk];
         
         [self.navViewController popViewControllerAnimated:YES];
         [self.navViewController popViewControllerAnimated:YES];

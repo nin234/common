@@ -69,6 +69,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @synthesize delconfirm;
 @synthesize picName;
 @synthesize listName;
+@synthesize share_id;
 //@synthesize imageScrollView;
 
 
@@ -242,7 +243,10 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
                 NSLog(@"Failed to remove item at URL %@ reason %@\n", thumburl, err);
             
             delconfirm = false;
-            [pAppCmnUtil.dataSync deletedEasyItem:listName];
+            ItemKey *itk = [[ItemKey alloc] init];
+            itk.name = listName;
+            itk.share_id = share_id;
+            [pAppCmnUtil.dataSync deletedEasyItem:itk];
             [pAppCmnUtil.navViewController popViewControllerAnimated:YES];
         }
         else 

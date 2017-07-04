@@ -71,6 +71,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 //@property (nonatomic, retain) EasySlideScrollView *imageScrollView;
 @property bool bPhoto;
 @property bool delconfirm;
+@property  long long share_id;
 
 
 -(void) photoAction;

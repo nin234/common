@@ -185,7 +185,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     if (list != nil && [list count] > indexPath.row)
     {
         NSString *text;
-        NSString *origtext;
+        ItemKey *itk = [list objectAtIndex:indexPath.row];
         if(bShareView)
         {
             NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
@@ -197,24 +197,16 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
             {
                 text = @"\u2B1C   ";
             }
-            NSString *lstName = [list objectAtIndex:indexPath.row];
-            origtext = lstName;
-            NSArray *pArr = [lstName componentsSeparatedByString:@":::"];
-            NSString *textLstName = [pArr objectAtIndex:[pArr count]-1];
-            
-            text = [text stringByAppendingString:textLstName];
+           
+            text = [text stringByAppendingString:itk.name];
             
            
         }
         else
         {
-            NSString *lstName = [list objectAtIndex:indexPath.row];
-            origtext = lstName;
-            NSArray *pArr = [lstName componentsSeparatedByString:@":::"];
-            NSString *textLstName = [pArr objectAtIndex:[pArr count]-1];
-            text = textLstName;
+            text = itk.name;
         }
-        NSString *pic = [picDic objectForKey:origtext];
+        NSString *pic = [picDic objectForKey:itk];
         CGRect textFrame = CGRectMake(10, 10, 275, 25);
         if (pic != nil)
         {
@@ -263,7 +255,8 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     for (NSUInteger i=0; i < lcnt; ++i)
     {
         NSStringCompareOptions  opt = NSCaseInsensitiveSearch;
-        NSRange aR = [[list objectAtIndex:i] rangeOfString:str options:opt];
+        ItemKey *itk = [list objectAtIndex:i];
+        NSRange aR = [itk.name rangeOfString:str options:opt];
         if (aR.location == NSNotFound && aR.length ==0)
         {
             continue;
@@ -382,13 +375,14 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     if (list != nil && [list count] > indexPath.row)
     {
-        NSString *item = [list objectAtIndex:indexPath.row];
-        NSString *pic = [picDic objectForKey:item];
+        ItemKey *itk = [list objectAtIndex:indexPath.row];
+        NSString *pic = [picDic objectForKey:itk];
         if (pic != nil)
         {
             EasyDisplayViewController *photoVwCntrl = [EasyDisplayViewController alloc];
             photoVwCntrl.picName = pic;
-            photoVwCntrl.listName = item;
+            photoVwCntrl.listName = itk.name;
+            photoVwCntrl.share_id = itk.share_id;
             photoVwCntrl = [photoVwCntrl initWithNibName:nil bundle:nil];
            //[photoVwCntrl.view addSubview:[[EasySlideScrollView alloc] init]];
             [pAppCmnUtil.navViewController pushViewController:photoVwCntrl animated:YES];
@@ -396,20 +390,21 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
         }
         else
         {
-            [self itemDisplay:item];
+            [self itemDisplay:itk];
         }
     }
     
 }
 
--(void) itemDisplay:(NSString *)listname
+-(void) itemDisplay:(ItemKey *) itk
 {
-    NSLog(@"Displaying item %@", listname);
+    NSLog(@"Displaying item %@ %s %d", itk.name, __FILE__, __LINE__);
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil.dataSync selectedItem:listname];
+    [pAppCmnUtil.dataSync selectedItem:itk];
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.bEasyGroc = true;
-    aViewController.name = listname;
+    aViewController.name = itk.name;
+    aViewController.share_id = itk.share_id;
     aViewController.editMode = eListModeDisplay;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
