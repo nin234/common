@@ -63,6 +63,7 @@ const NSInteger TEXTFIELD_TAG = 54325;
 @synthesize list;
 @synthesize mlistName;
 @synthesize nameVw;
+@synthesize share_id;
 
 
 -(void) cleanUpItemMp
@@ -505,7 +506,10 @@ const NSInteger TEXTFIELD_TAG = 54325;
     }
     [pListView cleanUpItemMp];
     NSLog(@"Adding item done ");
-    [pAppCmnUtil.dataSync addItem:pListView.name itemsDic:pListView.itemMp];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = pListView.name;
+    itk.share_id = pAppCmnUtil.share_id;
+    [pAppCmnUtil.dataSync addItem:itk itemsDic:pListView.itemMp];
     if (bEasyGroc)
     {
         if (bInvChanged)
@@ -633,7 +637,11 @@ const NSInteger TEXTFIELD_TAG = 54325;
      NSLog(@"itemEditDone1 itemMp item=%@ row=%ld item.row=%lld", item.item, (unsigned long)[key unsignedIntegerValue], item.rowno);
      }
      */
-    [pAppCmnUtil.dataSync editItem:pListView.name itemsDic:pListView.itemMp];
+    
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name =  pListView.name;
+    itk.share_id = pListView.share_id;
+    [pAppCmnUtil.dataSync editItem:itk itemsDic:pListView.itemMp];
     
     return;
 }
@@ -751,7 +759,10 @@ const NSInteger TEXTFIELD_TAG = 54325;
     if (itemMp == nil || ![itemMp count] || hiddenMp == nil || ![hiddenMp count])
         return;
     NSLog(@"Updating hidden items in  application enter  background");
-    [pAppCmnUtil.dataSync editItem:name itemsDic:itemMp];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = name;
+    itk.share_id = share_id;
+    [pAppCmnUtil.dataSync editItem:itk itemsDic:itemMp];
 
 }
 
@@ -783,7 +794,10 @@ const NSInteger TEXTFIELD_TAG = 54325;
         if (itemMp == nil || ![itemMp count] || hiddenMp == nil || ![hiddenMp count])
             return;
         NSLog(@"Updating hidden items in  view will disappear");
-        [pAppCmnUtil.dataSync editItem:name itemsDic:itemMp];
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name = name;
+        itk.share_id = share_id;
+        [pAppCmnUtil.dataSync editItem:itk itemsDic:itemMp];
        
     }
      

@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "MainViewController.h"
+#import "ItemKey.h"
 
 
 @protocol DataOpsDelegate <NSObject>
@@ -143,7 +144,7 @@
 -(void) editedItem:(id)item;
 -(void) deletedItem: (id)item;
 
--(void) addItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) addItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 
 @property (nonatomic, weak) id<DataOpsDelegate> delegate;
 
@@ -173,7 +174,7 @@
 -(NSArray *) getList: (NSString *)key;
 -(void) selectedItem: (NSString *) selectedItem;
 -(void) hiddenItems:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp hiddenDic:(NSMutableDictionary*) hiddensMp;
--(void) editItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) editItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) deletedEasyItem:(NSString *)name;
 -(NSArray *) getListNames;
 -(NSDictionary *) getPics;

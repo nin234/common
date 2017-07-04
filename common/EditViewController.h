@@ -37,6 +37,7 @@
 -(bool) numbersTag:(NSInteger) tag;
 -(NSString *) getEditName;
 -(NSString *) getAlbumTitle;
+-(NSUInteger) getEditItemShareId;
 @end
 
 @interface EditViewController : UITableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, AlbumContentsViewControllerDelegate>

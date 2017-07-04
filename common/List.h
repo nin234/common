@@ -16,6 +16,7 @@
 @property (nonatomic, retain) NSString * item;
 @property (nonatomic, retain) NSDate   *date;
 @property BOOL hidden;
+@property (nonatomic) long long share_id;
 
 
 @end

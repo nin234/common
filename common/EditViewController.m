@@ -277,12 +277,16 @@
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [delegate itemEditDone];
-    NSString *name = [delegate getEditName];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = [delegate getEditName];
+    itk.share_id = [delegate getEditItemShareId];
+    
 
-    if (pAppCmnUtil.itemsMp != nil &&  name != nil)
+    if (pAppCmnUtil.itemsMp != nil &&  itk.name != nil)
     {
         NSLog(@"Persisting checklist in itemAddDone %s %d", __FILE__, __LINE__);
-        [pAppCmnUtil.dataSync editItem:name itemsDic:pAppCmnUtil.itemsMp];
+        
+        [pAppCmnUtil.dataSync editItem:itk itemsDic:pAppCmnUtil.itemsMp];
         pAppCmnUtil.itemsMp = nil;
         
     }

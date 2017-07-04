@@ -22,6 +22,7 @@
 @synthesize aViewController1;
 @synthesize listName;
 @synthesize itemsMp;
+@synthesize share_id;
 
 -(instancetype) init
 {
@@ -31,6 +32,7 @@
         
         itemsMp = nil;
         bEasyGroc = false;
+        share_id =0;
         return self;
 
     }

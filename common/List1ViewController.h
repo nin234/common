@@ -10,6 +10,7 @@
 
 //#include <map>
 
+
 enum eListMode
 {
    eListModeDisplay,
@@ -66,6 +67,7 @@ enum eDispActionItems
 @property enum eListMode editMode;
 @property bool bEasyGroc;
 @property bool bDoubleParent;
+@property (nonatomic) long long share_id;
 
 -(void) refreshMasterList;
 -(void) refreshList;
@@ -77,4 +79,6 @@ enum eDispActionItems
 - (void)itemAddDone;
 - (void)itemEditDone;
 //need a data structure clean up
+
+
 @end

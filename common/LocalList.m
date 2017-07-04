@@ -16,6 +16,7 @@
 @synthesize item;
 @synthesize date;
 @synthesize hidden;
+@synthesize share_id;
 
 -(id) copyFromList:(List *)list
 {
@@ -24,6 +25,7 @@
     self.item = list.item;
     self.date = list.date;
     self.hidden = list.hidden;
+    self.share_id = list.share_id;
     
     return self;
 }
@@ -37,6 +39,7 @@
         self.item = list.item;
         self.date = list.date;
         self.hidden = list.hidden;
+        self.share_id   = list.share_id;
         return self;
     }
     return nil;

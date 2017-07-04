@@ -15,5 +15,6 @@
 @dynamic item;
 @dynamic date;
 @dynamic hidden;
+@dynamic share_id;
 
 @end

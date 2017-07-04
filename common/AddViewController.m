@@ -1148,7 +1148,11 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
     if (pAppCmnUtil.itemsMp != nil &&  name != nil)
     {
         NSLog(@"Persisting checklist in itemAddDone %s %d", __FILE__, __LINE__);
-        [pAppCmnUtil.dataSync addItem:name itemsDic:pAppCmnUtil.itemsMp];
+        
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name =name;
+        itk.share_id = pAppCmnUtil.share_id;
+        [pAppCmnUtil.dataSync addItem:itk itemsDic:pAppCmnUtil.itemsMp];
         pAppCmnUtil.itemsMp = nil;
     }
     

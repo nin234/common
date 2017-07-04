@@ -29,6 +29,7 @@ enum eEditActionItems
 @property (nonatomic, retain) NSURL *pPicsDir;
 @property (nonatomic, retain) EasyViewController *aViewController1;
 @property (nonatomic, retain) NSMutableDictionary* itemsMp;
+@property long long share_id;
 
 + (instancetype)sharedInstance;
 

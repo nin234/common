@@ -689,7 +689,7 @@
 }
 
 
--(void) editItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+-(void) editItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
 {
     [workToDo lock];
     [listEditNames addObject:name];
@@ -955,7 +955,7 @@
         {
             NSArray *keys = [[listMps objectAtIndex:i] allKeys];
             NSMutableDictionary *rowitems = [listMps objectAtIndex:i];
-            NSString *name = [listNames objectAtIndex:i];
+            ItemKey *itk = [listNames objectAtIndex:i];
             NSUInteger valcnt = [keys count];
             for (NSUInteger j=0; j < valcnt; ++j)
             {
@@ -970,7 +970,8 @@
                 
                 
                 item.item = itemstr.item;
-                item.name = name;
+                item.name = itk.name;
+                item.share_id = item.share_id;
                 item.hidden = itemstr.hidden;
                 item.rowno = itemstr.rowno;
                 ++nTotCnt;
@@ -978,15 +979,10 @@
             }
             ListNames *mname = [storeNames objectAtIndex:i];
             
-            NSArray *namecomps = [name componentsSeparatedByString:@"::];::"];
             
-            mname.name = [namecomps objectAtIndex:0];
-            if ([namecomps count] >1)
-            {
-                mname.share_id = [[namecomps objectAtIndex:1] longLongValue];
-                mname.share_name = [namecomps objectAtIndex:1];
-            }
-
+            mname.name = itk.name;
+            mname.share_id = itk.share_id;
+            
             //NSLog(@"Storing  list name %@\n", mname);
             
         }
@@ -1370,8 +1366,8 @@
     NSUInteger ecnt = [listEditNames count];
     for (NSUInteger i=0; i < ecnt; ++i)
     {
-        NSString *name = [listEditNames objectAtIndex:i];
-        NSMutableArray* listarr =  [listArr objectForKey:name];
+        ItemKey *itk = [listEditNames objectAtIndex:i];
+        NSMutableArray* listarr =  [listArr objectForKey:itk];
         if (listarr != nil)
         {
             NSUInteger enmcnt = [listarr count];
@@ -1392,11 +1388,12 @@
     NSUInteger mlnmcnt = [listNamesArr count];
     for (NSUInteger i=0; i < ecnt; ++i)
     {
-        NSString *name = [listEditNames objectAtIndex:i];
+        ItemKey *itk = [listEditNames objectAtIndex:i];
         
         for (NSUInteger j=0; j < mlnmcnt; ++j)
         {
-            if ([name isEqualToString:[listNamesArr objectAtIndex:j]])
+            ItemKey *itr =[listNamesArr objectAtIndex:j];
+            if ([itk.name isEqualToString:itr.name] && itr.share_id == itk.share_id)
             {
                 ListNames *lname = [listNamesTmp objectAtIndex:j];
                 
@@ -1415,7 +1412,7 @@
     NSManagedObjectModel *managedObjectModel =
     [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
     NSDictionary *ent = [managedObjectModel entitiesByName];
-    printf("entity count %lu\n", (unsigned long)[[ent allKeys] count]);
+    NSLog(@"entity count %lu %s %d", (unsigned long)[[ent allKeys] count], __FILE__, __LINE__);
     NSEntityDescription *entity =
     [ent objectForKey:@"List"];
     
@@ -1440,9 +1437,9 @@
         NSArray *keys = [[listEditMps objectAtIndex:i] allKeys];
         NSMutableDictionary *rowitems = [listEditMps objectAtIndex:i];
         
-        NSString *name = [listEditNames objectAtIndex:i];
+        ItemKey *itk = [listEditNames objectAtIndex:i];
         NSUInteger valcnt = [keys count];
-        NSLog(@"Number of items to store %lu (no of keys)valcnt = %lu in list %@", (unsigned long)[rowitems count], (unsigned long)valcnt, name);
+        NSLog(@"Number of items to store %lu (no of keys)valcnt = %lu in list %@ %s %d", (unsigned long)[rowitems count], (unsigned long)valcnt, itk.name, __FILE__, __LINE__);
         
         for (NSUInteger j=0; j < valcnt; ++j)
         {
@@ -1454,15 +1451,17 @@
                 continue;
             }
             List *item = [storeItems objectAtIndex:nTotCnt];
-            item.name = name;
+            item.name = itk.name;
+            item.share_id = itk.share_id;
             item.item = itemstr.item;
             item.rowno = itemstr.rowno;
             item.hidden = itemstr.hidden;
             ++nTotCnt;
-            NSLog(@"Storing item at index %@ %lld in list %@ hidden=%d", item.item, item.rowno, name, item.hidden);
+            NSLog(@"Storing item at index %@ %lld in list %@ hidden=%d %s %e", item.item, item.rowno, itk.name, item.hidden, __FILE__, __LINE__);
         }
         ListNames *mname = [storeNames objectAtIndex:i];
-        mname.name = name;
+        mname.name = itk.name;
+        mname.share_id = itk.share_id;
         mname.current = YES;
         
         //NSLog(@"Storing master list name %@\n", mname);
@@ -2010,7 +2009,7 @@
     return nil;
 }
 
--(void) addItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+-(void) addItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
 {
     [workToDo lock];
     [listNames addObject:name];
