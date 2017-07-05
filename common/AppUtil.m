@@ -110,26 +110,7 @@
     [aViewController1.pAllItms.movOrImg removeAllObjects];
 }
 
--(void) initializeShrUtl
-{
-    aViewController1 = [[MainViewController alloc]
-                        initWithNibName:nil bundle:nil];
-    
-    
-    UIImage *image = [UIImage imageNamed:@"895-user-group@2x.png"];
-    UIImage *imageSel = [UIImage imageNamed:@"895-user-group-selected@2x.png"];
-    aViewController1.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Share" image:image selectedImage:imageSel];
-    aViewController1.bShareView = true;
-    UINavigationController *mainVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController1];
-    appShrUtl.window = self.window;
-    appShrUtl.navViewController = navViewController;
-    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl ContactsDelegate:self];
-    if (appShrUtl.purchased)
-        [appShrUtl registerForRemoteNotifications];
-    
-    
 
-}
 
 - (NSString *) getAlbumDir: (NSString *) album_name
 {

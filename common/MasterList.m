@@ -16,4 +16,5 @@
 @dynamic startMonth;
 @dynamic endMonth;
 @dynamic inventory;
+@dynamic share_id;
 @end

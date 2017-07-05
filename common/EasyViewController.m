@@ -136,6 +136,7 @@
             [pMainVwCntrl.pSearchBar resignFirstResponder];
             TemplListViewController *aViewController = [[TemplListViewController alloc]
                                                         initWithNibName:nil bundle:nil];
+            aViewController.delegate = [delegate getTemplListVwCntrlDelegate];
             [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
         }
         break;

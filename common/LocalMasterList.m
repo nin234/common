@@ -17,6 +17,7 @@
 @synthesize  startMonth;
 @synthesize  endMonth;
 @synthesize  inventory;
+@synthesize share_id;
 
 -(instancetype) initFromMasterList:(MasterList *)mlist
 {
@@ -28,6 +29,7 @@
         self.startMonth = mlist.startMonth;
         self.endMonth = mlist.endMonth;
         self.inventory = mlist.inventory;
+        self.share_id   = mlist.share_id;
         return self;
     }
     return nil;

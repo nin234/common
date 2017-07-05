@@ -19,6 +19,7 @@ enum eActionSheet
 
 -(void) shareMgrStartAndShow;
 -(void) shareContactsSetSelected;
+-(id) getTemplListVwCntrlDelegate;
 
 @end
 

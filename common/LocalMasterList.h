@@ -17,6 +17,7 @@
 @property int startMonth;
 @property int endMonth;
 @property int inventory;
+@property (nonatomic) long long share_id;
 
 -(instancetype) initFromMasterList:(MasterList *)list;
 

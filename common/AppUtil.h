@@ -55,7 +55,6 @@
 - (NSString *) getAlbumDir: (NSString *) album_name;
 -(void) iCloudOrEmail;
 -(void) photoActions:(int) source;
--(void) initializeShrUtl;
 -(void) shareNow:(NSString *) shareStr;
 -(void) setNavViewController:(UINavigationController *)navViewController;
 
