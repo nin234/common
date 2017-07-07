@@ -28,6 +28,7 @@
 -(NSString *) getEmailFbMsg:(id)itm;
 -(NSString *) getShareMsg:(id)itm;
 -(NSString *) getItemName:(id)itm;
+-(long long ) getItemShareId;
 @end
 
 @interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, UIAlertViewDelegate>

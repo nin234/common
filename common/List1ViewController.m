@@ -64,6 +64,7 @@ const NSInteger TEXTFIELD_TAG = 54325;
 @synthesize mlistName;
 @synthesize nameVw;
 @synthesize share_id;
+@synthesize mlist_share_id;
 
 
 -(void) cleanUpItemMp
@@ -272,7 +273,10 @@ const NSInteger TEXTFIELD_TAG = 54325;
 {
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    mlist = [pAppCmnUtil.dataSync getMasterList:mlistName];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = mlistName;
+    itk.share_id = mlist_share_id;
+    mlist = [pAppCmnUtil.dataSync getMasterList:itk];
     if (bEasyGroc)
     {
         name = mlistName;
@@ -335,8 +339,10 @@ const NSInteger TEXTFIELD_TAG = 54325;
     
     if (bEasyGroc)
     {
+        
         mInvListName = [mlistName stringByAppendingString:@":INV"];
-        mInvArr = [pAppCmnUtil.dataSync getMasterList:mInvListName];
+        itk.name = mInvListName;
+        mInvArr = [pAppCmnUtil.dataSync getMasterList:itk];
         NSUInteger invArrCnt = [mInvArr count];
         
         for (NSUInteger i=0; i < invArrCnt; ++i)
@@ -358,7 +364,8 @@ const NSInteger TEXTFIELD_TAG = 54325;
         }
         
         mScrtchListName = [mlistName stringByAppendingString:@":SCRTCH"];
-        mScrtchArr = [pAppCmnUtil.dataSync getMasterList:mScrtchListName];
+        itk.name = mScrtchListName;
+        mScrtchArr = [pAppCmnUtil.dataSync getMasterList:itk];
         NSUInteger scrtchArrCnt = [mScrtchArr count];
         for (NSUInteger i=0; i < scrtchArrCnt; ++i)
         {
@@ -522,11 +529,17 @@ const NSInteger TEXTFIELD_TAG = 54325;
                 MasterList *mitem = [mInvMp objectForKey:key];
                 mitem.inventory = 10;
             }
-            [pAppCmnUtil.dataSync editedTemplItem:mInvListName itemsDic:mInvMp];
+            ItemKey *mtk = [[ItemKey alloc] init];
+            mtk.name = mInvListName;
+            mtk.share_id = mlist_share_id;
+            [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:mInvMp];
         }
         if (mScrtchArr != nil && [mScrtchArr count])
         {
-            [pAppCmnUtil.dataSync deletedTemplItem:mScrtchListName];
+            ItemKey *mtk = [[ItemKey alloc] init];
+            mtk.name = mScrtchListName;
+            mtk.share_id = mlist_share_id;
+            [pAppCmnUtil.dataSync deletedTemplItem:mtk];
         }
         
     }

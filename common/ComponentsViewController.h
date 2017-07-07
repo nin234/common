@@ -20,5 +20,6 @@
 @property  bool recrLstExists;
 @property bool invLstExists;
 @property bool scrtchLstExists;
+@property long long share_id;
 
 @end

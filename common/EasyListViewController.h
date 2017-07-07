@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ItemKey.h"
 
 /**
  <#Description#>
@@ -28,6 +29,6 @@
 -(void) filter:(NSString *) str;
 -(void) removeFilter;
 
--(NSString *) getSelectedItem;
+-(ItemKey *) getSelectedItem;
 
 @end

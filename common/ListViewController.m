@@ -64,6 +64,7 @@
 @synthesize easyGrocLstType;
 @synthesize pCompVwCntrl;
 @synthesize bCheckListView;
+@synthesize share_id;
 
 
 -(void) showSeasonPicker : (NSUInteger) rowNo
@@ -191,7 +192,12 @@
 {
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     if (mlistName != nil)
-        mlist = [pAppCmnUtil.dataSync getMasterList:mlistName];
+    {
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name = mlistName;
+        itk.share_id = share_id;
+        mlist = [pAppCmnUtil.dataSync getMasterList:itk];
+    }
     else
         mlist = nil;
     name = mlistName;
@@ -253,6 +259,7 @@
     aViewController.editMode = eViewModeEdit;
     aViewController.easyGrocLstType = easyGrocLstType;
     aViewController.mlistName = mlistName;
+    aViewController.share_id = share_id;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     return;
@@ -265,6 +272,7 @@
     aViewController.editMode = eViewModeDisplay;
     aViewController.easyGrocLstType = easyGrocLstType;
     aViewController.name = templ_name;
+    aViewController.share_id = share_id;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     [aViewController refreshMasterListCpyFromLstVwCntrl:pLst];
@@ -281,12 +289,23 @@
     
     //[self templItemDisplay:pListView.name lstcntr:pListView];
     [pListView cleanUpItemMp];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = pListView.name;
+    if (pListView.share_id)
+    {
+        itk.share_id = pListView.share_id;
+    }
+    else
+    {
+        itk.share_id = pAppCmnUtil.share_id;
+    }
+
     if (bCheckListView)
     {
-        [pAppCmnUtil.dataSync addTemplName:pListView.name];
+        [pAppCmnUtil.dataSync addTemplName:itk];
     }
     
-    [pAppCmnUtil.dataSync addTemplItem:pListView.name itemsDic:pListView.itemMp];
+    [pAppCmnUtil.dataSync addTemplItem:itk itemsDic:pListView.itemMp];
     if (pAppCmnUtil.bEasyGroc && [pListView.itemMp count])
     {
         switch (easyGrocLstType)
@@ -333,7 +352,10 @@
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
     [pListView cleanUpItemMp];
-    [pAppCmnUtil.dataSync editedTemplItem:pListView.name itemsDic:pListView.itemMp];
+    ItemKey *mtk = [[ItemKey alloc] init];
+    mtk.name = pListView.name;
+    mtk.share_id = pListView.share_id;
+    [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:pListView.itemMp];
     return;
 }
 
@@ -354,7 +376,10 @@
             item.inventory = 0;
         }
     }
-    [pAppCmnUtil.dataSync editedTemplItem:item.name itemsDic:itemMp];
+    ItemKey *mtk = [[ItemKey alloc] init];
+    mtk.name = item.name;
+    mtk.share_id = share_id;
+    [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:itemMp];
     
 }
 

@@ -95,7 +95,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 }
 
 
--(NSString *) getSelectedItem
+-(ItemKey *) getSelectedItem
 {
     NSUInteger cnt = [seletedItems count];
     for (NSUInteger i=0; i < cnt; ++i)
@@ -334,17 +334,22 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
         [tableView cellForRowAtIndexPath:indexPath];
         UILabel *textField = (UILabel *)[cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_2];
         NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
+        ItemKey *itk = [list objectAtIndex:indexPath.row];
+        if (itk == nil)
+        {
+            NSLog(@"Invalid list item %s %d", __FILE__, __LINE__);
+        }
         if ([numbr boolValue] == YES)
         {
 
             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:NO]];
             textField.text = @"\u2B1C   ";
-            textField.text = [textField.text stringByAppendingString:[list objectAtIndex:indexPath.row]];
+            textField.text = [textField.text stringByAppendingString:itk.name];
         }
         else
         {
             textField.text = @"\u2705   ";
-            textField.text = [textField.text stringByAppendingString:[list objectAtIndex:indexPath.row]];
+            textField.text = [textField.text stringByAppendingString:itk.name];
             NSUInteger crnt = indexPath.row;
             
             NSLog(@"Changing  image to selected at index %lu\n", (unsigned long)crnt);
@@ -361,7 +366,8 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
                     [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
                     UILabel *othr_row_textfld = (UILabel *)[othr_row_cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_2];
                     othr_row_textfld.text =@"\u2B1C";
-                    othr_row_textfld.text =  [othr_row_textfld.text stringByAppendingString:[list objectAtIndex:i]];
+                    itk = [list objectAtIndex:i];
+                    othr_row_textfld.text =  [othr_row_textfld.text stringByAppendingString:itk.name];
                     NSLog(@"Changing image Not selected at index %lu\n", (unsigned long)i);
                     [seletedItems replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:NO]];
                 }

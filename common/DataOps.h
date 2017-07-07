@@ -165,11 +165,11 @@
 -(bool) isNewItem:(id) item;
 -(NSArray *) getMasterListNames;
 - (void)saveEasyContext;
--(NSArray *) getMasterList: (NSString *)key;
--(void) addTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
--(void) addShareTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
--(void) editedTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp;
--(void) deletedTemplItem:(NSString *)name;
+-(NSArray *) getMasterList: (ItemKey *)key;
+-(void) addTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) addShareTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) deletedTemplItem:(ItemKey *)name;
 -(void) addPicItem:(NSString *)name picItem:(NSString *)picUrl;
 -(NSArray *) getList: (ItemKey *)key;
 -(void) selectedItem: (ItemKey *) selectedItem;
@@ -178,7 +178,7 @@
 -(void) deletedEasyItem:(ItemKey *)name;
 -(NSArray *) getListNames;
 -(NSDictionary *) getPics;
--(void) addTemplName:(NSString *)name;
+-(void) addTemplName:(ItemKey *)name;
 -(bool) checkMlistNameExist:(NSString *)name;
 
 

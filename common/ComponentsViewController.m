@@ -26,6 +26,7 @@
 @synthesize invLstExists;
 @synthesize scrtchLstExists;
 @synthesize recrLstExists;
+@synthesize share_id;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,20 +37,24 @@
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (masterListName != nil)
         {
-            mlist = [pAppCmnUtil.dataSync getMasterList:masterListName];
+            ItemKey *itk = [[ItemKey alloc] init];
+            itk.name = masterListName;
+            itk.share_id = share_id;
+            mlist = [pAppCmnUtil.dataSync getMasterList:itk];
             if (mlist)
                 recrLstExists = true;
             else
                 recrLstExists = false;
             masterScrathListName = [masterListName stringByAppendingString:@":SCRTCH"];
             masterInvListName = [masterListName stringByAppendingString:@":INV"];
-            mlistScrtch = [pAppCmnUtil.dataSync getMasterList:masterScrathListName];
+            itk.name = masterScrathListName;
+            mlistScrtch = [pAppCmnUtil.dataSync getMasterList:itk];
             if (mlistScrtch)
                 scrtchLstExists = true;
             else
                 scrtchLstExists = false;
-            
-            mlistInv = [pAppCmnUtil.dataSync getMasterList:masterInvListName];
+            itk.name = masterInvListName;
+            mlistInv = [pAppCmnUtil.dataSync getMasterList:itk];
             if (mlistInv)
                 invLstExists = true;
             else
@@ -249,7 +254,7 @@
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     ListViewController *aViewController = [ListViewController alloc];
-    
+    aViewController.share_id = share_id;
     if (indexPath.section == 0)
     {
         aViewController.easyGrocLstType = eRecurrngLst;
@@ -262,6 +267,7 @@
             aViewController.editMode = eViewModeDisplay;
         }
         aViewController.mlistName = masterListName;
+        
 
     }
     else if (indexPath.section ==1)

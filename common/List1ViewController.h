@@ -59,6 +59,7 @@ enum eDispActionItems
 @property (nonatomic, retain) NSMutableDictionary *hiddenMp;
 @property (nonatomic, retain) NSMutableDictionary *hiddenCells;
 @property (nonatomic, retain)NSArray* list;
+@property long long mlist_share_id;
 
 //nameVw used just for debugging purposes
 @property (nonatomic, retain) NSString *nameVw;

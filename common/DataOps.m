@@ -80,7 +80,7 @@
 
 
 
--(void) editedTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+-(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
 
 {
     [workToDo lock];
@@ -93,7 +93,7 @@
     return;
 }
 
--(void) deletedTemplItem:(NSString *)name
+-(void) deletedTemplItem:(ItemKey *)name
 {
     [workToDo lock];
     [masterListDeletedNames addObject:name];
@@ -148,8 +148,8 @@
     NSUInteger mecnt = [masterListEditNames count];
     for (NSUInteger i=0; i < mecnt; ++i)
     {
-        NSString *name = [masterListEditNames objectAtIndex:i];
-        NSMutableArray* mlistarr =  [masterListArr objectForKey:name];
+        ItemKey *itk = [masterListEditNames objectAtIndex:i];
+        NSMutableArray* mlistarr =  [masterListArr objectForKey:itk];
         if (mlistarr != nil)
         {
             NSUInteger enmcnt = [mlistarr count];
@@ -177,7 +177,7 @@
     NSManagedObjectModel *managedObjectModel =
     [[self.easyManagedObjectContext persistentStoreCoordinator] managedObjectModel];
     NSDictionary *ent = [managedObjectModel entitiesByName];
-    printf("entity count %lu\n", (unsigned long)[[ent allKeys] count]);
+    NSLog(@"entity count %lu %s %d", (unsigned long)[[ent allKeys] count], __FILE__, __LINE__);
     NSEntityDescription *entity =
     [ent objectForKey:@"MasterList"];
     
@@ -196,7 +196,7 @@
     {
         NSArray *keys = [[masterListEditMps objectAtIndex:i] allKeys];
         NSMutableDictionary *rowitems = [masterListEditMps objectAtIndex:i];
-        NSString *name = [masterListEditNames objectAtIndex:i];
+        ItemKey *itk = [masterListEditNames objectAtIndex:i];
         NSUInteger valcnt = [keys count];
         for (NSUInteger j=0; j < valcnt; ++j)
         {
@@ -207,7 +207,8 @@
                 continue;
             }
             MasterList *item = [storeItems objectAtIndex:nTotCnt];
-            item.name = name;
+            item.name =  itk.name;
+            item.share_id = itk.share_id;
             item.item = itemstr.item;
             item.startMonth = itemstr.startMonth;
             item.endMonth = itemstr.endMonth;
@@ -255,8 +256,8 @@
     NSUInteger mecnt = [masterListDeletedNames count];
     for (NSUInteger i=0; i < mecnt; ++i)
     {
-        NSString *name = [masterListDeletedNames objectAtIndex:i];
-        NSMutableArray* mlistarr =  [masterListArr objectForKey:name];
+        ItemKey *itk = [masterListDeletedNames objectAtIndex:i];
+        NSMutableArray* mlistarr =  [masterListArr objectForKey:itk];
         if (mlistarr != nil)
         {
             NSUInteger enmcnt = [mlistarr count];
@@ -270,10 +271,11 @@
     NSUInteger mlnmcnt = [masterListNamesArr count];
     for (NSUInteger i=0; i < mecnt; ++i)
     {
-        NSString *name = [masterListDeletedNames objectAtIndex:i];
+        ItemKey *itk = [masterListDeletedNames objectAtIndex:i];
         for (NSUInteger j=0; j < mlnmcnt; ++j)
         {
-            if ([name isEqualToString:[masterListNamesArr objectAtIndex:j]])
+            ItemKey *itr = [masterListNamesArr objectAtIndex:j];
+            if ([itk.name isEqualToString:itr.name] && itk.share_id == itr.share_id)
             {
                 [self.easyManagedObjectContext deleteObject:[masterListNamesTmp objectAtIndex:j]];
             }
@@ -978,7 +980,7 @@
                 
                 item.item = itemstr.item;
                 item.name = itk.name;
-                item.share_id = item.share_id;
+                item.share_id = itk.share_id;
                 item.hidden = itemstr.hidden;
                 item.rowno = itemstr.rowno;
                 ++nTotCnt;
@@ -1099,10 +1101,10 @@
     
     for (int i=0; i <nItems; ++i)
     {
-        NSString *name = [masterListNamesOnly objectAtIndex:i];
+        ItemKey *name = [masterListNamesOnly objectAtIndex:i];
         MasterListNames *mname = [storeNames objectAtIndex:i];
-        mname.name = name;
-        mname.share_id = 0;
+        mname.name = name.name;
+        mname.share_id = name.share_id;
         mname.share_name = @"0";
         // NSLog(@"Storing master list name %@\n", mname);
         
@@ -1174,7 +1176,7 @@
         {
             NSArray *keys = [[shareMasterListMps objectAtIndex:i] allKeys];
             NSMutableDictionary *rowitems = [shareMasterListMps objectAtIndex:i];
-            NSString *name = [shareMasterListNames objectAtIndex:i];
+            ItemKey *itk = [shareMasterListNames objectAtIndex:i];
             NSUInteger valcnt = [keys count];
             for (NSUInteger j=0; j < valcnt; ++j)
             {
@@ -1185,7 +1187,8 @@
                     continue;
                 }
                 MasterList *item = [storeItems objectAtIndex:nTotCnt];
-                item.name = name;
+                item.name = itk.name;
+                item.share_id = itk.share_id;
                 item.item = itemstr.item;
                 item.startMonth = itemstr.startMonth;
                 item.endMonth = itemstr.endMonth;
@@ -1195,16 +1198,9 @@
                 //  NSLog(@"Storing item at index %@ %lu\n", item, (unsigned long)nTotCnt);
             }
             MasterListNames *mname = [storeNames objectAtIndex:i];
-            NSArray *namecomps = [name componentsSeparatedByString:@"::];::"];
-            
-            mname.name = [namecomps objectAtIndex:0];
-            if ([namecomps count] >1)
-            {
-                mname.share_id = [[namecomps objectAtIndex:1] longLongValue];
-                mname.share_name = [namecomps objectAtIndex:1];
-            }
-            // NSLog(@"Storing master list name %@\n", mname);
-            
+            mname.name = itk.name;
+            mname.share_id = itk.share_id;
+                    
         }
     }
     if (templShareItemsToAdd > nItems)
@@ -1264,7 +1260,7 @@
         {
             NSArray *keys = [[masterListMps objectAtIndex:i] allKeys];
             NSMutableDictionary *rowitems = [masterListMps objectAtIndex:i];
-            NSString *name = [masterListNames objectAtIndex:i];
+            ItemKey *itk = [masterListNames objectAtIndex:i];
             NSUInteger valcnt = [keys count];
             for (NSUInteger j=0; j < valcnt; ++j)
             {
@@ -1275,7 +1271,8 @@
                     continue;
                 }
                 MasterList *item = [storeItems objectAtIndex:nTotCnt];
-                item.name = name;
+                item.name = itk.name;
+                item.share_id = itk.share_id;
                 item.item = itemstr.item;
                 item.startMonth = itemstr.startMonth;
                 item.endMonth = itemstr.endMonth;
@@ -1325,7 +1322,7 @@
     return masterListNamesArr;
 }
 
--(NSArray *) getMasterList: (NSString *)key
+-(NSArray *) getMasterList: (ItemKey *)key
 {
     [workToDo lock];
     if (key == nil)
@@ -1530,9 +1527,11 @@
     for (NSInteger i=0; i < masterListCnt; ++i)
     {
         MasterListNames *mnameRow = [masterListNamesTmp objectAtIndex:i];
-        NSString *mname = mnameRow.name;
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name = mnameRow.name;
+        itk.share_id = mnameRow.share_id;
         
-        [masterListNamesArr addObject:mname];
+        [masterListNamesArr addObject:itk];
     }
     //NSLog(@"Refreshing templ data count=%ld %@\n", (long)masterListCnt, masterListNamesArr);
     [workToDo unlock];
@@ -1556,7 +1555,11 @@
     {
         MasterList *mitem = [masterListTmp objectAtIndex:i];
         //NSLog(@"Adding item to master list %@\n", mitem);
-        NSMutableArray* mlistarr =  [masterListArr objectForKey:mitem.name];
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.name = mitem.name;
+        itk.share_id = mitem.share_id;
+
+        NSMutableArray* mlistarr =  [masterListArr objectForKey:itk];
         if (mlistarr != nil)
         {
             [mlistarr addObject:mitem];
@@ -1565,7 +1568,7 @@
         {
             mlistarr = [[NSMutableArray alloc] init];
             [mlistarr addObject:mitem];
-            [masterListArr setObject:mlistarr forKey:mitem.name];
+            [masterListArr setObject:mlistarr forKey:itk];
             
         }
         
@@ -1576,17 +1579,17 @@
 }
 
 
--(void) addTemplName:(NSString *)name
+-(void) addTemplName:(ItemKey *)name
 {
      [workToDo lock];
     [masterListNamesOnly addObject:name];
     ++templNameItemsToAdd;
-    NSLog(@"Added  new template  name item %@ %d and signalling work to do\n", name, templNameItemsToAdd);
+    NSLog(@"Added  new template  name item %@ %d and signalling work to do\n", name.name, templNameItemsToAdd);
     [workToDo signal];
     [workToDo unlock];
     return;
 }
--(void) addShareTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+-(void) addShareTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
 {
     [workToDo lock];
     [shareMasterListNames addObject:name];
@@ -1599,7 +1602,7 @@
 }
 
 
--(void) addTemplItem:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp
+-(void) addTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
 {
     [workToDo lock];
     [masterListNames addObject:name];
@@ -2041,7 +2044,12 @@
             }
         
         NSMutableArray* listarr =  [listArr objectForKey:key];
-    // NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n", listarr, key, listArr);
+    NSArray *keys = [listArr allKeys];
+    for (ItemKey *key in keys)
+    {
+        NSLog(@"key.name=%@ key.share_id=%d" , key.name, key.share_id);
+    }
+     NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n", listarr, key, listArr);
         if (listarr != nil)
         {
             NSMutableArray *list = [[NSMutableArray alloc] init];

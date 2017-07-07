@@ -90,11 +90,12 @@
     NSString *shrStr = [shareStr stringByAppendingString:@":::"];
     NSString *shrMsg = [delegate getShareMsg:itm];
     NSString *name = [delegate getItemName:itm];
+    long long share_id = [delegate getItemShareId];
     if (name == nil)
         return;
     [picMetaStr stringByAppendingString:name];
     shrStr = [shrStr stringByAppendingString:shrMsg];
-    [pShrMgr shareItem:shrMsg listName:name];
+    [pShrMgr shareItem:shrMsg listName:name shrId:share_id];
     NSUInteger cnt =  [aViewController1.pAllItms.attchments count];
     for (NSUInteger i =0; i < cnt; ++i)
     {

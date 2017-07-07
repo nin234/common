@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ListViewController.h"
+#import "ItemKey.h"
 
 
 @protocol TemplListViewControllerDelegate <NSObject>
@@ -37,7 +38,7 @@ enum templateNameButtons
 @property (nonatomic, weak) id<TemplListViewControllerDelegate> delegate;
 
 @property bool bShareTemplView;
--(NSString *) getSelectedItem;
+-(ItemKey *) getSelectedItem;
 @property bool bCheckListView;
 
 @end

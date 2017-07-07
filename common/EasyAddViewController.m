@@ -310,7 +310,8 @@
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
             label.textAlignment = NSTextAlignmentLeft;
             label.font = [UIFont boldSystemFontOfSize:14];
-            label.text = [masterList objectAtIndex:indexPath.row];
+            ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+            label.text = itk.name;
             NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             [cell.contentView addSubview:label];
@@ -323,7 +324,8 @@
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
             label.textAlignment = NSTextAlignmentLeft;
             label.font = [UIFont boldSystemFontOfSize:14];
-            label.text = [masterList objectAtIndex:indexPath.row];
+            ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+            label.text = itk.name;
             NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             [cell.contentView addSubview:label];
@@ -438,8 +440,11 @@
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = listMode;
         aViewController.bEasyGroc = false;
-        aViewController.mlistName = [masterList objectAtIndex:indexPath.row];
-        NSLog(@"Setting List1ViewController masterlistname = %@ %s %d", aViewController.mlistName, __FILE__, __LINE__);
+        ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+        aViewController.mlistName = itk.name;
+        aViewController.mlist_share_id = itk.share_id;
+        
+        NSLog(@"Setting List1ViewController masterlistname = %@ share_id=%lld %s %d", aViewController.mlistName, aViewController.mlist_share_id, __FILE__, __LINE__);
         aViewController.bDoubleParent = true;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         
@@ -459,7 +464,12 @@
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = eListModeAdd;
         aViewController.bEasyGroc = true;
-        aViewController.mlistName = [masterList objectAtIndex:indexPath.row];
+        ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+        aViewController.mlistName = itk.name;
+        aViewController.mlist_share_id = itk.share_id;
+        aViewController.share_id = pAppCmnUtil.share_id;
+        
+
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
         
@@ -473,6 +483,7 @@
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         aViewController.mlistName = nil;
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+         aViewController.share_id = pAppCmnUtil.share_id;
 
     }
     else if (indexPath.section ==0)

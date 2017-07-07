@@ -66,6 +66,12 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 
     masterList = [NSArray arrayWithArray:[pAppCmnUtil.dataSync getMasterListNames]];
     cnt = [masterList count];
+    seletedItems = [[NSMutableArray alloc] initWithCapacity:cnt];
+    for (NSUInteger i=0; i < cnt ; ++i)
+    {
+        [seletedItems addObject:[NSNumber numberWithBool:NO]];
+    }
+
      [pAppCmnUtil.dataSync unlock];
     NSLog (@" Refreshed Master list name %@ count %ld", masterList, (long)cnt);
 }
@@ -89,6 +95,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         ListViewController *aViewController = [ListViewController alloc];
         aViewController.editMode = eViewModeAdd;
         aViewController.mlistName = nil;
+        aViewController.share_id = 0;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         aViewController.bCheckListView = bCheckListView;
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
@@ -125,7 +132,10 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
                 [pAvw show];
                 return;
             }
-            [pAppCmnUtil.dataSync addTemplName:templName];
+            ItemKey *itk = [[ItemKey alloc] init];
+            itk.name = templName;
+            itk.share_id = pAppCmnUtil.share_id;
+            [pAppCmnUtil.dataSync addTemplName:itk];
         }
             break;
             
@@ -242,10 +252,10 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     
 }
 
--(NSString *) getSelectedItem
+-(ItemKey *) getSelectedItem
 {
-    NSUInteger cnt = [seletedItems count];
-    for (NSUInteger i=0; i < cnt; ++i)
+    NSUInteger selcnt = [seletedItems count];
+    for (NSUInteger i=0; i < selcnt; ++i)
     {
         
         NSNumber* row_no = [seletedItems objectAtIndex:i];
@@ -285,8 +295,8 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     label.textAlignment = NSTextAlignmentLeft;
     label.font = [UIFont boldSystemFontOfSize:14];
     NSString *text;
-    NSArray *pArr = [[masterList objectAtIndex:indexPath.row] componentsSeparatedByString:@":::"];
-    NSString *textLstName = [pArr objectAtIndex:[pArr count]-1];
+    ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+    NSString *textLstName = itk.name;
     if(bShareTemplView)
     {
         NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
@@ -309,7 +319,14 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     label.tag = SELECTION_INDICATOR_TAG_3;
     NSLog(@"Setting template list label %@ for row %ld\n", label.text, (long)indexPath.row);
     if (!self.bShareTemplView)
+    {
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    else
+    {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    
     [cell.contentView addSubview:label];
 
     // Configure the cell...
@@ -367,7 +384,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    
+    ItemKey *itk = [masterList objectAtIndex:indexPath.row];
     if (bShareTemplView)
     {
         UITableViewCell *cell =
@@ -379,18 +396,18 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
             
             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:NO]];
             textField.text = @"\u2B1C  ";
-            textField.text = [textField.text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
+            textField.text = [textField.text stringByAppendingString:itk.name];
         }
         else
         {
             textField.text = @"\u2705  ";
-            textField.text = [textField.text stringByAppendingString:[masterList objectAtIndex:indexPath.row]];
+            textField.text = [textField.text stringByAppendingString:itk.name];
             NSUInteger crnt = indexPath.row;
             
             NSLog(@"Changing  image to selected at index %lu\n", (unsigned long)crnt);
             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:YES]];
-            NSUInteger cnt = [seletedItems count];
-            for (NSUInteger i=0; i < cnt; ++i)
+            NSUInteger selcnt = [seletedItems count];
+            for (NSUInteger i=0; i < selcnt; ++i)
             {
                 if (i==crnt)
                     continue;
@@ -401,7 +418,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
                     [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
                     UILabel *othr_row_textfld = (UILabel *)[othr_row_cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_3];
                     othr_row_textfld.text =@"\u2B1C";
-                    othr_row_textfld.text =  [othr_row_textfld.text stringByAppendingString:[masterList objectAtIndex:i]];
+                    othr_row_textfld.text =  [othr_row_textfld.text stringByAppendingString:itk.name];
                     NSLog(@"Changing image Not selected at index %lu\n", (unsigned long)i);
                     [seletedItems replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:NO]];
                 }
@@ -416,7 +433,9 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     if (pAppCmnUtil.bEasyGroc)
     {
         ComponentsViewController *aViewController = [ComponentsViewController alloc];
-        aViewController.masterListName = [masterList objectAtIndex:indexPath.row];
+        
+        aViewController.masterListName = itk.name;
+        aViewController.share_id = itk.share_id;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
     }
@@ -425,7 +444,8 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         
         ListViewController *aViewController = [ListViewController alloc];
         aViewController.editMode = eViewModeDisplay;
-        aViewController.mlistName= [masterList objectAtIndex:indexPath.row];
+        aViewController.mlistName= itk.name;
+        aViewController.share_id = itk.share_id;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
     
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
