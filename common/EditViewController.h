@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MySlider.h"
+#import "ItemKey.h"
 #import "AlbumContentsViewController.h"
 
 @protocol EditViewControllerDelegate <NSObject>
@@ -35,7 +36,7 @@
 -(bool) rangeFourTag:(NSInteger) tag;
 -(bool) ratingsTag:(NSInteger) tag;
 -(bool) numbersTag:(NSInteger) tag;
--(NSString *) getEditName;
+-(ItemKey *) getEditItemKey;
 -(NSString *) getAlbumTitle;
 -(NSUInteger) getEditItemShareId;
 @end

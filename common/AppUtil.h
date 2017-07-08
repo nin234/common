@@ -28,12 +28,12 @@
 -(NSString *) getEmailFbMsg:(id)itm;
 -(NSString *) getShareMsg:(id)itm;
 -(NSString *) getItemName:(id)itm;
--(long long ) getItemShareId;
+-(long long ) getItemShareId:(id) itm;
 @end
 
 @interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, UIAlertViewDelegate>
 {
-    bool bShrMgrStarted;
+    
      bool bUpgradeAlert;
 }
 

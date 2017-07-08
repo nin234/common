@@ -36,11 +36,7 @@
     [delegate setPurchsed];
     [inapp stop];
     
-    if (!bShrMgrStarted)
-    {
-        [pShrMgr start];
-        bShrMgrStarted = true;
-    }
+    
     
 }
 
@@ -49,7 +45,7 @@
     self = [super init];
     if (self)
     {
-        bShrMgrStarted = false ;
+        
         bNoICloudAlrt = false;
         bUpgradeAlert = false;
         inapp = [[InAppPurchase alloc] init];
@@ -90,7 +86,7 @@
     NSString *shrStr = [shareStr stringByAppendingString:@":::"];
     NSString *shrMsg = [delegate getShareMsg:itm];
     NSString *name = [delegate getItemName:itm];
-    long long share_id = [delegate getItemShareId];
+    long long share_id = [delegate getItemShareId:itm];
     if (name == nil)
         return;
     [picMetaStr stringByAppendingString:name];
@@ -185,11 +181,6 @@
         
     if (buttonIndex == 0)
     {
-        if (!bShrMgrStarted)
-        {
-            [pShrMgr start];
-            bShrMgrStarted = true;
-        }
         [appShrUtl showShareView];
         
     }

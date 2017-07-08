@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "ItemKey.h"
 
 @protocol DisplayViewControllerDelegate <NSObject>
 
@@ -21,7 +22,7 @@
 -(double) getDispLatitude;
 -(double) getDispLongitude;
 -(NSString *) getDispNotes;
--(NSString *) getDispName;
+-(ItemKey *) getDispItemKey;
 -(NSString*) setTitle;
 
 @end

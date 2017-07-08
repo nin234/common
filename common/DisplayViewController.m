@@ -475,8 +475,8 @@
             AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (checkListArr == nil)
         {
-            NSLog(@"Getting checklist for %@ %s %d", [delegate getDispName], __FILE__, __LINE__);
-            checkListArr = [pAppCmnUtil.dataSync getList:[delegate getDispName]];
+            NSLog(@"Getting checklist for %@ %lld, %s %d", [delegate getDispItemKey].name, [delegate getDispItemKey].share_id, __FILE__, __LINE__);
+            checkListArr = [pAppCmnUtil.dataSync getList:[delegate getDispItemKey]];
         }
         
         if (checkListArr != nil)
@@ -489,7 +489,7 @@
             aViewController.bDoubleParent = false;
             aViewController.list = checkListArr;
             //need to check how listName being used should ideally be assigned getDispItemTitle
-            pAppCmnUtil.listName = [delegate getDispName];
+            pAppCmnUtil.listName = [delegate getDispItemKey].name;
             aViewController.name = [delegate getDispItemTitle];
             aViewController = [aViewController initWithNibName:nil bundle:nil];
             

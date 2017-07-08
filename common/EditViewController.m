@@ -277,9 +277,8 @@
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [delegate itemEditDone];
-    ItemKey *itk = [[ItemKey alloc] init];
-    itk.name = [delegate getEditName];
-    itk.share_id = [delegate getEditItemShareId];
+    ItemKey *itk = [delegate getEditItemKey];
+    
     
 
     if (pAppCmnUtil.itemsMp != nil &&  itk.name != nil)
@@ -790,9 +789,7 @@
         
         [delegate deleteEditItem];
          AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-        ItemKey *itk = [[ItemKey alloc] init];
-        itk.name = [delegate getEditName];
-        itk.share_id = [delegate getEditItemShareId];
+        ItemKey *itk = [delegate getEditItemKey];
         [pAppCmnUtil.dataSync deletedEasyItem:itk];
         
         [self.navViewController popViewControllerAnimated:YES];
@@ -1213,7 +1210,7 @@
         if (checkListArr == nil)
         {
             
-             checkListArr = [pAppCmnUtil.dataSync getList:[delegate getEditName]];
+             checkListArr = [pAppCmnUtil.dataSync getList:[delegate getEditItemKey]];
             if (checkListArr == nil)
             {
             
@@ -1269,8 +1266,10 @@
     aViewController.mlistName = nil;
     aViewController.bDoubleParent = false;
     aViewController.list = checkListArr;
-    pAppCmnUtil.listName = [delegate getEditName];
-    aViewController.name = [delegate getEditName];
+    ItemKey *itk = [delegate getEditItemKey];
+    pAppCmnUtil.listName = itk.name;
+    aViewController.name = itk.name;
+    aViewController.share_id = itk.share_id;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
