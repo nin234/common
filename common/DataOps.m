@@ -892,7 +892,7 @@
 -(void) updateSelectedItem
 {
     
-    NSString *selectedItm;
+    ItemKey *selectedItm;
     [workToDo lock];
     selectedItm = selectedItem;
     [workToDo unlock];
@@ -902,7 +902,7 @@
     {
         ListNames *mname = [listNamesTmp objectAtIndex:j];
         // NSLog(@"Before updating current item %@", mname);
-        if ([mname.name isEqualToString:selectedItm])
+        if ([mname.name isEqualToString:selectedItm.name])
         mname.current = YES;
         else
         mname.current = NO;
@@ -1461,7 +1461,7 @@
             item.rowno = itemstr.rowno;
             item.hidden = itemstr.hidden;
             ++nTotCnt;
-            NSLog(@"Storing item at index %@ %lld in list %@ hidden=%d %s %e", item.item, item.rowno, itk.name, item.hidden, __FILE__, __LINE__);
+            NSLog(@"Storing item at index %@ %lld in list %@ hidden=%d %s %d", item.item, item.rowno, itk.name, item.hidden, __FILE__, __LINE__);
         }
         ListNames *mname = [storeNames objectAtIndex:i];
         mname.name = itk.name;
@@ -1595,7 +1595,7 @@
     [shareMasterListNames addObject:name];
     [shareMasterListMps addObject:itmsMp];
     ++templShareItemsToAdd;
-    NSLog(@"Added  new template item %@ %d and signalling work to do\n", name, templShareItemsToAdd);
+    NSLog(@"Added  new template item %@ %lld %d and signalling work to do\n", name.name, name.share_id, templShareItemsToAdd);
     [workToDo signal];
     [workToDo unlock];
     return;

@@ -14,6 +14,7 @@
 #import "MySlider.h"
 #include <sys/time.h>
 #import "AlbumContentsViewController.h"
+#import "NotesViewController.h"
 
 @protocol AddViewControllerDelegate <NSObject>
 

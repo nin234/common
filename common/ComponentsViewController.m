@@ -86,9 +86,18 @@
     {
         NSLog (@"In action sheet deleting list");
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-        [pAppCmnUtil.dataSync deletedTemplItem:masterInvListName];
-        [pAppCmnUtil.dataSync deletedTemplItem:masterScrathListName];
-        [pAppCmnUtil.dataSync deletedTemplItem:masterListName];
+        ItemKey *itk = [[ItemKey alloc] init];
+        itk.share_id = share_id;
+        itk.name = masterInvListName;
+        [pAppCmnUtil.dataSync deletedTemplItem:itk];
+        ItemKey *itks = [[ItemKey alloc] init];
+        itks.share_id = share_id;
+        itks.name = masterScrathListName;
+        [pAppCmnUtil.dataSync deletedTemplItem:itks];
+        ItemKey *itkm = [[ItemKey alloc] init];
+        itkm.share_id = share_id;
+        itkm.name = masterListName;
+        [pAppCmnUtil.dataSync deletedTemplItem:itkm];
         
         [pAppCmnUtil popView];
 

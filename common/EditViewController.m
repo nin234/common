@@ -1192,7 +1192,7 @@
     {
         NotesViewController *notesViewController = [NotesViewController alloc];
         NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
-        notesViewController.delegate =  delegate;
+        notesViewController.delegate =  (id<NotesViewControllerDelegate>)delegate;
         notesViewController.mode = eNotesModeEdit;
         notesViewController.title = [delegate getEditItemTitle];
         notesViewController.notesTxt = [delegate getEditNotes];

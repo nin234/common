@@ -1252,7 +1252,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
     else if (indexPath.row == 6)
     {
         NotesViewController *notesViewController = [NotesViewController alloc];
-        notesViewController.delegate =  delegate;
+        notesViewController.delegate = (id<NotesViewControllerDelegate>)delegate;
         notesViewController.mode = eNotesModeAdd;
         notesViewController.notesTxt = [delegate getNotes];
         
