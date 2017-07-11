@@ -191,8 +191,10 @@
     NSString *formattedDateString = [dateFormatter stringFromDate:today];
     name = [name stringByAppendingString:@" "];
     name = [name stringByAppendingString:formattedDateString];
-    
-    [pAppCmnUtil.dataSync addPicItem:name picItem:pFlName];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = name;
+    itk.share_id = pAppCmnUtil.share_id;
+    [pAppCmnUtil.dataSync addPicItem:itk picItem:pFlName];
     [pAppCmnUtil showPicList:name pictName:pFlName imagePicker:imagePickerController];
     return;
 }

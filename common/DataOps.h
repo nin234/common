@@ -170,7 +170,7 @@
 -(void) addShareTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) deletedTemplItem:(ItemKey *)name;
--(void) addPicItem:(NSString *)name picItem:(NSString *)picUrl;
+-(void) addPicItem:(ItemKey *)name picItem:(NSString *)picUrl;
 -(NSArray *) getList: (ItemKey *)key;
 -(void) selectedItem: (ItemKey *) selectedItem;
 -(void) hiddenItems:(NSString *)name itemsDic:(NSMutableDictionary*) itmsMp hiddenDic:(NSMutableDictionary*) hiddensMp;

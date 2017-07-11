@@ -101,7 +101,7 @@
         if (picName == nil)
             continue;
         
-        [pShrMgr sharePicture:picUrl metaStr:picMetaStr];
+        [pShrMgr sharePicture:picUrl metaStr:picMetaStr shrId:share_id];
     }
     [aViewController1.pAllItms.attchments removeAllObjects];
     [aViewController1.pAllItms.movOrImg removeAllObjects];

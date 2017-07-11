@@ -1051,10 +1051,12 @@
     [workToDo lock];
     for (int i=0; i <nItems; ++i)
     {
-        NSString *name = [listPicNames objectAtIndex:i];
+        ItemKey *itk = [listPicNames objectAtIndex:i];
         NSString *url =  [listPicUrls objectAtIndex:i];
         ListNames *mname = [storeNames objectAtIndex:i];
-        mname.name = name;
+        mname.name = itk.name;
+        mname.share_id = itk.share_id;
+        
         mname.picurl = url;
         // NSLog(@"Storing  list name %@\n", mname);
     }
@@ -1756,7 +1758,7 @@
     return;
 }
 
--(void) addPicItem:(NSString *)name picItem:(NSString *)picUrl
+-(void) addPicItem:(ItemKey *)name picItem:(NSString *)picUrl
 {
     [workToDo lock];
     [listPicNames addObject:name];
