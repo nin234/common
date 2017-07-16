@@ -163,6 +163,37 @@
     return;
 }
 
+-(void) initShareTabBar
+{
+    aViewController1 = [[MainViewController alloc]
+                        initWithNibName:nil bundle:nil];
+    aViewController1.pAllItms.bInICloudSync = true;
+    aViewController1.pAllItms.bInEmail = true;
+    aViewController1.pAllItms.bAttchmentsInit = false;
+    aViewController1.delegate = (id)delegate;
+    aViewController1.delegate_1  = (id) delegate;
+    
+   MainViewController* aViewController2 = [[MainViewController alloc]
+                        initWithNibName:nil bundle:nil];
+    aViewController2.pAllItms.bInICloudSync = true;
+    aViewController2.pAllItms.bInEmail = true;
+    aViewController2.pAllItms.bAttchmentsInit = false;
+    aViewController2.delegate = (id)delegate;
+    aViewController2.delegate_1  = (id) delegate;
+    
+    UIImage *image = [UIImage imageNamed:@"895-user-group@2x.png"];
+    UIImage *imageSel = [UIImage imageNamed:@"895-user-group-selected@2x.png"];
+    aViewController1.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Share" image:image selectedImage:imageSel];
+    
+    mainVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController1];
+    
+    
+    mainTemplVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController2];
+    
+    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl templNavCntrl:mainTemplVwNavCntrl ContactsDelegate:self];
+
+}
+
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     MainViewController *pMainVwCntrl = [self.navViewController.viewControllers objectAtIndex:0];

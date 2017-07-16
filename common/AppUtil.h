@@ -35,6 +35,8 @@
 {
     
      bool bUpgradeAlert;
+    UINavigationController *mainTemplVwNavCntrl;
+    UINavigationController *mainVwNavCntrl;
 }
 
 
@@ -58,5 +60,6 @@
 -(void) photoActions:(int) source;
 -(void) shareNow:(NSString *) shareStr;
 -(void) setNavViewController:(UINavigationController *)navViewController;
+-(void) initShareTabBar;
 
 @end
