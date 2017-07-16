@@ -216,6 +216,7 @@
     if (buttonIndex == 0)
     {
         [appShrUtl showShareView];
+        [dataSync updateShareMainLstVwCntrl:aViewController1];
         
     }
     

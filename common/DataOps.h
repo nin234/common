@@ -181,6 +181,7 @@
 -(void) addTemplName:(ItemKey *)name;
 -(bool) checkMlistNameExist:(NSString *)name;
 -(void) updateEasyMainLstVwCntrl;
+-(void) updateShareMainLstVwCntrl:(MainViewController *) pMainVwCntrl;
 
 
 @end

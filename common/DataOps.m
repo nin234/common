@@ -2091,6 +2091,23 @@
     return;
 }
 
+-(void) updateShareMainLstVwCntrl:(MainViewController *) pMainVwCntrl
+{
+    //Invoke this always from main queue
+    
+    if (pMainVwCntrl == nil)
+        return;
+    
+    [workToDo lock];
+    pMainVwCntrl.pAllItms.itemNames = [NSMutableArray arrayWithArray:itemNames];
+    pMainVwCntrl.pAllItms.indexes = [NSMutableArray arrayWithArray:indexes];
+    pMainVwCntrl.pAllItms.seletedItems = [NSMutableArray arrayWithArray:seletedItems];
+    [workToDo unlock];
+    NSLog(@"Refreshing main row itemNames = %lu indexes = %lu seletedItems = %lu bShareView= %d %s %d", (unsigned long)[itemNames count], (unsigned long)[indexes count], (unsigned long)[seletedItems count], pMainVwCntrl.pAllItms.bShareView, __FILE__, __LINE__);
+        [pMainVwCntrl.pAllItms.tableView reloadData];
+    return;
+}
+
 -(void) updateMainLstVwCntrl
 {
     
@@ -2104,7 +2121,7 @@
     pMainVwCntrl.pAllItms.indexes = [NSMutableArray arrayWithArray:indexes];
     pMainVwCntrl.pAllItms.seletedItems = [NSMutableArray arrayWithArray:seletedItems];
     [workToDo unlock];
-    NSLog(@"Refreshing main row itemNames = %lu indexes = %lu seletedItems = %lu\n", (unsigned long)[itemNames count], (unsigned long)[indexes count], (unsigned long)[seletedItems count]);
+    NSLog(@"Refreshing main row itemNames = %lu indexes = %lu seletedItems = %lu %s %d", (unsigned long)[itemNames count], (unsigned long)[indexes count], (unsigned long)[seletedItems count], __FILE__, __LINE__);
     
    // 
    // [pMainVwCntrl.pAllItms.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationLeft];

@@ -61,7 +61,6 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
         seletedItems = [[NSMutableArray alloc] init];
         itemNames = [[NSMutableArray alloc] init];
         indexes = [[NSMutableArray alloc] init];
-        bShareView = false;
         NSLog(@"Creating the fetch queue\n");
                
     }
@@ -197,7 +196,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath 
 { 
-    if (indexPath.row == 0)
+    if (indexPath.row == 0 && !bShareView)
         cell.backgroundColor = [UIColor brownColor];
     return;
 }
@@ -395,7 +394,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
             cell.backgroundColor = nil;
         }
     
-        if (indexPath.row == 0)
+        if (indexPath.row == 0 && !bShareView)
         {
             cell.textLabel.text = @"Sort By";
            // cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; 
@@ -403,16 +402,29 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
             cell.backgroundColor = [UIColor brownColor];
             return cell;
         }
-        else if (indexPath.row > [indexes count])
-            return cell;
+        else
+        {
+            if (!bShareView && indexPath.row > [indexes count])
+                return cell;
+            if (bShareView && indexPath.row >= [indexes count])
+                return cell;
+        }
         UIImageView *indicator;
         UILabel *label;
         const NSInteger IMAGE_SIZE = 30;
         const NSInteger SIDE_PADDING = 35;
     
-        if (bInEmail || bInICloudSync || bShareView)
+        if (bShareView)
         {
-            NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row-1];
+            NSNumber* numbr;
+            if (bShareView)
+            {
+                numbr= [seletedItems objectAtIndex:indexPath.row];
+            }
+            else
+            {
+                numbr= [seletedItems objectAtIndex:indexPath.row-1];
+            }
             if ([numbr boolValue] == YES)
             {
                 indicator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"IsSelected.png"]];
@@ -439,7 +451,16 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
         label.font = [UIFont boldSystemFontOfSize:14];
         [cell.contentView addSubview:label];
         NSUInteger row = indexPath.row;
-        id item = [itemNames objectAtIndex:[[indexes objectAtIndex:row-1] intValue]];
+    id item;
+     if (bShareView)
+     {
+         item = [itemNames objectAtIndex:[[indexes objectAtIndex:row] intValue]];
+
+     }
+    else
+    {
+        item = [itemNames objectAtIndex:[[indexes objectAtIndex:row-1] intValue]];
+    }
     
      
     label.text = [delegate getLabelTxt:item];

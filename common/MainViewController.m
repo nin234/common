@@ -61,14 +61,15 @@
         [self.pSearchBar setDelegate:self];
         [self.view addSubview:self.pSearchBar];
     }
-    self.pAllItms = [[MainListViewController alloc]
-                     initWithNibName:nil bundle:nil];
+    self.pAllItms = [MainListViewController alloc];
+    
     self.pAllItms.bInICloudSync = false;
     self.pAllItms.bInEmail = false;
     self.pAllItms.bAttchmentsInit = false;
     [self.pAllItms setDelegate:delegate_1];
     self.pAllItms.navViewController = self.navigationController;
     self.pAllItms.bShareView = self.bShareView;
+    self.pAllItms   = [self.pAllItms initWithNibName:nil bundle:nil];
     CGRect tableRect;
     if (bShareView)
     {
