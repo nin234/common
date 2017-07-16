@@ -165,13 +165,15 @@
 
 -(void) initShareTabBar
 {
-    aViewController1 = [[MainViewController alloc]
-                        initWithNibName:nil bundle:nil];
+    aViewController1 = [MainViewController alloc];
+    
     aViewController1.pAllItms.bInICloudSync = true;
     aViewController1.pAllItms.bInEmail = true;
     aViewController1.pAllItms.bAttchmentsInit = false;
     aViewController1.delegate = (id)delegate;
     aViewController1.delegate_1  = (id) delegate;
+    aViewController1.bShareView = true;
+    aViewController1 = [aViewController1 initWithNibName:nil bundle:nil];
     
    MainViewController* aViewController2 = [[MainViewController alloc]
                         initWithNibName:nil bundle:nil];
@@ -180,6 +182,7 @@
     aViewController2.pAllItms.bAttchmentsInit = false;
     aViewController2.delegate = (id)delegate;
     aViewController2.delegate_1  = (id) delegate;
+    
     
     UIImage *image = [UIImage imageNamed:@"895-user-group@2x.png"];
     UIImage *imageSel = [UIImage imageNamed:@"895-user-group-selected@2x.png"];
