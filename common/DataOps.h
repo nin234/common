@@ -180,6 +180,7 @@
 -(NSDictionary *) getPics;
 -(void) addTemplName:(ItemKey *)name;
 -(bool) checkMlistNameExist:(NSString *)name;
+-(void) updateEasyMainLstVwCntrl;
 
 
 @end

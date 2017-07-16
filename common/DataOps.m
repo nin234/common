@@ -1764,7 +1764,7 @@
     [listPicNames addObject:name];
     [listPicUrls addObject:picUrl];
     ++picItemsToAdd;
-    NSLog(@"Added  new pic item %@ %@ %d and signalling work to do\n", name, picUrl, itemsToAdd);
+    NSLog(@"Added  new pic item %@ %@ %d and signalling work to do\n", name, picUrl, picItemsToAdd);
     [workToDo signal];
     [workToDo unlock];
     return;
