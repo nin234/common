@@ -61,5 +61,7 @@
 -(void) shareNow:(NSString *) shareStr;
 -(void) setNavViewController:(UINavigationController *)navViewController;
 -(void) initShareTabBar;
+-(void) refreshShareView;
+
 
 @end

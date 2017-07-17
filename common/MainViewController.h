@@ -19,6 +19,7 @@
 -(void) iCloudOrEmail;
 -(void) shareContactsAdd;
 -(NSString* ) mainVwCntrlTitle;
+-(void) refreshShareView;
 
 @end
 

@@ -550,7 +550,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
     if (indexPath.row > [indexes count])
         return;
     
-    if (bInEmail || bInICloudSync || bShareView)
+    if (bShareView)
     {
         UITableViewCell *cell =
         [tableView cellForRowAtIndexPath:indexPath];

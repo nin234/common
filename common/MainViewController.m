@@ -61,15 +61,24 @@
         [self.pSearchBar setDelegate:self];
         [self.view addSubview:self.pSearchBar];
     }
-    self.pAllItms = [MainListViewController alloc];
-    
-    self.pAllItms.bInICloudSync = false;
-    self.pAllItms.bInEmail = false;
-    self.pAllItms.bAttchmentsInit = false;
-    [self.pAllItms setDelegate:delegate_1];
-    self.pAllItms.navViewController = self.navigationController;
-    self.pAllItms.bShareView = self.bShareView;
-    self.pAllItms   = [self.pAllItms initWithNibName:nil bundle:nil];
+    pAllItms = [MainListViewController alloc];
+    if (!bShareView)
+    {
+        pAllItms.bInICloudSync = false;
+        pAllItms.bInEmail = false;
+        pAllItms.bAttchmentsInit = false;
+    }
+    else
+    {
+        pAllItms.bInICloudSync = true;
+        pAllItms.bInEmail = true;
+        pAllItms.bAttchmentsInit = false;
+    }
+
+    [pAllItms setDelegate:delegate_1];
+    pAllItms.navViewController = self.navigationController;
+    pAllItms.bShareView = bShareView;
+    pAllItms   = [pAllItms initWithNibName:nil bundle:nil];
     CGRect tableRect;
     if (bShareView)
     {
@@ -80,10 +89,16 @@
         tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + 50, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
     }
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
-    self.pAllItms.tableView = pTVw;
+    pAllItms.tableView = pTVw;
    [self.view addSubview:self.pAllItms.tableView];
-    
-    [delegate initRefresh];
+    if (bShareView)
+    {
+        [delegate refreshShareView];
+    }
+    else
+    {
+        [delegate initRefresh];
+    }
     
 }
 
