@@ -91,7 +91,7 @@
         return;
     [picMetaStr stringByAppendingString:name];
     shrStr = [shrStr stringByAppendingString:shrMsg];
-    [pShrMgr shareItem:shrMsg listName:name shrId:share_id];
+    [pShrMgr shareItem:shrStr listName:name shrId:share_id];
     NSUInteger cnt =  [aViewController1.pAllItms.attchments count];
     for (NSUInteger i =0; i < cnt; ++i)
     {
