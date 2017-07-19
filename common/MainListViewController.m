@@ -409,43 +409,9 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
             if (bShareView && indexPath.row >= [indexes count])
                 return cell;
         }
-        UIImageView *indicator;
-        UILabel *label;
-        const NSInteger IMAGE_SIZE = 30;
-        const NSInteger SIDE_PADDING = 35;
     
-        if (bShareView)
-        {
-            NSNumber* numbr;
-            if (bShareView)
-            {
-                numbr= [seletedItems objectAtIndex:indexPath.row];
-            }
-            else
-            {
-                numbr= [seletedItems objectAtIndex:indexPath.row-1];
-            }
-            if ([numbr boolValue] == YES)
-            {
-                indicator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"IsSelected.png"]];
-                NSLog(@"Setting image  selected\n");
-            }
-            else
-            {
-                indicator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"NotSelected.png"]];
-                NSLog(@"Setting image not selected\n");
-            }
-            indicator.tag = SELECTION_INDICATOR_TAG_SH;
-            indicator.frame =
-            CGRectMake(0, 0, IMAGE_SIZE, IMAGE_SIZE);
-            [cell.contentView addSubview:indicator];
-            
-            label = [[UILabel alloc] initWithFrame:CGRectMake(SIDE_PADDING, 0, 275, 25)];
-            label.tag = TEXT_LABEL_TAG;
- 
-        }
-        else
-          label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
+        UILabel *label;
+        label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
             
         label.textAlignment = NSTextAlignmentLeft;
         label.font = [UIFont boldSystemFontOfSize:14];
@@ -454,16 +420,28 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
     id item;
      if (bShareView)
      {
-         item = [itemNames objectAtIndex:[[indexes objectAtIndex:row] intValue]];
-
+         NSString *text;
+         NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
+         if ([numbr boolValue] == YES)
+         {
+             text = @"\u2705   ";
+         }
+         else
+         {
+             text = @"\u2B1C   ";
+         }
+          item = [itemNames objectAtIndex:[[indexes objectAtIndex:row] intValue]];
+         text = [text stringByAppendingString:[delegate getLabelTxt:item]];
+         label.text = text;
      }
     else
     {
         item = [itemNames objectAtIndex:[[indexes objectAtIndex:row-1] intValue]];
+        label.text = [delegate getLabelTxt:item];
     }
     
      
-    label.text = [delegate getLabelTxt:item];
+    
         NSLog(@"Setting main list label %@\n", label.text);
        
     
@@ -540,12 +518,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 
-    if (indexPath.row ==0)
-    {
-       
-        [delegate pushSortOptionViewController];
-        return;
-    }
+    
     printf("Row selected %ld\n", (long)indexPath.row);
     if (indexPath.row > [indexes count])
         return;
@@ -554,21 +527,30 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
     {
         UITableViewCell *cell =
         [tableView cellForRowAtIndexPath:indexPath];
-        UIImageView *indicator = (UIImageView *)[cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_SH];
-        NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row-1];
+        NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
+        NSArray *subvw =  [cell.contentView subviews];
+        if ([subvw count] != 1)
+            return;
+        UILabel *label = [subvw objectAtIndex:0];
         if ([numbr boolValue] == YES)
         {
-            indicator.image = [UIImage imageNamed:@"NotSelected.png"];
+            NSString* text = @"\u2B1C   ";
+             id item = [itemNames objectAtIndex:[[indexes objectAtIndex:indexPath.row] intValue]];
+            text = [text stringByAppendingString:[delegate getLabelTxt:item]];
+            label.text = text;
             NSLog(@"Changing image Not selected\n");
-            [seletedItems replaceObjectAtIndex:indexPath.row-1 withObject:[NSNumber numberWithBool:NO]];
+            [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:NO]];
         }
         else
         {
-            indicator.image = [UIImage imageNamed:@"IsSelected.png"];
-            NSUInteger crnt = indexPath.row - 1;
+            NSString* text = @"\u2705   ";
+            id item = [itemNames objectAtIndex:[[indexes objectAtIndex:indexPath.row] intValue]];
+            text = [text stringByAppendingString:[delegate getLabelTxt:item]];
+            label.text = text;
+            NSUInteger crnt = indexPath.row;
 
             NSLog(@"Changing  image to selected at index %lu\n", (unsigned long)crnt);
-             [seletedItems replaceObjectAtIndex:indexPath.row-1 withObject:[NSNumber numberWithBool:YES]];
+             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:YES]];
                         NSUInteger cnt = [seletedItems count];
             for (NSUInteger i=0; i < cnt; ++i)
             {
@@ -578,10 +560,17 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
                 if ([othr_row_no boolValue] == YES)
                 {
                     UITableViewCell *othr_row_cell =
-                    [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i+1 inSection:0]];
-                    UIImageView *othr_row_indicator = (UIImageView *)[othr_row_cell.contentView viewWithTag:SELECTION_INDICATOR_TAG_SH];
-                    othr_row_indicator.image = [UIImage imageNamed:@"NotSelected.png"];
-                    NSLog(@"Changing image Not selected at index %lu\n", (unsigned long)i);
+                    [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                    NSArray *subvw =  [othr_row_cell.contentView subviews];
+                    if ([subvw count] != 1)
+                        return;
+                    UILabel *label = [subvw objectAtIndex:0];
+                    NSString* text = @"\u2B1C   ";
+                    id item = [itemNames objectAtIndex:[[indexes objectAtIndex:indexPath.row] intValue]];
+                    text = [text stringByAppendingString:[delegate getLabelTxt:item]];
+                    label.text = text;
+
+                    
                     [seletedItems replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:NO]];
                 }
             }
