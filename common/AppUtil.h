@@ -62,6 +62,7 @@
 -(void) setNavViewController:(UINavigationController *)navViewController;
 -(void) initShareTabBar;
 -(void) refreshShareView;
+-(void) refreshShareMainLst;
 
 
 @end

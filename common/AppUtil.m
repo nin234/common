@@ -163,6 +163,11 @@
     return;
 }
 
+-(void) refreshShareMainLst
+{
+    [dataSync updateShareMainLstVwCntrl:aViewController1];
+}
+
 -(void) refreshShareView
 {
     [dataSync updateShareMainLstVwCntrl:aViewController1];
