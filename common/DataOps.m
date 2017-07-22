@@ -2049,9 +2049,9 @@
     NSArray *keys = [listArr allKeys];
     for (ItemKey *key in keys)
     {
-        NSLog(@"key.name=%@ key.share_id=%d" , key.name, key.share_id);
+        NSLog(@"key.name=%@ key.share_id=%d %s %d" , key.name, key.share_id, __FILE__, __LINE__);
     }
-     NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n", listarr, key, listArr);
+     NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n %s %d", listarr, key, listArr, __FILE__, __LINE__);
         if (listarr != nil)
         {
             NSMutableArray *list = [[NSMutableArray alloc] init];

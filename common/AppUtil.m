@@ -11,6 +11,7 @@
 #import <Social/SLComposeViewController.h>
 #import <Social/SLServiceTypes.h>
 #import "AppCmnUtil.h"
+#import "List.h"
 
 @implementation AppUtil
 
@@ -91,6 +92,21 @@
         return;
     [picMetaStr stringByAppendingString:name];
     shrStr = [shrStr stringByAppendingString:shrMsg];
+    ItemKey *itk = [delegate getItemKey:itm];
+    NSArray* checkListArr = [dataSync getList:itk];
+    NSUInteger nItems = [checkListArr count];
+    shrStr = [shrStr stringByAppendingString:@"];;;]"];
+    for (NSUInteger i=0; i < nItems; ++i)
+    {
+        List *item = [checkListArr objectAtIndex:i];
+        shrStr = [shrStr stringByAppendingString:[[NSNumber numberWithLongLong:item.rowno] stringValue]];
+        shrStr = [shrStr stringByAppendingString:@":"];
+        shrStr = [shrStr stringByAppendingString:item.item];
+        shrStr = [shrStr stringByAppendingString:@":"];
+        shrStr = [shrStr stringByAppendingString:[[NSNumber numberWithBool:item.hidden] stringValue]];
+        shrStr = [shrStr stringByAppendingString:@"]:;"];
+    }
+
     [pShrMgr shareItem:shrStr listName:name shrId:share_id];
     NSUInteger cnt =  [aViewController1.pAllItms.attchments count];
     for (NSUInteger i =0; i < cnt; ++i)
