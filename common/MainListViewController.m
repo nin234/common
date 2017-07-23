@@ -575,6 +575,11 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
     
    
    //  pDlg.selectedItem = [itemNames objectAtIndex:indexPath.row-1];
+    if (!indexPath.row)
+    {
+        [delegate pushSortOptionViewController];
+        return;
+    }
     
     [delegate pushDisplayViewController:[itemNames objectAtIndex:[[indexes objectAtIndex:indexPath.row-1] intValue]] indx:(int)indexPath.row-1];
 }
