@@ -952,6 +952,7 @@ const NSInteger TEXTFIELD_TAG = 54325;
     List1ViewController *aViewController = [List1ViewController alloc];
     aViewController.editMode = eListModeEdit;
     aViewController.name = name;
+    aViewController.share_id = share_id;
     aViewController.bEasyGroc = bEasyGroc;
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     aViewController.nameVw = @"Edited";
