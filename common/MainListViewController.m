@@ -294,20 +294,9 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
             bFound = true;
             id item = [itemNames objectAtIndex:[[indexes objectAtIndex:i] intValue]];
             
+           albumContentsViewController = [delegate pushAlbumContentsViewController:item indx:i source:source delegate:self];
             
-            albumContentsViewController = [[AlbumContentsViewController alloc] initWithNibName:@"AlbumContentsViewController" bundle:nil];
-                NSLog(@"Pushing AlbumContents view controller %s %d\n" , __FILE__, __LINE__);
-                //  albumContentsViewController.assetsGroup = group_;
-            [albumContentsViewController setDelphoto:true];
-            [albumContentsViewController setEmailphoto:true];
-            [delegate setAlbumName:item albumcntrl:albumContentsViewController];
-            [albumContentsViewController setPhotoreqsource:source];
-            [albumContentsViewController setDelegate:self];
-
-                [albumContentsViewController setDelphoto:false];
-                [navViewController pushViewController:albumContentsViewController animated:YES];
-                
-                          break;
+            break;
         }
     }
     

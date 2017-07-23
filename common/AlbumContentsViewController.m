@@ -162,7 +162,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     movOrImg = [[NSMutableArray alloc] init];
     if (self) 
     {
-        emailphoto = false;
+        
         NSString *pAlMoc = pAlName;
         printf("In AlbumContentsViewController Selected album name %s\n", [pAlMoc UTF8String]);
         nPicCnt = 0;

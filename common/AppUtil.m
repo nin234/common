@@ -90,7 +90,7 @@
     long long share_id = [delegate getItemShareId:itm];
     if (name == nil)
         return;
-    [picMetaStr stringByAppendingString:name];
+    picMetaStr  = [picMetaStr stringByAppendingString:name];
     shrStr = [shrStr stringByAppendingString:shrMsg];
     ItemKey *itk = [delegate getItemKey:itm];
     NSArray* checkListArr = [dataSync getList:itk];
