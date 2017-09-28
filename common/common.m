@@ -8,6 +8,8 @@
 
 #import "common.h"
 
+NSString *const keyValSeparator = @":|:";
+
 @implementation common
 
 @end

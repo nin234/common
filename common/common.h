@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const keyValSeparator;
+
 @interface common : NSObject
 
 @end

@@ -11,6 +11,7 @@
 #import <Social/SLComposeViewController.h>
 #import <Social/SLServiceTypes.h>
 #import "AppCmnUtil.h"
+#import "common.h"
 #import "List.h"
 
 @implementation AppUtil
@@ -95,15 +96,15 @@
     ItemKey *itk = [delegate getItemKey:itm];
     NSArray* checkListArr = [dataSync getList:itk];
     NSUInteger nItems = [checkListArr count];
-    shrStr = [shrStr stringByAppendingString:@"];;;]"];
+    shrStr = [shrStr stringByAppendingString:@"::]}]::"];
     for (NSUInteger i=0; i < nItems; ++i)
     {
         List *item = [checkListArr objectAtIndex:i];
         shrStr = [shrStr stringByAppendingString:[[NSNumber numberWithLongLong:item.rowno] stringValue]];
-        shrStr = [shrStr stringByAppendingString:@":"];
-        shrStr = [shrStr stringByAppendingString:item.item];
-        shrStr = [shrStr stringByAppendingString:@":"];
+        shrStr = [shrStr stringByAppendingString:keyValSeparator];
         shrStr = [shrStr stringByAppendingString:[[NSNumber numberWithBool:item.hidden] stringValue]];
+        shrStr = [shrStr stringByAppendingString:keyValSeparator];
+        shrStr = [shrStr stringByAppendingString:item.item];
         shrStr = [shrStr stringByAppendingString:@"]:;"];
     }
 

@@ -11,6 +11,7 @@
 #import "ItemKey.h"
 #import "LocalList.h"
 #import "AppCmnUtil.h"
+#import "common.h"
 
 @implementation CommonDecoder
 
@@ -63,7 +64,7 @@
     
     CommonShareMgr *pCmnShrMgr = (CommonShareMgr *)self.pShrMgr;
     
-    NSArray *arr = [list componentsSeparatedByString:@"];;;]"];
+    NSArray *arr = [list componentsSeparatedByString:@"::]}]::"];
     
     
     [pCmnShrMgr processItem:[arr objectAtIndex:0]];
@@ -88,15 +89,15 @@
         {
             
             NSString *itemrow = [listItems objectAtIndex:i];
-            NSArray *itemrowarr = [itemrow componentsSeparatedByString:@":"];
+            NSArray *itemrowarr = [itemrow componentsSeparatedByString:keyValSeparator];
             NSUInteger cnt1 = [itemrowarr count];
             if (cnt1 != 3)
                 continue;
             NSString *rownoStr = [itemrowarr objectAtIndex:0];
-            NSString *item = [itemrowarr objectAtIndex:1];
+            NSString *item = [itemrowarr objectAtIndex:2];
             long long rowno1 = [rownoStr longLongValue];
             NSNumber *rowno = [NSNumber numberWithLongLong:rowno1];
-            NSString *hiddenStr = [itemrowarr objectAtIndex:2];
+            NSString *hiddenStr = [itemrowarr objectAtIndex:1];
             BOOL hidden = [hiddenStr boolValue];
             LocalList *litem = [[LocalList alloc] init];
             litem.name = name;
