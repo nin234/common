@@ -110,17 +110,19 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
   //  ALAssetRepresentation *assetRepresentation = [asset defaultRepresentation];
     NSString *pFlName = [[pAlbmVw.thumbnails objectAtIndex:currIndx] stringValue];
     NSString *pFlImgName = [pFlName stringByAppendingString:@".MOV"];
+    NSString *pFlMp4ImgName = [pFlName stringByAppendingString:@".mp4"];
     pFlName = [pFlName stringByAppendingString:@".jpg"];
     
     NSError *err;
     NSURL *albumurl = [NSURL URLWithString:pAlName];
     NSURL *imgUrl;
-    NSURL *movUrl;
+    NSURL *movUrl, *mp4MovUrl;
     
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
     {
         imgUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
         movUrl = [albumurl URLByAppendingPathComponent:pFlImgName isDirectory:NO];
+        mp4MovUrl = [albumurl URLByAppendingPathComponent:pFlMp4ImgName isDirectory:NO];
 
     }
     
@@ -160,55 +162,13 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     }
     else if ([movUrl checkResourceIsReachableAndReturnError:&err] == YES)
     {
-       
-        NSLog(@"Loading movie %@ \n", movUrl);
-        currURL = movUrl;
-        NSLog(@"Loading movie %@ URL %@\n", pFlImgName, currURL);
-         pMovP = [[MPMoviePlayerController alloc] initWithContentURL:currURL];
-        bPhoto = false;
-       
-        pMovP.movieSourceType = MPMovieSourceTypeFile;
-        NSLog(@"Playable duration %f %@ %f", [pMovP playableDuration], [pMovP contentURL], [pMovP duration]);
-       
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(movieLoaded:)
-                                                     name:MPMoviePlayerLoadStateDidChangeNotification object:pMovP];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(movieLoadFailed:)
-                                                     name:MPMoviePlayerPlaybackDidFinishNotification object:pMovP];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(hideNavBar:)
-                                                     name:MPMoviePlayerDidEnterFullscreenNotification object:pMovP];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(showNavBar:)
-                                                     name:MPMoviePlayerDidExitFullscreenNotification object:pMovP];
+        [self prepareAndPlayVideo:movUrl scrlView:imageScrollView];
         
-        // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, 300, 420) animated:NO];
-        [pMovP prepareToPlay];
-         NSLog(@"Playable duration %f %f", [pMovP playableDuration], [pMovP duration]);
-         if ([[UIScreen mainScreen] bounds].size.height > 500.0)
-            [pMovP.view setFrame: CGRectMake(0.0, -35.0, 320, 520)];
-        else
-            [pMovP.view setFrame: CGRectMake(0.0, 0.0, 320, 408)];
-        UISwipeGestureRecognizer * left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
-        left.direction = UISwipeGestureRecognizerDirectionLeft;
-        [pMovP.view addGestureRecognizer:left];
+    }
+    else if ([mp4MovUrl checkResourceIsReachableAndReturnError:&err] == YES)
+    {
+        [self prepareAndPlayVideo:mp4MovUrl scrlView:imageScrollView];
         
-        UISwipeGestureRecognizer * right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
-        right.direction = UISwipeGestureRecognizerDirectionRight;
-        [pMovP.view addGestureRecognizer:right];
-        
-        [imageScrollView addSubview:pMovP.view];
-        NSLog(@"Load state %lu %@", (unsigned long)[pMovP loadState], pMovP);
-       // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, pMovP.view.frame.size.width, pMovP.view.frame.size.height) animated:NO];
-
-        if ([pMovP isPreparedToPlay])
-        {
-             NSLog(@"Playing movie\n");
-            [pMovP play];
-           
-        }
-         
     }
     else
     {
@@ -218,27 +178,80 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
      NSLog(@"View loaded\n");
 }
 
+-(void) prepareAndPlayVideo:(NSURL *)movUrl scrlView:(SlideScrollView *) imageScrollView
+{
+    NSLog(@"Loading movie %@ \n", movUrl);
+    currURL = movUrl;
+  
+    pMovP = [[MPMoviePlayerController alloc] initWithContentURL:currURL];
+    bPhoto = false;
+    
+    pMovP.movieSourceType = MPMovieSourceTypeFile;
+    NSLog(@"Playable duration %f %@ %f", [pMovP playableDuration], [pMovP contentURL], [pMovP duration]);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(movieLoaded:)
+                                                 name:MPMoviePlayerLoadStateDidChangeNotification object:pMovP];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(movieLoadFailed:)
+                                                 name:MPMoviePlayerPlaybackDidFinishNotification object:pMovP];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideNavBar:)
+                                                 name:MPMoviePlayerDidEnterFullscreenNotification object:pMovP];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showNavBar:)
+                                                 name:MPMoviePlayerDidExitFullscreenNotification object:pMovP];
+    
+    // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, 300, 420) animated:NO];
+    [pMovP prepareToPlay];
+    NSLog(@"Playable duration %f %f", [pMovP playableDuration], [pMovP duration]);
+    if ([[UIScreen mainScreen] bounds].size.height > 500.0)
+        [pMovP.view setFrame: CGRectMake(0.0, -35.0, 320, 520)];
+    else
+        [pMovP.view setFrame: CGRectMake(0.0, 0.0, 320, 408)];
+    UISwipeGestureRecognizer * left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
+    left.direction = UISwipeGestureRecognizerDirectionLeft;
+    [pMovP.view addGestureRecognizer:left];
+    
+    UISwipeGestureRecognizer * right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
+    right.direction = UISwipeGestureRecognizerDirectionRight;
+    [pMovP.view addGestureRecognizer:right];
+    
+    [imageScrollView addSubview:pMovP.view];
+    NSLog(@"Load state %lu %@", (unsigned long)[pMovP loadState], pMovP);
+    // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, pMovP.view.frame.size.width, pMovP.view.frame.size.height) animated:NO];
+    
+    if ([pMovP isPreparedToPlay])
+    {
+        NSLog(@"Playing movie\n");
+        [pMovP play];
+        
+    }
+
+}
+
 -(void) changePhoto
 {
     printf("Changing photo\n");
     if (pMovP != nil)
-        [pMovP pause];  
-        
+        [pMovP pause];
+    
     NSString *pFlName = [[pAlbmVw.thumbnails objectAtIndex:currIndx] stringValue];
     NSString *pFlImgName = [pFlName stringByAppendingString:@".MOV"];
+    NSString *pFlMp4ImgName = [pFlName stringByAppendingString:@".mp4"];
     pFlName = [pFlName stringByAppendingString:@".jpg"];
     
 
     NSError *err;
     NSURL *albumurl = [NSURL URLWithString:pAlName];
     NSURL *imgUrl;
-    NSURL *movUrl;
+    NSURL *movUrl, *mp4MovUrl;
     
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
     {
         imgUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
         movUrl = [albumurl URLByAppendingPathComponent:pFlImgName isDirectory:NO];
-            
+        mp4MovUrl = [albumurl URLByAppendingPathComponent:pFlMp4ImgName isDirectory:NO];
     }
     
     if ([imgUrl checkResourceIsReachableAndReturnError:&err] == YES)
@@ -279,64 +292,11 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     }
     else if ([movUrl checkResourceIsReachableAndReturnError:&err] == YES)
     {
-        NSLog(@"Loading movie %@ \n", movUrl);
-        currURL = movUrl;
-        NSLog(@"Loading movie %@ URL %@\n", pFlImgName, currURL);
-        [currView  removeFromSuperview];
-        [pMovP.view removeFromSuperview];
-        SlideScrollView *imageScrollView = (SlideScrollView *)self.view;
-        
-        pMovP = [[MPMoviePlayerController alloc] initWithContentURL:currURL];
-        bPhoto = false;
-        
-        pMovP.movieSourceType = MPMovieSourceTypeFile;
-        NSLog(@"Playable duration %f %@ %f", [pMovP playableDuration], [pMovP contentURL], [pMovP duration]);
-        
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(movieLoaded:)
-                                                     name:MPMoviePlayerLoadStateDidChangeNotification object:pMovP];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(movieLoadFailed:)
-                                                     name:MPMoviePlayerPlaybackDidFinishNotification object:pMovP];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(hideNavBar:)
-                                                     name:MPMoviePlayerDidEnterFullscreenNotification object:pMovP];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(showNavBar:)
-                                                     name:MPMoviePlayerDidExitFullscreenNotification object:pMovP];
-       
-        
-        [pMovP prepareToPlay];
-        NSLog(@"Playable duration %f %f", [pMovP playableDuration], [pMovP duration]);
-        
-        if ([[UIScreen mainScreen] bounds].size.height > 500.0)
-            [pMovP.view setFrame: CGRectMake(0.0, -35.0, 320, 520)];
-        else
-            [pMovP.view setFrame: CGRectMake(0.0, 0.0, 320, 408)];
-         
-       
-        [imageScrollView setContentSize:[pMovP.view frame].size];
-        // currView = pMovP.view;
-        UISwipeGestureRecognizer * left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
-        left.direction = UISwipeGestureRecognizerDirectionLeft;
-        [pMovP.view addGestureRecognizer:left];
-        
-        UISwipeGestureRecognizer * right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
-        right.direction = UISwipeGestureRecognizerDirectionRight;
-        [pMovP.view addGestureRecognizer:right];
-        
-        [imageScrollView addSubview:pMovP.view];
-        NSLog(@"Load state %lu %@", (unsigned long)[pMovP loadState], pMovP);
-        // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, pMovP.view.frame.size.width, pMovP.view.frame.size.height) animated:NO];
-        
-        if ([pMovP isPreparedToPlay])
-        {
-            NSLog(@"Playing movie\n");
-            [pMovP play];
-            
-        }
-        
+        [self playNewVideo:movUrl];
+    }
+    else if ([mp4MovUrl checkResourceIsReachableAndReturnError:&err] == YES)
+    {
+        [self playNewVideo:mp4MovUrl];
     }
     else
     {
@@ -344,6 +304,69 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     }
 
     
+}
+
+
+-(void) playNewVideo:(NSURL *) movUrl
+{
+    NSLog(@"Loading movie %@ \n", movUrl);
+    currURL = movUrl;
+    
+    [currView  removeFromSuperview];
+    [pMovP.view removeFromSuperview];
+    SlideScrollView *imageScrollView = (SlideScrollView *)self.view;
+    
+    pMovP = [[MPMoviePlayerController alloc] initWithContentURL:currURL];
+    bPhoto = false;
+    
+    pMovP.movieSourceType = MPMovieSourceTypeFile;
+    NSLog(@"Playable duration %f %@ %f", [pMovP playableDuration], [pMovP contentURL], [pMovP duration]);
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(movieLoaded:)
+                                                 name:MPMoviePlayerLoadStateDidChangeNotification object:pMovP];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(movieLoadFailed:)
+                                                 name:MPMoviePlayerPlaybackDidFinishNotification object:pMovP];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideNavBar:)
+                                                 name:MPMoviePlayerDidEnterFullscreenNotification object:pMovP];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showNavBar:)
+                                                 name:MPMoviePlayerDidExitFullscreenNotification object:pMovP];
+    
+    
+    [pMovP prepareToPlay];
+    NSLog(@"Playable duration %f %f", [pMovP playableDuration], [pMovP duration]);
+    
+    if ([[UIScreen mainScreen] bounds].size.height > 500.0)
+        [pMovP.view setFrame: CGRectMake(0.0, -35.0, 320, 520)];
+    else
+        [pMovP.view setFrame: CGRectMake(0.0, 0.0, 320, 408)];
+    
+    
+    [imageScrollView setContentSize:[pMovP.view frame].size];
+    // currView = pMovP.view;
+    UISwipeGestureRecognizer * left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
+    left.direction = UISwipeGestureRecognizerDirectionLeft;
+    [pMovP.view addGestureRecognizer:left];
+    
+    UISwipeGestureRecognizer * right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
+    right.direction = UISwipeGestureRecognizerDirectionRight;
+    [pMovP.view addGestureRecognizer:right];
+    
+    [imageScrollView addSubview:pMovP.view];
+    NSLog(@"Load state %lu %@", (unsigned long)[pMovP loadState], pMovP);
+    // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, pMovP.view.frame.size.width, pMovP.view.frame.size.height) animated:NO];
+    
+    if ([pMovP isPreparedToPlay])
+    {
+        NSLog(@"Playing movie\n");
+        [pMovP play];
+        
+    }
+
 }
 
 - (void)didReceiveMemoryWarning
