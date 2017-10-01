@@ -22,6 +22,7 @@
 #include <MobileCoreServices/UTType.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "AVFoundation/AVAssetImageGenerator.h"
+#import "AVFoundation/AVAssetExportSession.h"
 #import "AVFoundation/AVAsset.h"
 #import "AVFoundation/AVTime.h"
 #import "CoreMedia/CMTime.h"
@@ -692,6 +693,57 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
     return myThumbnailImage;
 }
 
+-(void) saveAsMp4:(NSURL *) videoURL mp4VideoPath:(NSString *) videoPath
+{
+    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
+    
+    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+    
+    if ([compatiblePresets containsObject:AVAssetExportPresetLowQuality])
+        
+    {
+        
+        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset presetName:AVAssetExportPresetPassthrough];
+        
+        exportSession.outputURL = [NSURL fileURLWithPath:videoPath];
+        
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        
+        CMTime start = CMTimeMakeWithSeconds(1.0, 600);
+        
+        CMTime duration = CMTimeMakeWithSeconds(3.0, 600);
+        
+        CMTimeRange range = CMTimeRangeMake(start, duration);
+        
+        exportSession.timeRange = range;
+        
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            
+            switch ([exportSession status]) {
+                    
+                case AVAssetExportSessionStatusFailed:
+                    NSLog(@"Export failed: %@", [[exportSession error] localizedDescription]);
+                    
+                    break;
+                    
+                case AVAssetExportSessionStatusCancelled:
+                    
+                    NSLog(@"Export canceled");
+                    
+                    break;
+                    
+                default:
+                    
+                    break;
+                    
+            }
+            
+            
+        }];
+        
+    }
+}
+
 -(void) saveMovie:(NSURL *)movie
 {
     [delegate incrementPicCnt];
@@ -700,9 +752,10 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
     long filno = tv.tv_sec/2;
     NSString *pFlName = [[NSNumber numberWithLong:filno] stringValue];
     NSString *pImgFlName = [pFlName stringByAppendingString:@".jpg"];
-    
+    NSString *pMP4FlName = [pFlName stringByAppendingString:@".mp4"];
     pFlName = [pFlName stringByAppendingString:@".MOV"];
     NSString *pFlPath = [pAlName stringByAppendingString:@"/"];
+    NSString *pMP4VideoPath =  [pFlPath stringByAppendingString:pMP4FlName];
     pFlPath = [pFlPath stringByAppendingString:pFlName];
     NSURL *movurl = [NSURL URLWithString:pFlPath];
     NSData *data = [NSData dataWithContentsOfURL:movie];
@@ -710,12 +763,15 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
     {
         printf("Failed to write to file %ld\n", filno);
         // --nAlNo;
-        
+        return;
     }
     else
     {
         NSLog(@"Save file %ld in album %@ filename %@ URL %@\n", filno, movurl, pFlPath, movie);
+        
     }
+    
+   // [self saveAsMp4:movurl mp4VideoPath:pMP4VideoPath];
     
     //__block UIImage *thumbnail;
    // AVURLAsset *asset=[[AVURLAsset alloc] initWithURL:movurl options:nil];

@@ -805,7 +805,7 @@
 {
     
     //printf("Launch UIActionSheet");
-    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete House" otherButtonTitles:nil];
+    UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:[delegate deleteButtonTitle] otherButtonTitles:nil];
     [pSh showInView:self.tableView];
     [pSh setDelegate:self];
     

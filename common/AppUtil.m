@@ -117,6 +117,14 @@
         NSString *picName = [pathcomps lastObject];
         if (picName == nil)
             continue;
+        /*
+        if ([picName hasSuffix:@".MOV"])
+        {
+            picName = [picName stringByReplacingOccurrencesOfString:@"MOV" withString:@"mp4"];
+            picUrl = [picUrl URLByDeletingLastPathComponent];
+            picUrl = [picUrl URLByAppendingPathComponent:picName];
+        }
+         */
         
         [pShrMgr sharePicture:picUrl metaStr:picMetaStr shrId:share_id];
     }
