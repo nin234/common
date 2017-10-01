@@ -752,10 +752,10 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
     long filno = tv.tv_sec/2;
     NSString *pFlName = [[NSNumber numberWithLong:filno] stringValue];
     NSString *pImgFlName = [pFlName stringByAppendingString:@".jpg"];
-    NSString *pMP4FlName = [pFlName stringByAppendingString:@".mp4"];
+    
     pFlName = [pFlName stringByAppendingString:@".MOV"];
     NSString *pFlPath = [pAlName stringByAppendingString:@"/"];
-    NSString *pMP4VideoPath =  [pFlPath stringByAppendingString:pMP4FlName];
+    
     pFlPath = [pFlPath stringByAppendingString:pFlName];
     NSURL *movurl = [NSURL URLWithString:pFlPath];
     NSData *data = [NSData dataWithContentsOfURL:movie];
