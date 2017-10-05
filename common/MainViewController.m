@@ -26,6 +26,8 @@
                
         emailAction = false;
         fbAction = false;
+       
+        
         
     }
     return self;
@@ -102,9 +104,19 @@
     
 }
 
--(void) viewWillAppear:(BOOL)animated
+-(void) viewWillDisappear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    if (self.bShareView)
+    {
+      //  [self.tabBarController.tabBar setHidden:YES];
+    }
+}
+
+-(void) viewDidLoad
+{
+    
+    [super viewDidLoad];
+   
     NSString *title = [delegate mainVwCntrlTitle];
     self.navigationItem.title = [NSString stringWithString:title];
     if (self.bShareView)
@@ -115,11 +127,14 @@
         return;
     }
     
+    
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
     self.navigationItem.rightBarButtonItem = pBarItem;
     UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
     
     self.navigationItem.leftBarButtonItem = pBarItem1;
+    //[pAllItms.tableView reloadData];
+   
 }
 
 - (void)didReceiveMemoryWarning
@@ -176,16 +191,7 @@
 }
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-   
-    // Do any additional setup after loading the view from its nib.
-   
-    //pDlg.dataSync.refreshNow = true;
-   //  pBarItem1 = [[UIBarButtonItem alloc] initWithTitle:@"Email" style:UIBarButtonItemStyleBordered target:pDlg action:@selector(emailNow)];
 
-}
 
 -(void) shareContactsAdd
 {

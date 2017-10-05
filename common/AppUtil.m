@@ -231,17 +231,17 @@
 {
     MainViewController *pMainVwCntrl = [self.navViewController.viewControllers objectAtIndex:0];
     printf("Clicked button at index %ld\n", (long)buttonIndex);
-    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(iCloudEmailCancel) ];
-    self.navViewController.navigationBar.topItem.leftBarButtonItem = pBarItem;
-    self.navViewController.toolbarHidden = NO;
+    //UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(iCloudEmailCancel) ];
+   // self.navViewController.navigationBar.topItem.leftBarButtonItem = pBarItem;
+   // self.navViewController.toolbarHidden = NO;
     
-    UIBarButtonItem *flexibleSpaceButtonItem = [[UIBarButtonItem alloc]
-                                                initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-                                                target:nil action:nil];
+  //  UIBarButtonItem *flexibleSpaceButtonItem = [[UIBarButtonItem alloc]
+    //                                            initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+      //                                          target:nil action:nil];
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 45)];
     footer.backgroundColor = [UIColor clearColor];
     pMainVwCntrl.pAllItms.tableView.tableFooterView = footer;
-    UIBarButtonItem *pBarItem1;
+    //UIBarButtonItem *pBarItem1;
         
     if (buttonIndex == 0)
     {
@@ -265,14 +265,14 @@
         [self iCloudEmailCancel];
         return;
     }
-    
+    /*
     [pMainVwCntrl setToolbarItems:[NSArray arrayWithObjects:
                                    flexibleSpaceButtonItem,
                                    pBarItem1,
                                    flexibleSpaceButtonItem,
                                    nil]
                          animated:YES];
-    
+    */
     //[pMainVwCntrl.pAllItms.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationLeft];
     return;
     

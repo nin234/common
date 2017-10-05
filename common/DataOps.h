@@ -182,6 +182,6 @@
 -(bool) checkMlistNameExist:(NSString *)name;
 -(void) updateEasyMainLstVwCntrl;
 -(void) updateShareMainLstVwCntrl:(MainViewController *) pMainVwCntrl;
-
+-(void) updateMainLstVwCntrl;
 
 @end

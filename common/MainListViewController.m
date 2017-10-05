@@ -62,6 +62,7 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
         itemNames = [[NSMutableArray alloc] init];
         indexes = [[NSMutableArray alloc] init];
         NSLog(@"Creating the fetch queue\n");
+         //self.hidesBottomBarWhenPushed = YES;
                
     }
     return self;
@@ -131,11 +132,17 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
 {
     [super viewWillAppear:animated];
    // printf("Main window will appear\n");
+    if (bShareView)
+    {
+        [delegate refreshShareView];
+    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
    
 }
 

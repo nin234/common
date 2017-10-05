@@ -17,6 +17,7 @@
 -(void) pushSortOptionViewController;
 -(void) pushDisplayViewController:(id) item indx:(int) Indx;
 -(AlbumContentsViewController *) pushAlbumContentsViewController:(id) itm indx:(int)Indx source:(int) src delegate:(id )albumVwCntrlDelegate;
+-(void) refreshShareView;
 
 @end
 
