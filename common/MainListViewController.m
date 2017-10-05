@@ -521,6 +521,10 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
     
     if (bShareView)
     {
+        
+        if (indexPath.row >= [seletedItems count])
+            return;
+
         UITableViewCell *cell =
         [tableView cellForRowAtIndexPath:indexPath];
         NSNumber* numbr = [seletedItems objectAtIndex:indexPath.row];
