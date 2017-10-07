@@ -10,6 +10,11 @@
 
 NSString *const keyValSeparator = @":|:";
 
+NSString *const contactItemSeperator = @":::";
+
+NSString *const itemSeparator = @"]:;";
+
 @implementation common
+
 
 @end

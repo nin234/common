@@ -10,6 +10,11 @@
 
 extern NSString *const keyValSeparator;
 
+extern NSString *const contactItemSeperator;
+
+extern NSString *const itemSeparator;
+
 @interface common : NSObject
+
 
 @end
