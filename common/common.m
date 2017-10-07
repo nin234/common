@@ -14,6 +14,8 @@ NSString *const contactItemSeperator = @":::";
 
 NSString *const itemSeparator = @"]:;";
 
+NSString *const templListSeperator = @":;]:;";
+
 @implementation common
 
 

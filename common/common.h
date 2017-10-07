@@ -14,6 +14,8 @@ extern NSString *const contactItemSeperator;
 
 extern NSString *const itemSeparator;
 
+extern NSString *const templListSeperator;
+
 @interface common : NSObject
 
 
