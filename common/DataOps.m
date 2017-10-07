@@ -1310,9 +1310,9 @@
 
 -(bool) checkMlistNameExist:(NSString *)name
 {
-    for (NSString *nm in masterListNamesArr)
+    for (ItemKey *nm in masterListNamesArr)
     {
-        if ([nm isEqualToString:name])
+        if ([nm.name isEqualToString:name])
             return false;
     }
     return true;
