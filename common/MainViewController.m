@@ -50,93 +50,6 @@
     }  
 }
 
-
--(void) loadView
-{
-    [super loadView];
-    CGRect mainScrn = [UIScreen mainScreen].applicationFrame;
-    if (!bShareView)
-    {
-        CGRect  viewRect;
-       viewRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, 50);
-       self.pSearchBar = [[UISearchBar alloc] initWithFrame:viewRect];
-        [self.pSearchBar setDelegate:self];
-        [self.view addSubview:self.pSearchBar];
-    }
-    pAllItms = [MainListViewController alloc];
-    if (!bShareView)
-    {
-        pAllItms.bInICloudSync = false;
-        pAllItms.bInEmail = false;
-        pAllItms.bAttchmentsInit = false;
-    }
-    else
-    {
-        pAllItms.bInICloudSync = true;
-        pAllItms.bInEmail = true;
-        pAllItms.bAttchmentsInit = false;
-    }
-
-    [pAllItms setDelegate:delegate_1];
-    pAllItms.navViewController = self.navigationController;
-    pAllItms.bShareView = bShareView;
-    pAllItms   = [pAllItms initWithNibName:nil bundle:nil];
-    CGRect tableRect;
-    if (bShareView)
-    {
-        tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
-    }
-    else
-    {
-        tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + 50, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
-    }
-    UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
-    pAllItms.tableView = pTVw;
-   [self.view addSubview:self.pAllItms.tableView];
-    if (bShareView)
-    {
-        [delegate refreshShareView];
-    }
-    else
-    {
-        [delegate initRefresh];
-    }
-    
-}
-
--(void) viewWillDisappear:(BOOL)animated
-{
-    if (self.bShareView)
-    {
-      //  [self.tabBarController.tabBar setHidden:YES];
-    }
-}
-
--(void) viewDidLoad
-{
-    
-    [super viewDidLoad];
-   
-    NSString *title = [delegate mainVwCntrlTitle];
-    self.navigationItem.title = [NSString stringWithString:title];
-    if (self.bShareView)
-    {
-        
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"\U0001F46A\U0001F46A" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
-        self.navigationItem.rightBarButtonItem = pBarItem;
-        return;
-    }
-    
-    
-    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
-    self.navigationItem.rightBarButtonItem = pBarItem;
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
-    
-    self.navigationItem.leftBarButtonItem = pBarItem1;
-    //[pAllItms.tableView reloadData];
-   
-}
-
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -189,7 +102,7 @@
     searchBar.text = nil;
     [searchBar resignFirstResponder];
 }
-#pragma mark - View lifecycle
+
 
 
 
@@ -209,6 +122,8 @@
     [delegate iCloudOrEmail];
 }
 
+#pragma mark - View lifecycle
+
 - (void)viewDidUnload
 {
     [self setPSearchBar:nil];
@@ -216,6 +131,94 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+
+
+-(void) loadView
+{
+    [super loadView];
+    CGRect mainScrn = [UIScreen mainScreen].applicationFrame;
+    if (!bShareView)
+    {
+        CGRect  viewRect;
+        viewRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, 50);
+        self.pSearchBar = [[UISearchBar alloc] initWithFrame:viewRect];
+        [self.pSearchBar setDelegate:self];
+        [self.view addSubview:self.pSearchBar];
+    }
+    pAllItms = [MainListViewController alloc];
+    if (!bShareView)
+    {
+        pAllItms.bInICloudSync = false;
+        pAllItms.bInEmail = false;
+        pAllItms.bAttchmentsInit = false;
+    }
+    else
+    {
+        pAllItms.bInICloudSync = true;
+        pAllItms.bInEmail = true;
+        pAllItms.bAttchmentsInit = false;
+    }
+    
+    [pAllItms setDelegate:delegate_1];
+    pAllItms.navViewController = self.navigationController;
+    pAllItms.bShareView = bShareView;
+    pAllItms   = [pAllItms initWithNibName:nil bundle:nil];
+    CGRect tableRect;
+    if (bShareView)
+    {
+        tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
+    }
+    else
+    {
+        tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + 50, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
+    }
+    UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
+    pAllItms.tableView = pTVw;
+    [self.view addSubview:self.pAllItms.tableView];
+    if (bShareView)
+    {
+        [delegate refreshShareView];
+    }
+    else
+    {
+        [delegate initRefresh];
+    }
+    
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    if (self.bShareView)
+    {
+        //  [self.tabBarController.tabBar setHidden:YES];
+    }
+}
+
+-(void) viewDidLoad
+{
+    
+    [super viewDidLoad];
+    
+    NSString *title = [delegate mainVwCntrlTitle];
+    self.navigationItem.title = [NSString stringWithString:title];
+    if (self.bShareView)
+    {
+        
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"\U0001F46A\U0001F46A" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
+        self.navigationItem.rightBarButtonItem = pBarItem;
+        return;
+    }
+    
+    
+    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
+    self.navigationItem.rightBarButtonItem = pBarItem;
+    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
+    
+    self.navigationItem.leftBarButtonItem = pBarItem1;
+    //[pAllItms.tableView reloadData];
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
