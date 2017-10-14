@@ -2,8 +2,8 @@
 //  EasyViewController.m
 //  EasyGrocList
 //
-//  Created by Ninan Thomas on 3/5/13.
-//  Copyright (c) 2013 Ninan Thomas. All rights reserved.
+//  Created by Tarun Kovoor on 8/6/17.
+//  Copyright (c) 2017 Tarun Kovoor. All rights reserved.
 //
 
 #import "EasyViewController.h"
@@ -180,7 +180,7 @@
     UIActionSheet *pSh;
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     
-    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Template Lists", @"Share", nil];
+    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Template Lists", @"help", @"Share", nil];
     EasyViewController *pMainVwCntrl = [pAppCmnUtil.navViewController.viewControllers objectAtIndex:0];
     [pSh showInView:pMainVwCntrl.pAllItms.tableView];
     [pSh setDelegate:self];
