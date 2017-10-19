@@ -206,6 +206,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
         {
             text = itk.name;
         }
+        
         NSString *pic = [picDic objectForKey:itk];
         CGRect textFrame = CGRectMake(10, 10, 275, 25);
         if (pic != nil)
@@ -215,6 +216,9 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
             NSURL *albumurl = pAppCmnUtil.pThumbNailsDir;
             NSURL *thumburl;
              NSError *err;
+            NSString *pShareIdDir = [[NSNumber numberWithLongLong:itk.share_id] stringValue];
+            
+            albumurl = [albumurl URLByAppendingPathComponent:pShareIdDir isDirectory:YES];
             if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
             {
                 thumburl = [albumurl URLByAppendingPathComponent:pic isDirectory:NO];

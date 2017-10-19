@@ -135,6 +135,9 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     NSError *err;
     NSURL *albumurl = pAppCmnUtil.pPicsDir;
     NSURL *imgUrl;
+    NSString *pShareIdDir = [[NSNumber numberWithLongLong:share_id] stringValue];
+    
+    albumurl = [albumurl URLByAppendingPathComponent:pShareIdDir isDirectory:YES];
     
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
     {

@@ -121,9 +121,17 @@
     NSURL *pFlUrl;
     NSError *err;
     NSURL *albumurl = pAppCmnUtil.pPicsDir;
+    NSString *pShareIdDir = [[NSNumber numberWithLongLong:pAppCmnUtil.share_id] stringValue];
+    
+    albumurl = [albumurl URLByAppendingPathComponent:pShareIdDir isDirectory:YES];
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
     {
         
+        pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
+    }
+    else
+    {
+        [pAppCmnUtil.pFlMgr createDirectoryAtURL:albumurl withIntermediateDirectories:YES attributes:nil error:nil];
         pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
     }
     
@@ -165,9 +173,15 @@
     NSData *thumbnaildata = UIImageJPEGRepresentation(thumbnail, 0.3);
     
     albumurl = pAppCmnUtil.pThumbNailsDir;
+    albumurl = [albumurl URLByAppendingPathComponent:pShareIdDir isDirectory:YES];
     if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
     {
         
+        pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
+    }
+    else
+    {
+        [pAppCmnUtil.pFlMgr createDirectoryAtURL:albumurl withIntermediateDirectories:YES attributes:nil error:nil];
         pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
     }
     
