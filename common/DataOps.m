@@ -624,12 +624,13 @@
         if(refreshNow)
         {
             
-              refreshNow = false;
+            
           //  forceRefresh = true;
            //  refreshTime = [NSDate dateWithTimeIntervalSinceNow:10];
              [self refreshData];
              NSLog(@"Refreshing main screen contents in DataOps.m\n");
              [self updateMainLstVwCntrl];
+            refreshNow = false;
         }
         
         if (updateNow)
@@ -2010,6 +2011,7 @@
 
 -(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName
 {
+    [self refreshData];
     NSUInteger cnt = [unFilteredItems count];
     NSString *pAlName;
     for (NSUInteger i=0; i < cnt; ++i)
