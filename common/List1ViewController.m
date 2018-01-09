@@ -897,7 +897,9 @@ const NSInteger TEXTFIELD_TAG = 54325;
         
         case eShowAll:
         {
+            NSLog(@"Showing all items");
             [hiddenCells removeAllObjects];
+            [undoArry removeAllObjects];
             
             NSArray *keys = [hiddenMp allKeys];
             
@@ -919,6 +921,7 @@ const NSInteger TEXTFIELD_TAG = 54325;
             }
             
             [self.tableView reloadData];
+            //[self.tableView reloadData];
             /*
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -1480,26 +1483,8 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
         fieldNames = [NSArray arrayWithObjects:@"Name", nil];
     }
     
-        
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil || cell.bounds.size.height == 0.0)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    else
-    {
-        NSArray *pVws = [cell.contentView subviews];
-        unsigned long int cnt = [pVws count];
-        for (NSUInteger i=0; i < cnt; ++i)
-        {
-            [[pVws objectAtIndex:i] removeFromSuperview];
-        }
-        cell.textLabel.text = @"";
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.backgroundColor = nil;
-        cell.accessoryView = nil;
-        cell.editingAccessoryView = nil;
-    }
+    
+    UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
     
     if (indexPath.section != 0)
@@ -1579,7 +1564,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                         textField.text = name;
                         [cell.contentView addSubview:textField];
                     }
-                  break;
+                    break;
                 }
                 
             }
@@ -1589,7 +1574,9 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                 {
                     //Ignoring the space place holder for empty inserted rows
                     if ([item.item isEqualToString:@" "] == NO)
+                    {
                         [self setTextFieldVal:textField itm:item];
+                    }
                     if (editMode == eListModeDisplay)
                     {
                         if (bEasyGroc)
@@ -1601,12 +1588,12 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
             
                 [self setAccessories:cell rowNo:rowNm rowU:row];
                 textField.tag = row;
-            
+           
                 [cell.contentView addSubview:textField];
+           
+               NSLog(@"Adding textField %@ row= %lu hiddens txfld=%d cell=%d contentView=%d", textField.text, (unsigned long)row, textField.hidden, cell.hidden, cell.contentView.hidden);
+           
             
-            
-          //     NSLog(@"Adding textField %@ row= %lu", textField.text, (unsigned long)row);
-                
             }
             
             break;

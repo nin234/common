@@ -50,6 +50,7 @@ enum eDispActionItems
     NSInteger textFldRowNo;
     NSMutableDictionary *rowTarget;
     bool bInvChanged;
+
 }
 
 @property (nonatomic, retain) NSString *name;
