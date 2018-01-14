@@ -166,6 +166,7 @@
     {
         bCheckListView = false;
         inEditAction = false;
+        inDeleteAction = false;
         textFldRowNo = -1;
         rowTarget = [[NSMutableDictionary alloc] init];
         reloadAfterSeasonPicked = false;
@@ -280,15 +281,25 @@
     return;
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if (buttonIndex == 1)
+    {
+        
+    }
+    else
+    {
+        
+    }
+    
+    return;
+}
 
 - (void)templItemAddDone
 {
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    
-    ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
-    
-    //[self templItemDisplay:pListView.name lstcntr:pListView];
-    [pListView cleanUpItemMp];
+    ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController topViewController];
     ItemKey *itk = [[ItemKey alloc] init];
     itk.name = pListView.name;
     if (pListView.share_id)
@@ -299,6 +310,19 @@
     {
         itk.share_id = pAppCmnUtil.share_id;
     }
+    if (bCheckListView && !pAppCmnUtil.bEasyGroc)
+    {
+        if (![pAppCmnUtil.dataSync checkMlistNameExist:itk.name])
+        {
+            UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Name exists" message:@"CheckList item with the same name exists. Please rename and try again" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [pAvw show];
+            return;
+        }
+    }
+    [pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+    
+    //[self templItemDisplay:pListView.name lstcntr:pListView];
+    [pListView cleanUpItemMp];
 
     if (bCheckListView)
     {
@@ -550,13 +574,23 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     
-    if (editMode == eViewModeEdit)
+    if (editMode == eViewModeEdit || editMode == eViewModeAdd)
     {
         UITableViewCell *cell = (UITableViewCell *)[[textField superview] superview];
         NSIndexPath *indPath = [self.tableView indexPathForCell:cell];
+        if (!pAppCmnUtil.bEasyGroc && editMode == eViewModeAdd)
+        {
+            if (!indPath.row)
+            {
+                return YES;
+            }
+        }
         if (!indPath.row)
+        {
             return NO;
+        }
     }
     
     if (editMode != eViewModeDisplay)
@@ -592,10 +626,32 @@
         }
         return;
     }
-    printf("Clicked button at index %ld in delete template list\n", (long)buttonIndex);
-    if (buttonIndex == 0)
+    
+    if (inDeleteAction)
     {
-          }
+        inDeleteAction = false;
+        printf("Clicked button at index %ld in delete template list\n", (long)buttonIndex);
+        if (buttonIndex == 0)
+        {
+            AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+            
+            ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
+            
+            //[self templItemDisplay:pListView.name lstcntr:pListView];
+            [pListView cleanUpItemMp];
+            ItemKey *itk = [[ItemKey alloc] init];
+            itk.name = pListView.name;
+            if (pListView.share_id)
+            {
+                itk.share_id = pListView.share_id;
+            }
+            else
+            {
+                itk.share_id = pAppCmnUtil.share_id;
+            }
+            [pAppCmnUtil.dataSync deletedTemplItem:itk];
+        }
+    }
     
 }
 
@@ -627,6 +683,7 @@
 {
     
     //printf("Launch UIActionSheet");
+    inDeleteAction = true;
     NSLog(@"Touched delete list button\n");
     UIActionSheet *pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete List" otherButtonTitles:nil];
     [pSh showInView:self.tableView];
@@ -806,7 +863,9 @@
         case 0:
         {
           CGRect textFrame = CGRectMake(cell.bounds.origin.x, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
-            UILabel *textField = [[UILabel alloc] initWithFrame:textFrame];
+            UITextField *textField = [[UITextField alloc] initWithFrame:textFrame];
+            textField.delegate = self;
+            [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
             if (name == nil)
             {
                 NSString *pListName = @"List";

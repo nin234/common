@@ -146,7 +146,8 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize);
             barHeight = 55;
         }
         
-        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, 325, barHeight)];
+        CGRect mainScrn = [UIScreen mainScreen].bounds;
+        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, mainScrn.size.width, barHeight)];
         
 
         if (bInPicCapture)
@@ -184,7 +185,8 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize);
             barY = imagePickerController.cameraOverlayView.bounds.size.height - 55;
             barHeight = 55;
         
-        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, 325, barHeight)];
+        CGRect mainScrn = [UIScreen mainScreen].bounds;
+        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, mainScrn.size.width, barHeight)];
         
 
         if (pBarItem.enabled == NO)
@@ -614,7 +616,9 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize);
         barHeight = 55;
     }
     
-    UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, 325, barHeight)];
+     CGRect mainScrn = [UIScreen mainScreen].bounds;
+    
+    UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, mainScrn.size.width, barHeight)];
    
 
      UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(photosDone) ];

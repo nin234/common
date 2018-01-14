@@ -23,13 +23,14 @@ enum eEasyGrocType {
     eScratchLst
 };
 
-@interface ListViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate>
+@interface ListViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
     bool inEditAction;
     NSInteger textFldRowNo;
     NSMutableDictionary *rowTarget;
     NSUInteger seasonPickerRowNo;
     bool reloadAfterSeasonPicked;
+    bool inDeleteAction;
    }
 
 @property (nonatomic, retain) NSString *name;

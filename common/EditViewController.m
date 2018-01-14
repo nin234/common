@@ -164,8 +164,8 @@
             barY = imagePickerController.cameraOverlayView.bounds.size.height - 55;
             barHeight = 55;
         }
-        
-        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, 325, barHeight)];
+        CGRect mainScrn = [UIScreen mainScreen].bounds;
+        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, mainScrn.size.width, barHeight)];
         
         
         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(photosDone) ];
@@ -194,8 +194,8 @@
         NSLog(@"Setting camera toolbar bounds %f\n" , imagePickerController.cameraOverlayView.bounds.size.height);
         barY = imagePickerController.cameraOverlayView.bounds.size.height - 55;
         barHeight = 55;
-        
-        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, 325, barHeight)];
+        CGRect mainScrn = [UIScreen mainScreen].bounds;
+        UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, mainScrn.size.width, barHeight)];
         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(photosDone) ];
         UIBarButtonItem *pBarItem2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil ];
         // pBarItem2.width = 100;
@@ -493,7 +493,9 @@
         barHeight = 55;
     }
     
-    UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, 325, barHeight)];
+    CGRect mainScrn = [UIScreen mainScreen].bounds;
+    
+    UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, barY, mainScrn.size.width, barHeight)];
        
 
      UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(photosDone) ];
