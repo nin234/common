@@ -25,6 +25,12 @@
 		3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B1033B01E8752370021538A /* ComponentsViewController.m */; };
 		3B825ECC1ED305A70010339F /* LocalList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B825ECB1ED305A70010339F /* LocalList.m */; };
 		3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */; };
+		3BDCB4F220498214005F8E0D /* Chats.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4E920498212005F8E0D /* Chats.m */; };
+		3BDCB4F320498214005F8E0D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EA20498213005F8E0D /* ChatViewController.m */; };
+		3BDCB4F420498214005F8E0D /* ChatsHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EB20498213005F8E0D /* ChatsHeader.m */; };
+		3BDCB4F520498214005F8E0D /* ChatsSharingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4F020498214005F8E0D /* ChatsSharingDelegate.m */; };
+		3BDCB4F620498214005F8E0D /* ChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4F120498214005F8E0D /* ChatsViewController.m */; };
+		3BDCB4F9204A2509005F8E0D /* ChatsDBIntf.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4F8204A2509005F8E0D /* ChatsDBIntf.m */; };
 		3BF7F7651E74396300419F8D /* TemplListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7631E74396300419F8D /* TemplListViewController.m */; };
 		3BF7F7691E74949A00419F8D /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7671E74949A00419F8D /* ListViewController.m */; };
 		3BF7F7791E74F75C00419F8D /* EasyDataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7781E74F75C00419F8D /* EasyDataOps.m */; };
@@ -122,6 +128,18 @@
 		3BB193721EDCA33B00EC1B58 /* SeasonPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeasonPickerViewController.h; sourceTree = "<group>"; };
 		3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeasonPickerViewController.m; sourceTree = "<group>"; };
 		3BB193741EDCA33B00EC1B58 /* SeasonPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SeasonPickerViewController.xib; sourceTree = "<group>"; };
+		3BDCB4E820498212005F8E0D /* Chats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chats.h; sourceTree = "<group>"; };
+		3BDCB4E920498212005F8E0D /* Chats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chats.m; sourceTree = "<group>"; };
+		3BDCB4EA20498213005F8E0D /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		3BDCB4EB20498213005F8E0D /* ChatsHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatsHeader.m; sourceTree = "<group>"; };
+		3BDCB4EC20498213005F8E0D /* ChatsHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatsHeader.h; sourceTree = "<group>"; };
+		3BDCB4ED20498213005F8E0D /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		3BDCB4EE20498213005F8E0D /* ChatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatsViewController.h; sourceTree = "<group>"; };
+		3BDCB4EF20498214005F8E0D /* ChatsSharingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatsSharingDelegate.h; sourceTree = "<group>"; };
+		3BDCB4F020498214005F8E0D /* ChatsSharingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatsSharingDelegate.m; sourceTree = "<group>"; };
+		3BDCB4F120498214005F8E0D /* ChatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatsViewController.m; sourceTree = "<group>"; };
+		3BDCB4F7204A2509005F8E0D /* ChatsDBIntf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatsDBIntf.h; sourceTree = "<group>"; };
+		3BDCB4F8204A2509005F8E0D /* ChatsDBIntf.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatsDBIntf.m; sourceTree = "<group>"; };
 		3BF7F7621E74396300419F8D /* TemplListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplListViewController.h; sourceTree = "<group>"; };
 		3BF7F7631E74396300419F8D /* TemplListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplListViewController.m; sourceTree = "<group>"; };
 		3BF7F7641E74396300419F8D /* TemplListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplListViewController.xib; sourceTree = "<group>"; };
@@ -277,10 +295,22 @@
 				DB7061511CAA9B9B0031C445 /* Constants.h */,
 				DBD16B0F1C90547A00052A03 /* DataOps.h */,
 				DBD16B101C90549300052A03 /* DataOps.m */,
+				3BDCB4F7204A2509005F8E0D /* ChatsDBIntf.h */,
+				3BDCB4F8204A2509005F8E0D /* ChatsDBIntf.m */,
 				DBD16B031C8EE94100052A03 /* DisplayViewController.h */,
 				DBD16B051C8EE95400052A03 /* DisplayViewController.m */,
 				3BF7F79F1E7505FA00419F8D /* EasyAddViewController.h */,
 				3BF7F7A01E75060400419F8D /* EasyAddViewController.m */,
+				3BDCB4E820498212005F8E0D /* Chats.h */,
+				3BDCB4E920498212005F8E0D /* Chats.m */,
+				3BDCB4EC20498213005F8E0D /* ChatsHeader.h */,
+				3BDCB4EB20498213005F8E0D /* ChatsHeader.m */,
+				3BDCB4EF20498214005F8E0D /* ChatsSharingDelegate.h */,
+				3BDCB4F020498214005F8E0D /* ChatsSharingDelegate.m */,
+				3BDCB4EE20498213005F8E0D /* ChatsViewController.h */,
+				3BDCB4F120498214005F8E0D /* ChatsViewController.m */,
+				3BDCB4ED20498213005F8E0D /* ChatViewController.h */,
+				3BDCB4EA20498213005F8E0D /* ChatViewController.m */,
 				3BF7F7771E74F74800419F8D /* EasyDataOps.h */,
 				3BF7F7781E74F75C00419F8D /* EasyDataOps.m */,
 				3BF7F78C1E74FECB00419F8D /* EasyDisplayViewController.h */,
@@ -457,17 +487,23 @@
 				3BF7F7801E74FB4300419F8D /* LocalMasterListNames.m in Sources */,
 				3BF7F7691E74949A00419F8D /* ListViewController.m in Sources */,
 				DBD16B111C90549300052A03 /* DataOps.m in Sources */,
+				3BDCB4F9204A2509005F8E0D /* ChatsDBIntf.m in Sources */,
 				DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */,
+				3BDCB4F620498214005F8E0D /* ChatsViewController.m in Sources */,
+				3BDCB4F420498214005F8E0D /* ChatsHeader.m in Sources */,
 				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,
 				DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */,
 				3BF7F79E1E7500A800419F8D /* List.m in Sources */,
 				3BF7F7841E74FB9500419F8D /* EasyPhoto.m in Sources */,
 				DBD16AD51C8AF5B900052A03 /* AddViewController.m in Sources */,
+				3BDCB4F220498214005F8E0D /* Chats.m in Sources */,
 				DB7061481CAA88350031C445 /* CommonShareMgr.m in Sources */,
 				DBD16ABD1C844EBE00052A03 /* MainListViewController.m in Sources */,
 				3BF7F7951E74FF4D00419F8D /* EasyListViewController.m in Sources */,
+				3BDCB4F320498214005F8E0D /* ChatViewController.m in Sources */,
 				3B825ECC1ED305A70010339F /* LocalList.m in Sources */,
 				DB00E5271C7C912000E898F7 /* Photo.m in Sources */,
+				3BDCB4F520498214005F8E0D /* ChatsSharingDelegate.m in Sources */,
 				3BF7F78B1E74FD4200419F8D /* EasySlideScrollView.m in Sources */,
 				3B0E71E21F0B9B7600CC2B5C /* ItemKey.m in Sources */,
 				DB00E5091C7BF96100E898F7 /* NotesViewController.m in Sources */,
