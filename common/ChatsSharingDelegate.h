@@ -9,9 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <sharing/ContactsViewController.h>
 #import <sharing/ShareMgr.h>
+#import "SmartShareMgr.h"
+#import "ChatsDBIntf.h"
+#import "ChatsViewController.h"
 
 
-@interface ChatsSharingDelegate : NSObject<ContactsViewControllerDelegate, ShareMgrDelegate>
+@interface ChatsSharingDelegate : NSObject<ContactsViewControllerDelegate, ShareMgrDelegate, UITabBarControllerDelegate, ChatsViewControllerDelegate>
 
 -(void) launchChat:(FriendDetails *) frnd;
 -(NSURL *) getPicUrl:(long long ) shareId picName:(NSString *) name itemName:(NSString *) iName;
@@ -19,5 +22,16 @@
 -(void) setShareId : (long long) shareId;
 -(void) shareNow:(NSString *) shareStr;
 -(void) refreshShareMainLst;
+-(void) initSmartMsgApp;
+-(void) startSmartMsgApp;
+-(void) showContactsSelectViewForNewChats;
+
+@property (nonatomic, retain) ChatsDBIntf *dbIntf;
+@property (nonatomic, retain)  UITabBarController  *tabBarController;
+@property (nonatomic, retain) ContactsViewController  *selFrndCntrl;
+@property (nonatomic, retain) SmartShareMgr *pShrMgr;
+@property (nonatomic, retain) NSArray* controllersListView;
+@property  (nonatomic, retain) ChatsViewController *pChatsVwCntrl;
+@property  (nonatomic, retain) UINavigationController *pChatsNavCntrl;
 
 @end
