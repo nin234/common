@@ -26,27 +26,50 @@
     if (self)
     {
         dbIntf = [[ChatsDBIntf alloc] init];
+        me = nil;
         return self;
     }
     return  nil;
 }
+
+-(bool) sendMsg:(FriendDetails *) to Msg:(NSString *)msg
+{
+    if (me == nil)
+    {
+        if (pShrMgr.share_id)
+        {
+            me = [[FriendDetails alloc] init];
+            me.nickName = @"ME";
+            me.name = [NSString stringWithFormat:@"%lld", pShrMgr.share_id];
+        }
+        else
+        {
+            return false;
+        }
+    }
+    [dbIntf insertTextMsg:to From:me Msg:msg];
+    return true;
+}
+
 -(void) launchChat:(FriendDetails *) frnd
 {
-    if ([dbIntf chatExists:frnd])
+    if (frnd == nil)
     {
-        //launch ChatViewController with chat history
-        NSLog(@"Launching ChatViewController");
-        ChatViewController *pChatVw = [[ChatViewController alloc] initWithNibName:nil bundle:nil];
-        [pChatsNavCntrl pushViewController:pChatVw animated:YES];
+        NSLog(@"Error frnd is nil , Cannot launch chat");
+        return;
+    }
+    UICollectionViewFlowLayout* flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+   
+    //launch ChatViewController with chat history
+    NSLog(@"Launching ChatViewController");
+    self.tabBarController.selectedIndex = 0;
+    ChatViewController *pChatVw = [[ChatViewController alloc] initWithCollectionViewLayout:flowLayout];
+    pChatVw.pShrDelegate = self;
+    pChatVw.to = frnd;
+    [pChatsNavCntrl pushViewController:pChatVw animated:YES];
         
-    }
-    else
-    {
-        //launch empty ChatViewController
-        NSLog(@"Launching ChatViewController");
-        ChatViewController *pChatVw = [[ChatViewController alloc] initWithNibName:nil bundle:nil];
-        [pChatsNavCntrl pushViewController:pChatVw animated:YES];
-    }
+    
 }
 
 -(void) initializeTabBarCntrl

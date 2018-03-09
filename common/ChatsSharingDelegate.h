@@ -15,6 +15,9 @@
 
 
 @interface ChatsSharingDelegate : NSObject<ContactsViewControllerDelegate, ShareMgrDelegate, UITabBarControllerDelegate, ChatsViewControllerDelegate>
+{
+    FriendDetails *me;
+}
 
 -(void) launchChat:(FriendDetails *) frnd;
 -(NSURL *) getPicUrl:(long long ) shareId picName:(NSString *) name itemName:(NSString *) iName;
@@ -25,6 +28,7 @@
 -(void) initSmartMsgApp;
 -(void) startSmartMsgApp;
 -(void) showContactsSelectViewForNewChats;
+-(bool) sendMsg:(FriendDetails *) to Msg:(NSString *)msg;
 
 @property (nonatomic, retain) ChatsDBIntf *dbIntf;
 @property (nonatomic, retain)  UITabBarController  *tabBarController;

@@ -31,6 +31,7 @@
 		3BDCB4F520498214005F8E0D /* ChatsSharingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4F020498214005F8E0D /* ChatsSharingDelegate.m */; };
 		3BDCB4F620498214005F8E0D /* ChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4F120498214005F8E0D /* ChatsViewController.m */; };
 		3BDCB4F9204A2509005F8E0D /* ChatsDBIntf.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4F8204A2509005F8E0D /* ChatsDBIntf.m */; };
+		3BDCB4FE204BF6C7005F8E0D /* SmartShareMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4FC204BF6C6005F8E0D /* SmartShareMgr.m */; };
 		3BF7F7651E74396300419F8D /* TemplListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7631E74396300419F8D /* TemplListViewController.m */; };
 		3BF7F7691E74949A00419F8D /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7671E74949A00419F8D /* ListViewController.m */; };
 		3BF7F7791E74F75C00419F8D /* EasyDataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7F7781E74F75C00419F8D /* EasyDataOps.m */; };
@@ -140,6 +141,8 @@
 		3BDCB4F120498214005F8E0D /* ChatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatsViewController.m; sourceTree = "<group>"; };
 		3BDCB4F7204A2509005F8E0D /* ChatsDBIntf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatsDBIntf.h; sourceTree = "<group>"; };
 		3BDCB4F8204A2509005F8E0D /* ChatsDBIntf.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatsDBIntf.m; sourceTree = "<group>"; };
+		3BDCB4FC204BF6C6005F8E0D /* SmartShareMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartShareMgr.m; sourceTree = "<group>"; };
+		3BDCB4FD204BF6C7005F8E0D /* SmartShareMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartShareMgr.h; sourceTree = "<group>"; };
 		3BF7F7621E74396300419F8D /* TemplListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplListViewController.h; sourceTree = "<group>"; };
 		3BF7F7631E74396300419F8D /* TemplListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplListViewController.m; sourceTree = "<group>"; };
 		3BF7F7641E74396300419F8D /* TemplListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplListViewController.xib; sourceTree = "<group>"; };
@@ -293,6 +296,8 @@
 				3B1033B01E8752370021538A /* ComponentsViewController.m */,
 				3B1033B11E8752370021538A /* ComponentsViewController.xib */,
 				DB7061511CAA9B9B0031C445 /* Constants.h */,
+				3BDCB4FD204BF6C7005F8E0D /* SmartShareMgr.h */,
+				3BDCB4FC204BF6C6005F8E0D /* SmartShareMgr.m */,
 				DBD16B0F1C90547A00052A03 /* DataOps.h */,
 				DBD16B101C90549300052A03 /* DataOps.m */,
 				3BDCB4F7204A2509005F8E0D /* ChatsDBIntf.h */,
@@ -490,6 +495,7 @@
 				3BDCB4F9204A2509005F8E0D /* ChatsDBIntf.m in Sources */,
 				DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */,
 				3BDCB4F620498214005F8E0D /* ChatsViewController.m in Sources */,
+				3BDCB4FE204BF6C7005F8E0D /* SmartShareMgr.m in Sources */,
 				3BDCB4F420498214005F8E0D /* ChatsHeader.m in Sources */,
 				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,
 				DBD16A9C1C830F7900052A03 /* AlbumContentsViewController.m in Sources */,
