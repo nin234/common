@@ -32,6 +32,7 @@
     return  nil;
 }
 
+
 -(bool) sendMsg:(FriendDetails *) to Msg:(NSString *)msg
 {
     if (me == nil)
@@ -47,8 +48,24 @@
             return false;
         }
     }
+    NSString *shareStr = [[NSString alloc] init];
+    shareStr = [shareStr stringByAppendingString:to.name];
+    shareStr = [shareStr stringByAppendingString:@";"];
+    shareStr = [shareStr stringByAppendingString:@":::"];
+    shareStr = [shareStr stringByAppendingString:msg];
     [dbIntf insertTextMsg:to From:me Msg:msg];
+    [pShrMgr shareItem:shareStr listName:me.name shrId:pShrMgr.share_id];
     return true;
+}
+
+-(void) processItems
+{
+    [pShrMgr processItems];
+}
+
+-(void) getItems
+{
+    [pShrMgr getItems];
 }
 
 -(void) launchChat:(FriendDetails *) frnd

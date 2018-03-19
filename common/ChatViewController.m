@@ -53,6 +53,7 @@ static NSString * const reuseIdentifier = @"ChatVwCell";
 -(void) sendMsg
 {
     NSLog(@"Sending message");
+    
     [pShrDelegate sendMsg:to Msg:notes.text];
 }
 

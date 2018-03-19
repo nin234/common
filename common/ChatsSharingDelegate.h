@@ -38,4 +38,7 @@
 @property  (nonatomic, retain) ChatsViewController *pChatsVwCntrl;
 @property  (nonatomic, retain) UINavigationController *pChatsNavCntrl;
 
+-(void) processItems;
+-(void) getItems;
+
 @end
