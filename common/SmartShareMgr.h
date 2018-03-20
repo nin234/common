@@ -8,6 +8,9 @@
 
 #import "sharing/ShareMgr.h"
 
+
 @interface SmartShareMgr : ShareMgr
+
+
 
 @end

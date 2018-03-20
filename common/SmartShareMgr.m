@@ -8,9 +8,10 @@
 
 #import "SmartShareMgr.h"
 #import "CommonTranslator.h"
-#import "CommonDecoder.h"
+#import "ChatsDecoder.h"
 
 @implementation SmartShareMgr
+
 
 - (instancetype)init
 {
@@ -18,9 +19,9 @@
     if (self)
     {
         self.pTransl = [[CommonTranslator alloc] init];
-        CommonDecoder* pCommonDcd = [[CommonDecoder alloc] init];
-        pCommonDcd.pShrMgr = self;
-        self.pDecoder = pCommonDcd;
+        ChatsDecoder* pChatsDcd = [[ChatsDecoder alloc] init];
+        pChatsDcd.pShrMgr = self;
+        self.pDecoder = pChatsDcd;
         picSoFar = 0;
     }
     return self;

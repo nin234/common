@@ -12,11 +12,13 @@
 #import "SmartShareMgr.h"
 #import "ChatsDBIntf.h"
 #import "ChatsViewController.h"
+#import "ChatViewController.h"
 
 
 @interface ChatsSharingDelegate : NSObject<ContactsViewControllerDelegate, ShareMgrDelegate, UITabBarControllerDelegate, ChatsViewControllerDelegate>
 {
     FriendDetails *me;
+    ChatViewController *pChatVw;
 }
 
 -(void) launchChat:(FriendDetails *) frnd;
@@ -40,5 +42,7 @@
 
 -(void) processItems;
 -(void) getItems;
+-(bool) insertTextMsg:(FriendDetails *) from Msg:(NSString *) msg;
++ (instancetype)sharedInstance;
 
 @end

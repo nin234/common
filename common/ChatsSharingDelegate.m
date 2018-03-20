@@ -27,13 +27,24 @@
     {
         dbIntf = [[ChatsDBIntf alloc] init];
         me = nil;
+        pChatVw = nil;
         return self;
     }
     return  nil;
 }
 
++ (instancetype)sharedInstance
+{
+    static ChatsSharingDelegate *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[ChatsSharingDelegate alloc] init];
+        // Do any other initialisation stuff here
+    });
+    return sharedInstance;
+}
 
--(bool) sendMsg:(FriendDetails *) to Msg:(NSString *)msg
+-(bool) fillMeDetailsifRequd
 {
     if (me == nil)
     {
@@ -47,6 +58,31 @@
         {
             return false;
         }
+    }
+    return true;
+}
+
+-(bool) insertTextMsg:(FriendDetails *) from Msg:(NSString *) msg
+{
+    if (![self fillMeDetailsifRequd])
+    {
+        return false;
+    }
+    
+    [dbIntf insertTextMsg:me From:from Msg:msg];
+    if (pChatVw != nil && [pChatVw.to.name isEqualToString:from.name])
+    {
+        [pChatVw gotMsgNow:msg];
+    }
+    return true;
+}
+
+-(bool) sendMsg:(FriendDetails *) to Msg:(NSString *)msg
+{
+    if (![self fillMeDetailsifRequd])
+    {
+        NSLog(@"Cannot get my details sendMsg failed");
+        return false;
     }
     NSString *shareStr = [[NSString alloc] init];
     shareStr = [shareStr stringByAppendingString:to.name];
@@ -81,8 +117,7 @@
     //launch ChatViewController with chat history
     NSLog(@"Launching ChatViewController");
     self.tabBarController.selectedIndex = 0;
-    ChatViewController *pChatVw = [[ChatViewController alloc] initWithCollectionViewLayout:flowLayout];
-    pChatVw.pShrDelegate = self;
+    pChatVw = [[ChatViewController alloc] initWithCollectionViewLayout:flowLayout];
     pChatVw.to = frnd;
     [pChatsNavCntrl pushViewController:pChatVw animated:YES];
         
@@ -121,6 +156,7 @@
     pShrMgr = [[SmartShareMgr alloc] init];
     pShrMgr.pNtwIntf.connectAddr = @"smartmsg.ddns.net";
     pShrMgr.pNtwIntf.connectPort = @"16792";
+    
     [self initializeTabBarCntrl];
 }
 

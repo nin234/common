@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatsSharingDelegate.h"
 #import <sharing/FriendDetails.h>
 
 @interface ChatViewController : UICollectionViewController<UICollectionViewDelegateFlowLayout>
+{
+    NSString *tmpLabel;
+}
 
-@property(nonatomic, retain) ChatsSharingDelegate *pShrDelegate;
 @property (nonatomic, retain) FriendDetails *to;
 @property (nonatomic, retain) UITextView *notes;
+-(void) gotMsgNow:(NSString *)msg;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "ChatViewController.h"
+#import "ChatsSharingDelegate.h"
 
 @interface ChatViewController ()
 
@@ -14,7 +15,6 @@
 
 @implementation ChatViewController
 
-@synthesize pShrDelegate;
 @synthesize to;
 @synthesize notes;
 
@@ -23,7 +23,6 @@ static NSString * const reuseIdentifier = @"ChatVwCell";
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    
     return self;
 }
 
@@ -33,7 +32,7 @@ static NSString * const reuseIdentifier = @"ChatVwCell";
     if (self)
     {
         NSLog(@"Initializing ChatViewController");
-        
+        tmpLabel = @"Hello";
         
         CGRect fullScreenRect= [[UIScreen mainScreen] bounds];
         self.collectionView = [[UICollectionView alloc] initWithFrame:fullScreenRect collectionViewLayout:layout];
@@ -50,10 +49,17 @@ static NSString * const reuseIdentifier = @"ChatVwCell";
     
 }
 
+-(void) gotMsgNow:(NSString *)msg
+{
+    NSLog (@"Setting tmpLabel to %@ and reloading data", msg);
+    tmpLabel = msg;
+    [self.collectionView reloadData];
+}
+
 -(void) sendMsg
 {
     NSLog(@"Sending message");
-    
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
     [pShrDelegate sendMsg:to Msg:notes.text];
 }
 
@@ -115,7 +121,7 @@ static NSString * const reuseIdentifier = @"ChatVwCell";
         itemSize.width = screenRect.size.width*0.1;
         itemSize.height = screenRect.size.height*0.1;
     }
-    NSLog(@"itemsize indexPath.section=%d indexPath.item=%d width=%f height=%f", indexPath.section, indexPath.item , itemSize.width, itemSize.height);
+    NSLog(@"itemsize indexPath.section=%ld indexPath.item=%ld width=%f height=%f", indexPath.section, indexPath.item , itemSize.width, itemSize.height);
     
     return itemSize;
 }
@@ -145,8 +151,8 @@ static NSString * const reuseIdentifier = @"ChatVwCell";
     if (!indexPath.section)
     {
         UILabel *label = [[UILabel alloc] initWithFrame:screenRect];
-        [label setText:@"Hello "];
-        NSLog(@"Adding subview label Hello x=%f y=%f width=%f height=%f", screenRect.origin.x, screenRect.origin.y, screenRect.size.width, screenRect.size.height);
+        [label setText:tmpLabel];
+        NSLog(@"Adding subview label tmpLabel =%@ x=%f y=%f width=%f height=%f", tmpLabel, screenRect.origin.x, screenRect.origin.y, screenRect.size.width, screenRect.size.height);
         [cell.contentView addSubview:label];
     }
     else if (indexPath.section == 1)
