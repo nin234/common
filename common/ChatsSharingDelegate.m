@@ -117,7 +117,7 @@
     //launch ChatViewController with chat history
     NSLog(@"Launching ChatViewController");
     self.tabBarController.selectedIndex = 0;
-    pChatVw = [[ChatViewController alloc] initWithCollectionViewLayout:flowLayout];
+    pChatVw = [[ChatMainViewController alloc] initWithNibName:nil bundle:nil];
     pChatVw.to = frnd;
     [pChatsNavCntrl pushViewController:pChatVw animated:YES];
         
