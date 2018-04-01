@@ -1,22 +1,22 @@
 //
-//  ChatViewController1.m
+//  ChatViewController2.m
 //  common
 //
-//  Created by Ninan Thomas on 3/24/18.
+//  Created by Ninan Thomas on 3/26/18.
 //  Copyright © 2018 Sinacama. All rights reserved.
 //
 
-#import "ChatViewController1.h"
-#import "ChatsSharingDelegate.h"
+#import "ChatViewController2.h"
 
 
-@interface ChatViewController1 ()
+@interface ChatViewController2 ()
 
 @end
 
-@implementation ChatViewController1
+@implementation ChatViewController2
 
-
+@synthesize notes;
+@synthesize bShowKeyBoard;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -24,12 +24,12 @@
     if (self)
     {
         
-        
     }
     
     
     return self;
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -40,12 +40,12 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
 
 #pragma mark - Table view data source
 
@@ -56,15 +56,19 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return 50;
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+   
+    return 150.0;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     
-    // Configure the cell...
-    static NSString *CellIdentifier = @"ChatVwCell";
+    static NSString *CellIdentifier = @"ChatVwCell2";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
@@ -81,14 +85,19 @@
         cell.imageView.image = nil;
         cell.textLabel.text = nil;
         cell.accessoryType = UITableViewCellAccessoryNone;
-        [cell setBackgroundColor:[UIColor clearColor]];
     }
+    // Configure the cell...
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
     CGRect  viewRect;
-    viewRect = CGRectMake(0, 0, mainScrn.size.width, 50);
-   // UITextField* notes = [[UITextField alloc] initWithFrame:viewRect];
-   // [cell.contentView addSubview:notes];
-   
+    viewRect = CGRectMake(0, 0, mainScrn.size.width, 150);
+    notes = [[UITextView alloc] initWithFrame:viewRect];
+    NSLog (@"Notes initialized");
+    [cell.contentView addSubview:notes];
+    if (bShowKeyBoard)
+    {
+        [notes becomeFirstResponder];
+        NSLog (@"Keyboard becomes first responder");
+    }
     return cell;
 }
 
@@ -126,23 +135,6 @@
     return YES;
 }
 */
-
-
-#pragma mark - Table view delegate
-
-// In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here, for example:
-    // Create the next view controller.
-    
-    
-    // Pass the selected object to the new view controller.
-    
-    // Push the view controller.
-    [[ChatsSharingDelegate sharedInstance] showViewWithoutKeyBoard];
-}
-
 
 /*
 #pragma mark - Navigation

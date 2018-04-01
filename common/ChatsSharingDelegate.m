@@ -70,10 +70,12 @@
     }
     
     [dbIntf insertTextMsg:me From:from Msg:msg];
+    
     if (pChatVw != nil && [pChatVw.to.name isEqualToString:from.name])
     {
         [pChatVw gotMsgNow:msg];
     }
+     
     return true;
 }
 
@@ -92,6 +94,11 @@
     [dbIntf insertTextMsg:to From:me Msg:msg];
     [pShrMgr shareItem:shareStr listName:me.name shrId:pShrMgr.share_id];
     return true;
+}
+
+-(void) showViewWithoutKeyBoard
+{
+    [pChatVw showViewWithoutKeyBoard];
 }
 
 -(void) processItems
@@ -117,7 +124,9 @@
     //launch ChatViewController with chat history
     NSLog(@"Launching ChatViewController");
     self.tabBarController.selectedIndex = 0;
+    [self.tabBarController.tabBar setHidden:YES];
     pChatVw = [[ChatMainViewController alloc] initWithNibName:nil bundle:nil];
+    
     pChatVw.to = frnd;
     [pChatsNavCntrl pushViewController:pChatVw animated:YES];
         

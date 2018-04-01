@@ -19,6 +19,7 @@
 {
     FriendDetails *me;
     ChatMainViewController *pChatVw;
+    
 }
 
 -(void) launchChat:(FriendDetails *) frnd;
@@ -44,5 +45,7 @@
 -(void) getItems;
 -(bool) insertTextMsg:(FriendDetails *) from Msg:(NSString *) msg;
 + (instancetype)sharedInstance;
+
+-(void) showViewWithoutKeyBoard;
 
 @end

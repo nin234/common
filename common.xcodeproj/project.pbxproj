@@ -27,6 +27,7 @@
 		3B825ECC1ED305A70010339F /* LocalList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B825ECB1ED305A70010339F /* LocalList.m */; };
 		3BA108692066901300026680 /* ChatViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA108672066901300026680 /* ChatViewController1.m */; };
 		3BA1086D2068699400026680 /* ChatMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086B2068699400026680 /* ChatMainViewController.m */; };
+		3BA108702069185100026680 /* ChatViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086F2069185100026680 /* ChatViewController2.m */; };
 		3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */; };
 		3BDCB4F220498214005F8E0D /* Chats.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4E920498212005F8E0D /* Chats.m */; };
 		3BDCB4F320498214005F8E0D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EA20498213005F8E0D /* ChatViewController.m */; };
@@ -137,6 +138,8 @@
 		3BA1086A2068699400026680 /* ChatMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMainViewController.h; sourceTree = "<group>"; };
 		3BA1086B2068699400026680 /* ChatMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMainViewController.m; sourceTree = "<group>"; };
 		3BA1086C2068699400026680 /* ChatMainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatMainViewController.xib; sourceTree = "<group>"; };
+		3BA1086E2069185100026680 /* ChatViewController2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController2.h; sourceTree = "<group>"; };
+		3BA1086F2069185100026680 /* ChatViewController2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController2.m; sourceTree = "<group>"; };
 		3BB193721EDCA33B00EC1B58 /* SeasonPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeasonPickerViewController.h; sourceTree = "<group>"; };
 		3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeasonPickerViewController.m; sourceTree = "<group>"; };
 		3BB193741EDCA33B00EC1B58 /* SeasonPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SeasonPickerViewController.xib; sourceTree = "<group>"; };
@@ -315,6 +318,8 @@
 				3BA108662066901300026680 /* ChatViewController1.h */,
 				3BA108672066901300026680 /* ChatViewController1.m */,
 				3BA108682066901300026680 /* ChatViewController1.xib */,
+				3BA1086E2069185100026680 /* ChatViewController2.h */,
+				3BA1086F2069185100026680 /* ChatViewController2.m */,
 				DB00E4B41C7A9FF700E898F7 /* common.h */,
 				DB00E4B61C7A9FF700E898F7 /* common.m */,
 				DB7061421CAA88350031C445 /* CommonDecoder.h */,
@@ -557,6 +562,7 @@
 				3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */,
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
 				3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */,
+				3BA108702069185100026680 /* ChatViewController2.m in Sources */,
 				DB7061471CAA88350031C445 /* CommonDecoder.m in Sources */,
 				DB00E5331C7D24C300E898F7 /* AddressAnnotation.m in Sources */,
 				DBD16AB91C844E6F00052A03 /* MainViewController.m in Sources */,

@@ -8,17 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import "ChatViewController1.h"
+#import "ChatViewController2.h"
 #import <sharing/FriendDetails.h>
 
 @interface ChatMainViewController : UIViewController
 
-@property (nonatomic, retain) UITextView *notes;
+
 @property (nonatomic, retain) FriendDetails *to;
-@property  (nonatomic, retain) ChatViewController1 *pChatTableVw;
-@property (nonatomic, retain) UIView *pChatInputView;
+@property  (nonatomic, retain) ChatViewController1 *pChatOutputView;
+@property (nonatomic, retain) ChatViewController2 *pChatInputView;
+@property (nonatomic) bool bViewWithKeyBoard;
 
 
 -(void) gotMsgNow:(NSString *)msg;
-
+-(void) showViewWithoutKeyBoard;
 
 @end
