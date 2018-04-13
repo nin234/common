@@ -10,6 +10,17 @@
 
 
 @interface ChatViewController1 : UITableViewController
+{
+    int nRows;
+    NSArray *chatItems;
+    NSArray *rowIndexes;
+    CGFloat fromLeftInset;
+    CGFloat fromRightInset;
+    CGFloat toLeftInset;
+    CGFloat toRightInset;
+    CGFloat preferredMaxWidth;
+    
+}
 
 
 @end

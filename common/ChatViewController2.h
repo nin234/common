@@ -7,10 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <sharing/FriendDetails.h>
+#import "ChatInputTextView.h"
 
 @interface ChatViewController2 : UITableViewController<UITextViewDelegate>
+{
+   
+}
 
-@property (nonatomic, retain) UITextView *notes;
+@property (nonatomic, retain) ChatInputTextView *notes;
 @property (nonatomic) bool bShowKeyBoard;
+@property (nonatomic, retain) FriendDetails *to;
+@property (nonatomic) CGFloat notesHeight;
+@property (nonatomic, retain ) NSString *initialText;
 
 @end

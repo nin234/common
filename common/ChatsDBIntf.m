@@ -69,6 +69,22 @@
     return true;
 }
 
+-(NSArray *) getChatItems:(NSUInteger) limit
+{
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *descr = [NSEntityDescription entityForName:@"Chats" inManagedObjectContext:moc];
+    NSFetchRequest *req = [[NSFetchRequest alloc] init];
+    [req setEntity:descr];
+    //ascending:YES];
+    NSSortDescriptor* rownoDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp"
+                                                                    ascending:NO];
+    [req setFetchLimit:limit];
+    
+    NSArray *sortDescriptors = [NSArray arrayWithObjects: rownoDescriptor, nil];
+    NSError *error = nil;
+    return  [[moc executeFetchRequest:req error:&error]sortedArrayUsingDescriptors:sortDescriptors];
+}
+
 -(bool) chatExists:(FriendDetails *) contact
 {
     if (contact == nil)

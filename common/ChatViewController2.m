@@ -7,6 +7,8 @@
 //
 
 #import "ChatViewController2.h"
+#import "ChatsSharingDelegate.h"
+ #import <QuartzCore/QuartzCore.h>
 
 
 @interface ChatViewController2 ()
@@ -17,18 +19,30 @@
 
 @synthesize notes;
 @synthesize bShowKeyBoard;
+@synthesize to;
+@synthesize notesHeight;
+@synthesize initialText;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
+        self.tableView.estimatedRowHeight = notesHeight;
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        [self.tableView setSeparatorColor:[UIColor clearColor]];
+        if (bShowKeyBoard)
+        {
+            self.tableView.scrollEnabled = NO;
+        }
         
     }
     
     
     return self;
 }
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -59,11 +73,49 @@
     return 1;
 }
 
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    
-    return 150.0;
+    return UITableViewAutomaticDimension;
 }
 
+-(void) sendMsg
+{
+    NSLog (@"Sending message %@", notes.text);
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    [pShrDelegate sendMsg:to Msg:notes.text];
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    
+    return 10.0;
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *v = [UIView new];
+    [v setBackgroundColor:[UIColor clearColor]];
+    return v;
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    NSLog(@"Old frame height=%lf width=%lf new frame height =%lf width=%lf", newFrame.size.height, newFrame.size.width, textView.frame.size.height, textView.frame.size.width);
+    if (fabs(textView.frame.size.height - newFrame.size.height) > 10.0)
+    {
+        ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+        NSLog(@"redrawViews with initial text=%@", textView.text);
+        [pShrDelegate    redrawViews:newFrame.size.height+10 text:textView.text];
+    }
+    
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -88,16 +140,39 @@
     }
     // Configure the cell...
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
-    CGRect  viewRect;
-    viewRect = CGRectMake(0, 0, mainScrn.size.width, 150);
-    notes = [[UITextView alloc] initWithFrame:viewRect];
-    NSLog (@"Notes initialized");
+    CGRect  notesRect;
+    notesRect = CGRectMake(0, 0, mainScrn.size.width-30, notesHeight);
+    notes = [[ChatInputTextView alloc] initWithFrame:notesRect];
+    notes.scrollEnabled = YES;
+    
+    [notes setFont:[UIFont fontWithName:@"ArialMT" size:16]];
+    NSLog(@"Setting initial notes text %@", initialText);
+    [notes setText:initialText];
+    notes.bShowKeyBoard = bShowKeyBoard;
+    [[notes layer] setBorderColor:[[UIColor grayColor] CGColor]];
+    [[notes layer] setBorderWidth:2.3];
+    [[notes layer] setCornerRadius:15];
+    notes.delegate = self;
+    
+    NSLog (@"Notes initialized screen bounds height=%f width=%lf", mainScrn.size.height, mainScrn.size.width);
     [cell.contentView addSubview:notes];
+    CGRect buttonRect;
+    buttonRect = CGRectMake(mainScrn.size.width-25, 0, 20, 20);
+    UIButton *button = [[UIButton alloc] initWithFrame:buttonRect];
+    [button setBackgroundImage:[[UIImage imageNamed:@"ic_share_48pt.png"]
+                                stretchableImageWithLeftCapWidth:0.0f
+                                topCapHeight:0.0f]
+                      forState:UIControlStateNormal];
+    [button setBackgroundColor:[UIColor greenColor]];
+    [button addTarget:self action:@selector(sendMsg) forControlEvents:UIControlEventTouchDown];
+    [cell.contentView addSubview:button];
     if (bShowKeyBoard)
     {
         [notes becomeFirstResponder];
         NSLog (@"Keyboard becomes first responder");
     }
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    [pShrDelegate   setBInRedrawViews:false];
     return cell;
 }
 

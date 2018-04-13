@@ -12,15 +12,21 @@
 #import <sharing/FriendDetails.h>
 
 @interface ChatMainViewController : UIViewController
+{
+    CGSize kbsize ;
+    CGFloat maxTextHeight;
+}
 
 
 @property (nonatomic, retain) FriendDetails *to;
 @property  (nonatomic, retain) ChatViewController1 *pChatOutputView;
 @property (nonatomic, retain) ChatViewController2 *pChatInputView;
 @property (nonatomic) bool bViewWithKeyBoard;
+@property CGFloat notesHeight;
 
 
 -(void) gotMsgNow:(NSString *)msg;
 -(void) showViewWithoutKeyBoard;
+-(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText;
 
 @end

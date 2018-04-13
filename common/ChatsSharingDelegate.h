@@ -40,6 +40,7 @@
 @property (nonatomic, retain) NSArray* controllersListView;
 @property  (nonatomic, retain) ChatsViewController *pChatsVwCntrl;
 @property  (nonatomic, retain) UINavigationController *pChatsNavCntrl;
+@property (nonatomic) bool bInRedrawViews;
 
 -(void) processItems;
 -(void) getItems;
@@ -47,5 +48,6 @@
 + (instancetype)sharedInstance;
 
 -(void) showViewWithoutKeyBoard;
+-(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText;
 
 @end

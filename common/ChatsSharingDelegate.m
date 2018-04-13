@@ -18,6 +18,7 @@
 @synthesize pChatsVwCntrl;
 @synthesize pChatsNavCntrl;
 @synthesize controllersListView;
+@synthesize bInRedrawViews;
 
 
 -(instancetype) init
@@ -28,6 +29,7 @@
         dbIntf = [[ChatsDBIntf alloc] init];
         me = nil;
         pChatVw = nil;
+        bInRedrawViews = false;
         return self;
     }
     return  nil;
@@ -131,6 +133,16 @@
     [pChatsNavCntrl pushViewController:pChatVw animated:YES];
         
     
+}
+-(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText
+{
+    if (bInRedrawViews)
+    {
+        NSLog(@"Already in redrawViews ignoring this call");
+        return;
+    }
+    bInRedrawViews = true;
+    [pChatVw redrawViews:inputTextViewHeight text:notesText];
 }
 
 -(void) initializeTabBarCntrl

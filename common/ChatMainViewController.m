@@ -20,6 +20,7 @@
 @synthesize pChatOutputView;
 @synthesize pChatInputView;
 @synthesize bViewWithKeyBoard;
+@synthesize notesHeight;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -28,8 +29,10 @@
     if (self) {
         // Custom initialization
         bViewWithKeyBoard = false;
-        
-        
+        notesHeight = 45.0;
+        kbsize.height = 0.0;
+        kbsize.width = 0.0;
+        maxTextHeight = 0.0;
     }
     return self;
 }
@@ -47,54 +50,68 @@
 -(void) loadView
 {
     [super loadView];
-    [self setViewWithoutKeyBoard];
+    [self setViewWithoutKeyBoard:notesHeight text:nil];
     [self registerForKeyboardNotifications];
     
 }
 
--(void) setViewWithKeyBoard: (CGSize) kbsize
+-(void) setViewWithKeyBoard: (CGFloat) inputTextViewSize text:(NSString *) notesTxt
 {
+    
     bViewWithKeyBoard = true;
     CGRect tableRect;
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
-    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-150- kbsize.height);
+    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize- kbsize.height);
     pChatOutputView = [ChatViewController1 alloc];
-    pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
-    pChatOutputView.tableView = pTVw;
+      pChatOutputView.tableView = pTVw;
+    pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];
+    
+  
     [self.view addSubview:pChatOutputView.tableView];
     
     CGRect  inputViewRect;
-    inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-150-kbsize.height, mainScrn.size.width, 150+kbsize.height);
+    inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-inputTextViewSize-kbsize.height, mainScrn.size.width, inputTextViewSize+kbsize.height);
     pChatInputView = [ChatViewController2 alloc];
+    pChatInputView.notesHeight = inputTextViewSize - 15;
     pChatInputView.bShowKeyBoard = true;
-    pChatInputView  = [pChatInputView initWithNibName:nil bundle:nil];
+    pChatInputView.initialText = notesTxt;
+    pChatInputView.to = to;
     UITableView *pInputTblVw = [[UITableView alloc] initWithFrame:inputViewRect style:UITableViewStylePlain];
-    pChatInputView.tableView = pInputTblVw;
+      pChatInputView.tableView = pInputTblVw;
+    pChatInputView  = [pChatInputView initWithNibName:nil bundle:nil];
+    
     [self.view addSubview:pChatInputView.tableView];
    
 }
 
--(void) setViewWithoutKeyBoard
+
+
+-(void) setViewWithoutKeyBoard: (CGFloat) inputTextViewSize text:(NSString *) notesTxt
 {
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
     
     CGRect tableRect;
     
-    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-150);
+    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize);
     pChatOutputView = [ChatViewController1 alloc];
-    pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     pChatOutputView.tableView = pTVw;
+    pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];
+   
     [self.view addSubview:pChatOutputView.tableView];
     
     CGRect  inputViewRect;
-    inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-150, mainScrn.size.width, 150);
+    inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-inputTextViewSize, mainScrn.size.width, inputTextViewSize);
     pChatInputView = [ChatViewController2 alloc];
     pChatInputView.bShowKeyBoard = false;
-    pChatInputView  = [pChatInputView initWithNibName:nil bundle:nil];
+    pChatInputView.notesHeight = inputTextViewSize - 15;
+    pChatInputView.initialText = notesTxt;
     UITableView *pInputTblVw = [[UITableView alloc] initWithFrame:inputViewRect style:UITableViewStylePlain];
     pChatInputView.tableView = pInputTblVw;
+    pChatInputView  = [pChatInputView initWithNibName:nil bundle:nil];
+    pChatInputView.to = to;
+    
     [self.view addSubview:pChatInputView.tableView];
    
 }
@@ -117,13 +134,15 @@
   {
       return;
   }
+    NSString *notesTxt = pChatInputView.notes.text;
     bViewWithKeyBoard = false;
     NSArray *pVws = [self.view subviews];
     for (NSUInteger i = 0; i < [pVws count]; ++i)
     {
         [[pVws objectAtIndex:i] removeFromSuperview];
     }
-    [self setViewWithoutKeyBoard];
+    NSLog(@"Show view with out keyboard textViewSize=,%f", notesHeight);
+    [self setViewWithoutKeyBoard:notesHeight text:notesTxt];
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification
@@ -133,14 +152,59 @@
     {
         return;
     }
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    NSString *notesTxt = pChatInputView.notes.text;
     NSArray *pVws = [self.view subviews];
     for (NSUInteger i = 0; i < [pVws count]; ++i)
     {
         [[pVws objectAtIndex:i] removeFromSuperview];
     }
-    [self setViewWithKeyBoard:kbSize];
+    NSDictionary* info = [aNotification userInfo];
+     kbsize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    [self setViewWithKeyBoard:notesHeight text:notesTxt];
+}
+
+-(void) computeMaxTxtHeight
+{
+    if (kbsize.height == 0.0)
+    {
+        NSLog(@"Invalid ChatMainViewController:computeMaxTxtHeight invocation keyboard size not yet set");
+        return;
+    }
+    CGRect mainScrn= [[UIScreen mainScreen] bounds];
+    maxTextHeight = mainScrn.size.height - 200 - kbsize.height;
+}
+
+-(void) redrawViews:(CGFloat)  inputTextViewHeight text:(NSString *) notesText
+{
+    if (kbsize.height == 0.0)
+    {
+        NSLog(@"Invalid ChatMainViewController:redrawViews invocation keyboard size not yet set");
+        return;
+    }
+    if (maxTextHeight == 0.0)
+    {
+        [self computeMaxTxtHeight];
+    }
+    
+    if (notesHeight == maxTextHeight)
+    {
+        return;
+    }
+    
+    if (inputTextViewHeight > maxTextHeight)
+    {
+        notesHeight = maxTextHeight;
+    }
+    else
+    {
+        notesHeight = inputTextViewHeight;
+    }
+    NSArray *pVws = [self.view subviews];
+    for (NSUInteger i = 0; i < [pVws count]; ++i)
+    {
+        [[pVws objectAtIndex:i] removeFromSuperview];
+    }
+    [self setViewWithKeyBoard:notesHeight text:notesText];
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
