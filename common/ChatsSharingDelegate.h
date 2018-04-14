@@ -49,5 +49,6 @@
 
 -(void) showViewWithoutKeyBoard;
 -(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText;
+-(void) showTabBar;
 
 @end

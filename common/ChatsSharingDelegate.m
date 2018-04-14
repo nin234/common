@@ -137,6 +137,12 @@
         
     
 }
+
+-(void) showTabBar
+{
+    [self.tabBarController.tabBar setHidden:NO];
+}
+
 -(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText
 {
     if (bInRedrawViews)

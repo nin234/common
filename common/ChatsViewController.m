@@ -85,6 +85,8 @@
     self.navigationItem.title = [NSString stringWithString:title];
         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeNewMsg) ];
         self.navigationItem.rightBarButtonItem = pBarItem1;
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    [pShrDelegate showTabBar];
     
 }
 
@@ -156,7 +158,7 @@
     }
     NSString *frndName = [[NSNumber numberWithLongLong:frnd_shr_id] stringValue];
     FriendDetails *frndDetails = [frndDic objectForKey:frndName];
-    if (frndDetails != nil)
+    if (frndDetails != nil && frndDetails.nickName != nil)
     {
         [nameLabel setText:frndDetails.nickName];
     }
@@ -164,6 +166,7 @@
     {
         [nameLabel setText:frndName];
     }
+    [nameLabel setFont:[UIFont boldSystemFontOfSize:20]];
     
     UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, mainScrn.size.width-15, 55)];
     [contentLabel setText:pItem.text];
@@ -173,6 +176,26 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ChatsHeader *pItem = [chatHeaders objectAtIndex:indexPath.row];
+    long long frnd_shr_id =0;
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    if (pShrDelegate.pShrMgr.share_id == pItem.from)
+    {
+        frnd_shr_id = pItem.to;
+    }
+    else
+    {
+        frnd_shr_id = pItem.from;
+    }
+    NSString *frndName = [[NSNumber numberWithLongLong:frnd_shr_id] stringValue];
+    FriendDetails *frndDetails = [frndDic objectForKey:frndName];
+    if (frndDetails != nil)
+    {
+        [pShrDelegate launchChat:frndDetails];
+    }
+}
 
 /*
 // Override to support conditional editing of the table view.
