@@ -63,6 +63,7 @@
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
     tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize- kbsize.height);
     pChatOutputView = [ChatViewController1 alloc];
+    pChatOutputView.to = to;
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
       pChatOutputView.tableView = pTVw;
     pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];
@@ -96,6 +97,7 @@
     
     tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize);
     pChatOutputView = [ChatViewController1 alloc];
+     pChatOutputView.to = to;
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     pChatOutputView.tableView = pTVw;
     pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];

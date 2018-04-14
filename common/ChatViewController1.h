@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <sharing/FriendDetails.h>
 
 @interface ChatViewController1 : UITableViewController
 {
@@ -22,6 +22,7 @@
     
 }
 
+@property (nonatomic, retain) FriendDetails *to;
 -(void) scrollToBottom;
 
 @end

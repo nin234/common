@@ -17,6 +17,7 @@
 
 @implementation ChatViewController1
 
+@synthesize to;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,7 +31,7 @@
         nRows = 0;
         ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
         //100 limit will be enough for now, biggest phone iPhoneX
-        chatItems = [pShrDelegate.dbIntf getChatItems:100];
+        chatItems = [pShrDelegate.dbIntf getChatItems:100 with:to];
         CGRect mainScrn= [[UIScreen mainScreen] bounds];
         int maxRows = 75;
         int maxCharsPerRow = 35;
@@ -153,6 +154,10 @@
 
 -(void) scrollToBottom
 {
+    if (nRows < 1)
+    {
+        return;
+    }
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:nRows-1];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }

@@ -9,6 +9,7 @@
 #import "ChatsViewController.h"
 #import "ChatsSharingDelegate.h"
 #import "sharing/SHKeychainItemWrapper.h"
+#import "ChatsHeader.h"
 
 @interface ChatsViewController ()
 
@@ -105,7 +106,12 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return 5;
+    return [chatHeaders count];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return 95.0;
 }
 
 
@@ -115,18 +121,55 @@
     // Configure the cell...
  static NSString *CellIdentifier = @"ChatsVwCell";
  
-   /*  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
- if (cell == nil)
- {
- cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
- }
-    */
-    
+  
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    else
+    {
+        NSArray *pVws = [cell.contentView subviews];
+        int cnt = (int)[pVws count];
+        for (NSUInteger i=0; i < cnt; ++i)
+        {
+            [[pVws objectAtIndex:i] removeFromSuperview];
+        }
+        cell.imageView.image = nil;
+        cell.textLabel.text = nil;
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        [cell setBackgroundColor:[UIColor clearColor]];
+    }
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+     CGRect mainScrn= [[UIScreen mainScreen] bounds];
+    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, mainScrn.size.width-15, 30)];
+    ChatsHeader *pItem = [chatHeaders objectAtIndex:indexPath.row];
+    long long frnd_shr_id =0;
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    if (pShrDelegate.pShrMgr.share_id == pItem.from)
+    {
+        frnd_shr_id = pItem.to;
+    }
+    else
+    {
+        frnd_shr_id = pItem.from;
+    }
+    NSString *frndName = [[NSNumber numberWithLongLong:frnd_shr_id] stringValue];
+    FriendDetails *frndDetails = [frndDic objectForKey:frndName];
+    if (frndDetails != nil)
+    {
+        [nameLabel setText:frndDetails.nickName];
+    }
+    else
+    {
+        [nameLabel setText:frndName];
+    }
+    
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, mainScrn.size.width-15, 55)];
+    [contentLabel setText:pItem.text];
+    [cell.contentView addSubview:nameLabel];
+    [cell.contentView addSubview:contentLabel];
+    
     return cell;
 }
 

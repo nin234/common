@@ -127,9 +127,12 @@
     NSLog(@"Launching ChatViewController");
     self.tabBarController.selectedIndex = 0;
     [self.tabBarController.tabBar setHidden:YES];
-    pChatVw = [[ChatMainViewController alloc] initWithNibName:nil bundle:nil];
+    pChatVw = [ChatMainViewController alloc];
     
     pChatVw.to = frnd;
+    
+     pChatVw = [pChatVw initWithNibName:nil bundle:nil];
+    
     [pChatsNavCntrl pushViewController:pChatVw animated:YES];
         
     

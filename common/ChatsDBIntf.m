@@ -69,7 +69,7 @@
     return true;
 }
 
--(NSArray *) getChatItems:(NSUInteger) limit
+-(NSArray *) getChatItems:(NSUInteger) limit with:(FriendDetails *) frnd
 {
     NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *descr = [NSEntityDescription entityForName:@"Chats" inManagedObjectContext:moc];
@@ -79,7 +79,8 @@
     NSSortDescriptor* rownoDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp"
                                                                     ascending:NO];
     [req setFetchLimit:limit];
-    
+    long long share_id = [frnd.name longLongValue];
+    [req setPredicate:[NSPredicate predicateWithFormat:@"from == %ld OR to == %ld", share_id, share_id]];
     NSArray *sortDescriptors = [NSArray arrayWithObjects: rownoDescriptor, nil];
     NSError *error = nil;
     return  [[moc executeFetchRequest:req error:&error]sortedArrayUsingDescriptors:sortDescriptors];
