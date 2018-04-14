@@ -28,10 +28,11 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.tableView.estimatedRowHeight = notesHeight;
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        //self.tableView.estimatedRowHeight = notesHeight;
+        //self.tableView.rowHeight = UITableViewAutomaticDimension;
         [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         [self.tableView setSeparatorColor:[UIColor clearColor]];
+        
         if (bShowKeyBoard)
         {
             self.tableView.scrollEnabled = NO;
@@ -76,7 +77,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    
-    return UITableViewAutomaticDimension;
+    return notesHeight + 20;
 }
 
 -(void) sendMsg
@@ -141,7 +142,7 @@
     // Configure the cell...
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
     CGRect  notesRect;
-    notesRect = CGRectMake(0, 0, mainScrn.size.width-30, notesHeight);
+    notesRect = CGRectMake(10, 0, mainScrn.size.width-40, notesHeight);
     notes = [[ChatInputTextView alloc] initWithFrame:notesRect];
     notes.scrollEnabled = YES;
     

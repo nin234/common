@@ -151,11 +151,17 @@
     return self;
 }
 
+-(void) scrollToBottom
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:nRows-1];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+}
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
      [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.tableView setSeparatorColor:[UIColor clearColor]];
+   
     NSLog(@"ChatViewController1 viewWillAppear");
 }
 
@@ -164,6 +170,7 @@
     NSLog(@"ChatViewController1 viewDidLoad");
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
      [self.tableView setSeparatorColor:[UIColor clearColor]];
+   
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     

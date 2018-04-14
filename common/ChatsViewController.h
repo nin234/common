@@ -17,6 +17,10 @@
 
 
 @interface ChatsViewController : UITableViewController
+{
+    NSArray *chatHeaders;
+    NSMutableDictionary *frndDic;
+}
 
 @property (nonatomic, weak) id<ChatsViewControllerDelegate> delegate;
 @end

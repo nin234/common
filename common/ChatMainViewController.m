@@ -69,6 +69,7 @@
     
   
     [self.view addSubview:pChatOutputView.tableView];
+    [pChatOutputView scrollToBottom];
     
     CGRect  inputViewRect;
     inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-inputTextViewSize-kbsize.height, mainScrn.size.width, inputTextViewSize+kbsize.height);
@@ -100,6 +101,7 @@
     pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];
    
     [self.view addSubview:pChatOutputView.tableView];
+    [pChatOutputView scrollToBottom];
     
     CGRect  inputViewRect;
     inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-inputTextViewSize, mainScrn.size.width, inputTextViewSize);

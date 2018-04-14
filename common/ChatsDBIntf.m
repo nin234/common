@@ -106,6 +106,22 @@
     return true;
 }
 
+-(NSArray *) getChatHeaders:(NSUInteger) limit
+{
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *descr = [NSEntityDescription entityForName:@"ChatsHeader" inManagedObjectContext:moc];
+    NSFetchRequest *req = [[NSFetchRequest alloc] init];
+    [req setEntity:descr];
+    //ascending:YES];
+    NSSortDescriptor* rownoDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp"
+                                                                    ascending:YES];
+    [req setFetchLimit:limit];
+    
+    NSArray *sortDescriptors = [NSArray arrayWithObjects: rownoDescriptor, nil];
+    NSError *error = nil;
+    return  [[moc executeFetchRequest:req error:&error]sortedArrayUsingDescriptors:sortDescriptors];
+}
+
 #pragma mark - Core Data stack
 
 - (NSManagedObjectContext *)managedObjectContext {

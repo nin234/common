@@ -7,6 +7,8 @@
 //
 
 #import "ChatsViewController.h"
+#import "ChatsSharingDelegate.h"
+#import "sharing/SHKeychainItemWrapper.h"
 
 @interface ChatsViewController ()
 
@@ -18,8 +20,43 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    
+    if (self)
+    {
+        ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+        //100 limit will be enough for now, biggest phone iPhoneX
+        chatHeaders = [pShrDelegate.dbIntf getChatHeaders:100];
+        [self populateContacts];
+    }
     return self;
+}
+-(void) populateContacts
+{
+    
+   SHKeychainItemWrapper * kchain = [[SHKeychainItemWrapper alloc] initWithIdentifier:@"SharingData" accessGroup:@"3JEQ693MKL.com.rekhaninan.frndlst"];
+    frndDic = [[NSMutableDictionary alloc] init];
+   NSString * friendList = [kchain objectForKey:(__bridge id)kSecAttrComment];
+    if (friendList != nil  && [friendList length] > 0)
+    {
+        NSLog(@"Friendlist %@", friendList);
+        NSArray *friends = [friendList componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";"]];
+        NSUInteger cnt = [friends count];
+        if(cnt >1)
+        {
+            for (NSUInteger i=1; i < cnt-1; ++i)
+            {
+                NSString *frndStr = [friends objectAtIndex:i];
+                if (frndStr != nil && [frndStr length] > 0)
+                {
+                    FriendDetails *frnd = [[FriendDetails alloc] initWithString:frndStr];
+                    [frndDic setObject:frnd forKey:frnd.name];
+                }
+                
+            }
+        }
+        
+    }
+    
+    return;
 }
 
 - (void)didReceiveMemoryWarning {
