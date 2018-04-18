@@ -19,6 +19,7 @@
 @synthesize pChatsNavCntrl;
 @synthesize controllersListView;
 @synthesize bInRedrawViews;
+@synthesize saveQ;
 
 
 -(instancetype) init
@@ -30,6 +31,8 @@
         me = nil;
         pChatVw = nil;
         bInRedrawViews = false;
+        saveQ = [[NSOperationQueue alloc] init];
+        NSLog (@"initialized saveQ %s %d \n", __FILE__, __LINE__);
         return self;
     }
     return  nil;
@@ -95,6 +98,26 @@
     shareStr = [shareStr stringByAppendingString:msg];
     [dbIntf insertTextMsg:to From:me Msg:msg];
     [pShrMgr shareItem:shareStr listName:me.name shrId:pShrMgr.share_id];
+    return true;
+}
+
+-(bool) sendPicture:(FriendDetails *) to Msg:(NSURL *)picurl
+{
+    NSString *shareStr = [[NSString alloc] init];
+    shareStr = [shareStr stringByAppendingString:to.name];
+    shareStr = [shareStr stringByAppendingString:@";"];
+    shareStr = [shareStr stringByAppendingString:@"photo_caption"];
+    [pShrMgr sharePicture:picurl metaStr:shareStr shrId:pShrMgr.share_id];
+    return true;
+}
+
+-(bool) sendMovie:(FriendDetails *) to Msg:(NSURL *)movurl
+{
+    NSString *shareStr = [[NSString alloc] init];
+    shareStr = [shareStr stringByAppendingString:to.name];
+    shareStr = [shareStr stringByAppendingString:@";"];
+    shareStr = [shareStr stringByAppendingString:@"movie_caption"];
+    [pShrMgr sharePicture:movurl  metaStr:shareStr shrId:pShrMgr.share_id];
     return true;
 }
 

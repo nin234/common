@@ -25,6 +25,7 @@
 		3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B1033B01E8752370021538A /* ComponentsViewController.m */; };
 		3B4E289020605F4B00968E0E /* ChatsDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B4E288F20605F4B00968E0E /* ChatsDecoder.m */; };
 		3B5581C8207C58E900F49188 /* ChatInputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5581C7207C58E900F49188 /* ChatInputTextView.m */; };
+		3B5581D12083EBFF00F49188 /* CameraControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5581D02083EBFE00F49188 /* CameraControl.m */; };
 		3B825ECC1ED305A70010339F /* LocalList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B825ECB1ED305A70010339F /* LocalList.m */; };
 		3BA108692066901300026680 /* ChatViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA108672066901300026680 /* ChatViewController1.m */; };
 		3BA1086D2068699400026680 /* ChatMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086B2068699400026680 /* ChatMainViewController.m */; };
@@ -133,6 +134,8 @@
 		3B4E288F20605F4B00968E0E /* ChatsDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatsDecoder.m; sourceTree = "<group>"; };
 		3B5581C6207C58E900F49188 /* ChatInputTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatInputTextView.h; sourceTree = "<group>"; };
 		3B5581C7207C58E900F49188 /* ChatInputTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatInputTextView.m; sourceTree = "<group>"; };
+		3B5581CF2083EBFE00F49188 /* CameraControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraControl.h; sourceTree = "<group>"; };
+		3B5581D02083EBFE00F49188 /* CameraControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraControl.m; sourceTree = "<group>"; };
 		3B825ECA1ED305A70010339F /* LocalList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalList.h; sourceTree = "<group>"; };
 		3B825ECB1ED305A70010339F /* LocalList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalList.m; sourceTree = "<group>"; };
 		3BA108662066901300026680 /* ChatViewController1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController1.h; sourceTree = "<group>"; };
@@ -291,6 +294,8 @@
 				DB00E5311C7D24C300E898F7 /* AddressAnnotation.h */,
 				DB00E5321C7D24C300E898F7 /* AddressAnnotation.m */,
 				DBD16AD21C8AF59100052A03 /* AddViewController.h */,
+				3B5581CF2083EBFE00F49188 /* CameraControl.h */,
+				3B5581D02083EBFE00F49188 /* CameraControl.m */,
 				DBD16AD41C8AF5B900052A03 /* AddViewController.m */,
 				DBD16AD31C8AF5A400052A03 /* AddViewController.xib */,
 				DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */,
@@ -524,6 +529,7 @@
 				3BDCB4F9204A2509005F8E0D /* ChatsDBIntf.m in Sources */,
 				DBD16A9E1C830F8E00052A03 /* PhotoDisplayViewController.m in Sources */,
 				3BDCB4F620498214005F8E0D /* ChatsViewController.m in Sources */,
+				3B5581D12083EBFF00F49188 /* CameraControl.m in Sources */,
 				3BDCB4FE204BF6C7005F8E0D /* SmartShareMgr.m in Sources */,
 				3BDCB4F420498214005F8E0D /* ChatsHeader.m in Sources */,
 				DB00E5621C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m in Sources */,

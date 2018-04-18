@@ -32,6 +32,8 @@
 -(void) startSmartMsgApp;
 -(void) showContactsSelectViewForNewChats;
 -(bool) sendMsg:(FriendDetails *) to Msg:(NSString *)msg;
+-(bool) sendPicture:(FriendDetails *) to Msg:(NSURL *)picurl;
+-(bool) sendMovie:(FriendDetails *) to Msg:(NSURL *)movurl;
 
 @property (nonatomic, retain) ChatsDBIntf *dbIntf;
 @property (nonatomic, retain)  UITabBarController  *tabBarController;
@@ -50,5 +52,6 @@
 -(void) showViewWithoutKeyBoard;
 -(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText;
 -(void) showTabBar;
+@property (strong, nonatomic) NSOperationQueue *saveQ;
 
 @end

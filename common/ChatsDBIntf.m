@@ -23,20 +23,20 @@
     return;
 }
 
--(bool) insertTextMsg:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSString *) msg
+-(bool) insertMsg:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSString *) msg msgTyp:(int) mtyp
 {
     NSManagedObjectModel *managedObjectModel =
     [[self.managedObjectContext persistentStoreCoordinator] managedObjectModel];
     NSDictionary *ent = [managedObjectModel entitiesByName];
-
+    
     NSEntityDescription *entity =
     [ent objectForKey:@"Chats"];
     Chats *newItem = [[Chats alloc]
-                     initWithEntity:entity insertIntoManagedObjectContext:self.managedObjectContext];
+                      initWithEntity:entity insertIntoManagedObjectContext:self.managedObjectContext];
     newItem.from = [from.name longLongValue];
     newItem.to = [to.name longLongValue];
     newItem.text = msg;
-    newItem.type = eMsgTypeText;
+    newItem.type = mtyp;
     struct timeval now;
     gettimeofday(&now, NULL);
     newItem.timestamp = now.tv_sec;
@@ -59,7 +59,7 @@
     }
     
     ChatsHeader *newHeaderItem = [[ChatsHeader alloc]
-                      initWithEntity:chatsHeaderEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                                  initWithEntity:chatsHeaderEntity insertIntoManagedObjectContext:self.managedObjectContext];
     newHeaderItem.from = [from.name longLongValue];
     newHeaderItem.to = [to.name longLongValue];
     newHeaderItem.text = msg;
@@ -67,6 +67,11 @@
     newHeaderItem.timestamp = now.tv_sec;
     [self saveContext];
     return true;
+}
+
+-(bool) insertTextMsg:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSString *) msg
+{
+    return  [self insertMsg:to From:from Msg:msg msgTyp:eMsgTypeText];
 }
 
 -(NSArray *) getChatItems:(NSUInteger) limit with:(FriendDetails *) frnd

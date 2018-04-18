@@ -23,6 +23,12 @@
 @synthesize notesHeight;
 @synthesize initialText;
 
+-(void) saveQAdd:(NSInvocationOperation*) theOp
+{
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    [pShrDelegate.saveQ addOperation:theOp];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -32,7 +38,8 @@
         //self.tableView.rowHeight = UITableViewAutomaticDimension;
         [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         [self.tableView setSeparatorColor:[UIColor clearColor]];
-        
+        pCameraCntrl = [[CameraControl alloc] init];
+        pCameraCntrl.delegate = self;
         if (bShowKeyBoard)
         {
             self.tableView.scrollEnabled = NO;
@@ -87,6 +94,12 @@
     [pShrDelegate sendMsg:to Msg:notes.text];
 }
 
+-(void) showCamera
+{
+    NSLog(@"Showing camera");
+    [pCameraCntrl showCamera:self];
+    
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -100,6 +113,21 @@
     [v setBackgroundColor:[UIColor clearColor]];
     return v;
 }
+
+-(void) imageFurtherAction:(NSURL *) imgUrl thumbUrl:(NSURL *) turl
+{
+    NSLog (@"Sending picture %@", imgUrl);
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    [pShrDelegate sendPicture:to Msg:imgUrl];
+}
+
+-(void) movieFurtherAction:(NSURL *) movUrl thumbUrl:(NSURL *) turl
+{
+    NSLog (@"Sending movie %@", movUrl);
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    [pShrDelegate sendMovie:to Msg:movUrl];
+}
+
 
 - (void)textViewDidChange:(UITextView *)textView
 {
@@ -142,7 +170,24 @@
     // Configure the cell...
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
     CGRect  notesRect;
-    notesRect = CGRectMake(10, 0, mainScrn.size.width-40, notesHeight);
+    CGFloat notesX = 10.0;
+    if (!bShowKeyBoard)
+    {
+        
+        
+        CGRect buttonRect;
+        buttonRect = CGRectMake(notesX, 0, notesHeight, notesHeight);
+        UIButton *button = [[UIButton alloc] initWithFrame:buttonRect];
+        [button setBackgroundImage:[[UIImage imageNamed:@"camera.png"]
+                                    stretchableImageWithLeftCapWidth:0.0f
+                                    topCapHeight:0.0f]
+                          forState:UIControlStateNormal];
+        
+        [button addTarget:self action:@selector(showCamera) forControlEvents:UIControlEventTouchDown];
+        [cell.contentView addSubview:button];
+        notesX += notesHeight + 10;
+    }
+    notesRect = CGRectMake(notesX, 0, mainScrn.size.width-30- notesX, notesHeight);
     notes = [[ChatInputTextView alloc] initWithFrame:notesRect];
     notes.scrollEnabled = YES;
     
@@ -172,6 +217,7 @@
         [notes becomeFirstResponder];
         NSLog (@"Keyboard becomes first responder");
     }
+    
     ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
     [pShrDelegate   setBInRedrawViews:false];
     return cell;

@@ -27,6 +27,8 @@ enum eMsgType
 
 -(bool) chatExists:(FriendDetails *) contact;
 -(bool) insertTextMsg:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSString *) msg;
+-(bool) insertPicture:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSURL *) picurl;
+-(bool) insertVideo:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSURL *) movurl;
 -(NSArray *) getChatItems:(NSUInteger) limit with:(FriendDetails *) frnd;
 -(NSArray *) getChatHeaders:(NSUInteger) limit;
 
