@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <sharing/FriendDetails.h>
+#import "AlbumContentsTableViewCell.h"
+#import "PhotoDisplayViewController.h"
 
-@interface ChatViewController1 : UITableViewController
+@interface ChatViewController1 : UITableViewController<AlbumContentsTableViewCellSelectionDelegate, PhotoDisplayViewControllerDelegate>
 {
     int nRows;
     NSArray *chatItems;
@@ -24,5 +26,9 @@
 
 @property (nonatomic, retain) FriendDetails *to;
 -(void) scrollToBottom;
+//MARK: Properties
+
+@property (nonatomic, assign) IBOutlet AlbumContentsTableViewCell *tmpCell;
+-(void) deletedPhotoAtIndx:(NSUInteger)nIndx;
 
 @end

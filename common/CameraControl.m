@@ -462,7 +462,22 @@
 
 -(void) photosDone
 {
+    if (bInPicCapture)
+    {
+        
+        [imagePickerController stopVideoCapture];
+        NSLog(@"Stopping video capture\n");
+        pBarItem.enabled = YES;
+        bInPicCapture = false;
+        pBarItem.tintColor =  [UIColor blueColor];
+        bSaveLastPic = true;
+        return;
+    }
     
+    
+    [imagePickerController dismissViewControllerAnimated:NO completion:nil];
+    [delegate reloadViews];
+    bInShowCam = false;
 }
 
 @end

@@ -146,6 +146,13 @@
     
 }
 
+-(void) reloadViews
+{
+    ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
+    NSLog(@"redrawViews with text=%@", notes.text);
+    [pShrDelegate    redrawViews:notes.frame.size.height text:notes.text];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     

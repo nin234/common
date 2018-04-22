@@ -49,6 +49,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 #import <UIKit/UIKit.h>
 
 #import "AlbumContentsTableViewCell.h"
+#import "PhotoDisplayViewController.h"
 
 #define   PHOTOREQSOURCE_FB_1 1
 
@@ -63,14 +64,13 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 @end
 
-@interface AlbumContentsViewController : UITableViewController <AlbumContentsTableViewCellSelectionDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate> {
+@interface AlbumContentsViewController : UITableViewController <AlbumContentsTableViewCellSelectionDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate, PhotoDisplayViewControllerDelegate> {
 //    ALAssetsGroup *assetsGroup;
 //    NSMutableArray *assets;
  //   IBOutlet AlbumContentsTableViewCell *tmpCell;
     NSUInteger lastSelectedRow;
     NSMetadataQuery *query;
     bool bIniCloud;
-
 }
 
 -(void) deletedPhotoAtIndx : (NSUInteger) nIndx;
@@ -86,10 +86,10 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *street;
 @property bool delphoto;
-@property bool gotqueryres;
 @property bool reload;
 @property bool processQuery;
 @property bool emailphoto;
+@property bool smartMsgApp;
 @property int photoreqsource;
 @property (nonatomic, retain) NSMutableArray *photoSel;
 @property (nonatomic, retain) NSMutableArray *attchments;

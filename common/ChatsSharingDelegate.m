@@ -107,6 +107,7 @@
     shareStr = [shareStr stringByAppendingString:to.name];
     shareStr = [shareStr stringByAppendingString:@";"];
     shareStr = [shareStr stringByAppendingString:@"photo_caption"];
+    [dbIntf insertPicture:to From:me Msg:picurl];
     [pShrMgr sharePicture:picurl metaStr:shareStr shrId:pShrMgr.share_id];
     return true;
 }
@@ -117,6 +118,7 @@
     shareStr = [shareStr stringByAppendingString:to.name];
     shareStr = [shareStr stringByAppendingString:@";"];
     shareStr = [shareStr stringByAppendingString:@"movie_caption"];
+    [dbIntf insertVideo:to From:me Msg:movurl];
     [pShrMgr sharePicture:movurl  metaStr:shareStr shrId:pShrMgr.share_id];
     return true;
 }

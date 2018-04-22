@@ -50,7 +50,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 #include <sys/stat.h>
 #include <unistd.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "AlbumContentsViewController.h"
+
 
 #define ZOOM_VIEW_TAG 100
 #define ZOOM_STEP 1.5
@@ -70,15 +70,16 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @synthesize bPhoto;
 @synthesize delphoto;
 @synthesize delconfirm;
-@synthesize pAlbmVw;
 @synthesize subject;
 @synthesize pAlName;
 @synthesize pFlMgr;
 @synthesize navViewController;
+@synthesize delegate;
+@synthesize thumbnails;
 
 - (void)loadView
 {
-    CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
+    CGRect fullScreenRect=[[UIScreen mainScreen] bounds];
     SlideScrollView * scrollView=[[SlideScrollView alloc] initWithFrame:fullScreenRect];
     scrollView.contentSize=CGSizeMake(fullScreenRect.size.width,fullScreenRect.size.height);
     
@@ -90,6 +91,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     
     NSLog(@"View loaded\n");
 }
+
 - (void)viewDidLoad
 {
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(photoAction) ];
@@ -108,7 +110,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     [imageScrollView setScrollEnabled:NO];
 
   //  ALAssetRepresentation *assetRepresentation = [asset defaultRepresentation];
-    NSString *pFlName = [[pAlbmVw.thumbnails objectAtIndex:currIndx] stringValue];
+    NSString *pFlName = [[thumbnails objectAtIndex:currIndx] stringValue];
     NSString *pFlImgName = [pFlName stringByAppendingString:@".MOV"];
     NSString *pFlMp4ImgName = [pFlName stringByAppendingString:@".mp4"];
     pFlName = [pFlName stringByAppendingString:@".jpg"];
@@ -236,7 +238,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     if (pMovP != nil)
         [pMovP pause];
     
-    NSString *pFlName = [[pAlbmVw.thumbnails objectAtIndex:currIndx] stringValue];
+    NSString *pFlName = [[thumbnails objectAtIndex:currIndx] stringValue];
     NSString *pFlImgName = [pFlName stringByAppendingString:@".MOV"];
     NSString *pFlMp4ImgName = [pFlName stringByAppendingString:@".mp4"];
     pFlName = [pFlName stringByAppendingString:@".jpg"];
@@ -431,7 +433,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
                 NSLog(@"Failed to remove item at URL %@ reason %@\n", thumburl, err);
             
             delconfirm = false;
-            [pAlbmVw deletedPhotoAtIndx:currIndx];
+            [delegate deletedPhotoAtIndx:currIndx];
               [navViewController popViewControllerAnimated:YES];
             /*
             [pDlg.navViewController popViewControllerAnimated:YES];
@@ -506,14 +508,9 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
         //return;
     }
     
-    if (pAlbmVw.gotqueryres == true)
-    {
-        pAlbmVw.reload = true;
-        [pAlbmVw.tableView reloadData];
-        pAlbmVw.reload = false;
-    }
+   
 
-    if (currIndx < (pAlbmVw.nPicCnt -1))
+    if (currIndx < ([thumbnails count] -1))
     {
         ++currIndx;   
         printf("Curr Index %lu\n", (unsigned long)currIndx);
@@ -536,12 +533,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
         [pMovP stop];
     }
     
-    if (pAlbmVw.gotqueryres == true)
-    {
-        pAlbmVw.reload = true;
-        [pAlbmVw.tableView reloadData];
-        pAlbmVw.reload = false;
-    }
+    
     
     if (currIndx)
     {
@@ -645,12 +637,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 }
 - (void)tapDetectingImageView:(TapDetectingImageView *)view gotSwipe:(BOOL)left
 {
-    if (pAlbmVw.gotqueryres == true)
-    {
-        pAlbmVw.reload = true;
-        [pAlbmVw.tableView reloadData];
-        pAlbmVw.reload = false;
-    }
+   
 
     if (!left)
     {
@@ -670,7 +657,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     {
         printf("Show the right picture\n");
          printf("Curr Index %lu\n", (unsigned long)currIndx);
-        if (currIndx < (pAlbmVw.nPicCnt -1))
+        if (currIndx < ([thumbnails count] -1))
         {
             ++currIndx;   
             printf("Curr Index %lu\n", (unsigned long)currIndx);
@@ -716,9 +703,6 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
    // [super viewWillDisappear:YES];
     if (pMovP != nil)
         [pMovP pause];
-    pAlbmVw.reload = true;
-    if (pAlbmVw.gotqueryres == true)
-        [pAlbmVw.tableView reloadData];
    
 }
 

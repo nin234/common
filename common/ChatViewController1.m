@@ -9,6 +9,7 @@
 #import "ChatViewController1.h"
 #import "ChatsSharingDelegate.h"
 #import "Chats.h"
+#import "AlbumContentsTableViewCell.h"
 
 
 @interface ChatViewController1 ()
@@ -18,6 +19,7 @@
 @implementation ChatViewController1
 
 @synthesize to;
+@synthesize tmpCell;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -189,7 +191,10 @@
 }
 
 
-
+-(void) deletedPhotoAtIndx:(NSUInteger)nIndx
+{
+    
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -201,6 +206,46 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
     return 1;
+}
+
+- (void)albumContentsTableViewCell:(AlbumContentsTableViewCell *)cell selectedPhotoAtIndex:(NSUInteger)index
+{
+    PhotoDisplayViewController *photoViewController = [PhotoDisplayViewController alloc];
+    
+    NSUInteger arryIndx = cell.rowNumber + index;
+    
+    
+    photoViewController = [photoViewController initWithNibName:nil bundle:nil];
+    NSInteger i=arryIndx;
+    for (; i >=0; --i)
+    {
+        Chats *pChatItem = [chatItems objectAtIndex:i];
+        if (pChatItem.type != eMsgTypePicture || pChatItem.type != eMsgTypeVideo)
+            break;
+    }
+    NSUInteger startIndx = ++i;
+    NSMutableArray *thumbnails = [[NSMutableArray alloc] init];
+    for (NSUInteger j=startIndx; j < [chatItems count]; ++j)
+    {
+        Chats *pChatItem = [chatItems objectAtIndex:j];
+        if (pChatItem.type != eMsgTypePicture || pChatItem.type != eMsgTypeVideo)
+            break;
+        NSString *pImgFlName = [pChatItem.text lastPathComponent];
+        [thumbnails addObject:[pImgFlName stringByDeletingPathExtension]];
+    }
+    [photoViewController setCurrIndx:arryIndx-startIndx];
+    [photoViewController setDelphoto:true];
+    [photoViewController setDelegate:self];
+    [photoViewController setThumbnails:thumbnails];
+    [photoViewController setSubject:@"Pictures"];
+    [photoViewController setNavViewController:[self navigationController]];
+    NSString *pHdir = NSHomeDirectory();
+    NSString *pImgs = @"/Documents/images";
+    NSString *pImgsDir = [pHdir stringByAppendingString:pImgs];
+    [photoViewController setPAlName:pImgsDir];
+    [photoViewController setPFlMgr:[[NSFileManager alloc] init] ];
+    [[self navigationController] pushViewController:photoViewController animated:YES];
+    
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -224,7 +269,9 @@
             }
            
         }
-            break;
+        break;
+            
+            
       
         default:
             break;
@@ -246,6 +293,61 @@
     UIView *v = [UIView new];
     [v setBackgroundColor:[UIColor clearColor]];
     return v;
+}
+
+-(AlbumContentsTableViewCell  *) cellForThumbNails:(NSUInteger) row
+{
+    static NSString *CellIdentifier = @"ChatVwImgsCell";
+    
+    AlbumContentsTableViewCell *cell = (AlbumContentsTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        [[NSBundle bundleForClass:[AlbumContentsTableViewCell class]] loadNibNamed:@"AlbumContentsTableViewCell" owner:self options:nil];
+        cell = tmpCell;
+        tmpCell = nil;
+    }
+    cell.selectionDelegate = self;
+    NSNumber *arryIndexNum = [rowIndexes objectAtIndex:row];
+    NSUInteger arryIndx = [arryIndexNum unsignedIntegerValue];
+    cell.rowNumber = arryIndx;
+    for (NSUInteger i=0; i < 4; ++i)
+    {
+        if (arryIndx + i >= [chatItems count])
+        {
+            break;
+        }
+        Chats *pChatItem = [chatItems objectAtIndex:arryIndx+i];
+        if (pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture)
+        {
+            NSURL *pImgUrl = [NSURL URLWithString:pChatItem.text];
+            NSURL *pImgDirUrl = [pImgUrl URLByDeletingLastPathComponent];
+            NSString *pImgFile = [pImgUrl lastPathComponent];
+            NSURL *pThumbNailUrl = [pImgDirUrl URLByAppendingPathComponent:@"thumbnails" isDirectory:YES];
+            pThumbNailUrl = [pThumbNailUrl URLByAppendingPathComponent:pImgFile isDirectory:NO];
+            UIImage *thumbnail = [UIImage imageWithData:[NSData dataWithContentsOfURL:pThumbNailUrl]];
+            switch (i) {
+                case 0:
+                    [cell photo1].image = thumbnail;
+                break;
+                case 1:
+                    [cell photo2].image = thumbnail;
+                break;
+                case 2:
+                    [cell photo3].image = thumbnail;
+                break;
+                case 3:
+                    [cell photo4].image = thumbnail;
+                break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    return cell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -305,7 +407,7 @@
         case eMsgTypePicture:
         case eMsgTypeVideo:
         {
-            
+            return [self cellForThumbNails:indexPath.section];
         }
             break;
             

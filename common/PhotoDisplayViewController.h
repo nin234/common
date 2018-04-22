@@ -53,7 +53,13 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVAudioSession.h>
 #import <MessageUI/MFMailComposeViewController.h>
-#import "AlbumContentsViewController.h"
+
+
+@protocol PhotoDisplayViewControllerDelegate <NSObject>
+
+-(void) deletedPhotoAtIndx : (NSUInteger) nIndx;
+
+@end
 
 @interface PhotoDisplayViewController : UIViewController<UIScrollViewDelegate, TapDetectingImageViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate> {
   //  ALAsset *asset;
@@ -71,7 +77,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @property  (nonatomic, retain) MPMoviePlayerController *pMovP;
 @property (nonatomic, retain) AVAudioSession *audio;
 @property (nonatomic, retain) NSURL *currURL;
-@property (nonatomic, retain) AlbumContentsViewController *pAlbmVw;
+@property (nonatomic, retain) NSArray *thumbnails;
 
 @property (nonatomic, retain) NSString *pAlName;
 @property (nonatomic, retain) NSFileManager *pFlMgr;
@@ -85,5 +91,6 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 -(void) changePhoto;
 -(void) photoAction;
 -(void) popView;
+@property(nonatomic, weak) id<PhotoDisplayViewControllerDelegate> delegate;
 
 @end

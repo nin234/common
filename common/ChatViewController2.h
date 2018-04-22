@@ -24,6 +24,6 @@
 -(void) saveQAdd:(NSInvocationOperation*) theOp;
 -(void) imageFurtherAction:(NSURL *) imgUrl thumbUrl:(NSURL *) turl;
 -(void) movieFurtherAction:(NSURL *) movUrl thumbUrl:(NSURL *) turl;
-
+-(void) reloadViews;
 
 @end

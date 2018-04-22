@@ -64,7 +64,6 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @synthesize delphoto;
 @synthesize title;
 @synthesize tnailsquery;
-@synthesize gotqueryres;
 @synthesize reload;
 @synthesize processQuery;
 @synthesize emailphoto;
@@ -78,6 +77,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @synthesize pFlMgr;
 @synthesize navViewController;
 @synthesize delegate;
+@synthesize smartMsgApp;
 
 
 - (void)awakeFromNib {
@@ -166,7 +166,6 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
         NSString *pAlMoc = pAlName;
         printf("In AlbumContentsViewController Selected album name %s\n", [pAlMoc UTF8String]);
         nPicCnt = 0;
-        gotqueryres = false;
         reload = true;
         processQuery = true;
         
@@ -182,16 +181,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 {
     [super viewWillAppear:animated];
     NSLog(@"DisplayViewController will appear\n");
-    if (query != nil)
-    {
-        
-        if ([query isStopped])
-        {
-            NSLog(@"Start query in AlbumContentsViewController\n");
-            [query startQuery];
-            processQuery = true;
-        }
-    }
+    
 
 }
 
@@ -293,12 +283,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if(gotqueryres && reload)
-    {
-        thumbnails = [NSArray arrayWithArray:tnailsquery];
-        nPicCnt = [thumbnails count];
-        gotqueryres = false;
-    }
+    
     NSLog(@"No of rows in AlbumContentsViewController %f\n",ceil((float)nPicCnt/4));
   return ceil((float)nPicCnt/4); // there are four photos per row.
 }
@@ -579,7 +564,8 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
    // [photoViewController setAsset:[assets objectAtIndex:nAsstIndx]];
     [photoViewController setCurrIndx:nAsstIndx];
     [photoViewController setDelphoto:delphoto];
-    [photoViewController setPAlbmVw:self];
+    [photoViewController setDelegate:self];
+    [photoViewController setThumbnails:thumbnails];
     [photoViewController setSubject:title];
     [photoViewController setNavViewController:navViewController];
     [photoViewController setPAlName:pAlName];
