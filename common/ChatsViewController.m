@@ -221,6 +221,7 @@
     {
         frnd_shr_id = pItem.from;
     }
+    NSLog(@"Selected chats row=%ld from=%lld to=%lld", (long)indexPath.row, pItem.from, pItem.to);
     NSString *frndName = [[NSNumber numberWithLongLong:frnd_shr_id] stringValue];
     FriendDetails *frndDetails = [frndDic objectForKey:frndName];
     if (frndDetails != nil)

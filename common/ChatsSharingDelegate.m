@@ -110,6 +110,11 @@
 
 -(bool) sendPicture:(FriendDetails *) to Msg:(NSURL *)picurl
 {
+    if (![self fillMeDetailsifRequd])
+    {
+        NSLog(@"Cannot get my details sendPicture failed");
+        return false;
+    }
     NSString *shareStr = [[NSString alloc] init];
     shareStr = [shareStr stringByAppendingString:to.name];
     shareStr = [shareStr stringByAppendingString:@";"];
@@ -121,6 +126,11 @@
 
 -(bool) sendMovie:(FriendDetails *) to Msg:(NSURL *)movurl
 {
+    if (![self fillMeDetailsifRequd])
+    {
+        NSLog(@"Cannot get my details sendMovie failed");
+        return false;
+    }
     NSString *shareStr = [[NSString alloc] init];
     shareStr = [shareStr stringByAppendingString:to.name];
     shareStr = [shareStr stringByAppendingString:@";"];
