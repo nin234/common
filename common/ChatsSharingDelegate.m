@@ -8,6 +8,7 @@
 
 #import "ChatsSharingDelegate.h"
 #import "ChatViewController.h"
+#import "AVFoundation/AVAssetImageGenerator.h"
 
 @implementation ChatsSharingDelegate
 
@@ -20,6 +21,8 @@
 @synthesize controllersListView;
 @synthesize bInRedrawViews;
 @synthesize saveQ;
+@synthesize bRedrawViewsOnPhotoDelete;
+@synthesize pFlMgr;
 
 
 -(instancetype) init
@@ -31,7 +34,9 @@
         me = nil;
         pChatVw = nil;
         bInRedrawViews = false;
+        bRedrawViewsOnPhotoDelete = false;
         saveQ = [[NSOperationQueue alloc] init];
+        pFlMgr = [[NSFileManager alloc] init];
         NSLog (@"initialized saveQ %s %d \n", __FILE__, __LINE__);
         return self;
     }
@@ -84,6 +89,7 @@
     return true;
 }
 
+
 -(bool) sendMsg:(FriendDetails *) to Msg:(NSString *)msg
 {
     if (![self fillMeDetailsifRequd])
@@ -98,6 +104,7 @@
     shareStr = [shareStr stringByAppendingString:msg];
     [dbIntf insertTextMsg:to From:me Msg:msg];
     [pShrMgr shareItem:shareStr listName:me.name shrId:pShrMgr.share_id];
+    [pChatVw setViewWithKeyBoard:pChatVw.defaultNotesHeight text:nil];
     return true;
 }
 
@@ -145,8 +152,6 @@
         NSLog(@"Error frnd is nil , Cannot launch chat");
         return;
     }
-    UICollectionViewFlowLayout* flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
    
     //launch ChatViewController with chat history
     NSLog(@"Launching ChatViewController");
@@ -209,6 +214,7 @@
 -(void) initSmartMsgApp
 {
     pShrMgr = [[SmartShareMgr alloc] init];
+    pShrMgr.shrMgrDelegate = self;
     pShrMgr.pNtwIntf.connectAddr = @"smartmsg.ddns.net";
     pShrMgr.pNtwIntf.connectPort = @"16792";
     
@@ -220,16 +226,109 @@
     [pShrMgr start];
 }
 
+-(void) storeThumbNailImage:(NSURL *)picUrl
+{
+    UIImage  *fullScreenImage ;
+    NSString *pFlName = [picUrl lastPathComponent];
+    if ([pFlName hasSuffix:@".mp4"] || [pFlName hasSuffix:@".MOV"] )
+    {
+        AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:[AVAsset assetWithURL:picUrl]];
+        CMTime thumbTime = CMTimeMakeWithSeconds(0.0, 600);
+        NSError *error = nil;
+        CMTime actualTime;
+        
+        CGImageRef startImage = [generator copyCGImageAtTime:thumbTime actualTime:&actualTime error:&error];
+        fullScreenImage = [UIImage imageWithCGImage:startImage];
+    }
+    else
+    {
+        fullScreenImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl] scale:1.0];
+    }
+    
+    CGSize oImgSize;
+    oImgSize.height = 71;
+    oImgSize.width = 71;
+    UIGraphicsBeginImageContext(oImgSize);
+    [fullScreenImage drawInRect:CGRectMake(0, 0, oImgSize.width, oImgSize.height)];
+    UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    //  CGImageRef thumbnailImageRef = MyCreateThumbnailImageFromData (data, 5);
+    // UIImage *thumbnail = [UIImage imageWithCGImage:thumbnailImageRef];
+    CGSize pImgSiz = [thumbnail size];
+    NSLog(@"Added thumbnail Image height = %f width=%f \n", pImgSiz.height, pImgSiz.width);
+    
+    NSData *thumbnaildata = UIImageJPEGRepresentation(thumbnail, 0.3);
+    
+    // [pAlName stringByAppendingString:@"/thumbnails/"];
+    NSURL *albumurl = [picUrl URLByDeletingLastPathComponent];
+    albumurl = [albumurl URLByAppendingPathComponent:@"thumbnails" isDirectory:YES];
+    // NSURL  *albumurl = pDlg.pThumbNailsDir;
+    NSError *err;
+    
+    if ([pFlName hasSuffix:@".mp4"])
+    {
+        pFlName = [pFlName stringByReplacingOccurrencesOfString:@"mp4" withString:@"jpg"];
+        
+    }
+    else if ([pFlName hasSuffix:@".MOV"])
+    {
+        pFlName = [pFlName stringByReplacingOccurrencesOfString:@"MOV" withString:@"jpg"];
+    }
+    
+    NSURL *pFlUrl;
+    if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
+    {
+        
+        pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
+    }
+    
+    if ([thumbnaildata writeToURL:pFlUrl atomically:YES] == NO)
+    {
+        NSLog (@"Failed to write to thumbnail file  %@\n",  pFlUrl);
+        return;
+        // --nAlNo;
+        
+    }
+    else
+    {
+        NSLog(@"Save thumbnail file %@\n", pFlUrl);
+    }
+    NSArray *pathComponents = [picUrl pathComponents];
+    NSUInteger cnt = [pathComponents count];
+    NSString *pShareIdStr = [pathComponents objectAtIndex:cnt-3];
+    FriendDetails *from = [[FriendDetails alloc] init];
+    from.name = pShareIdStr;
+    [dbIntf insertPicture:me From:from Msg:picUrl];
+    return;
+}
 
 -(NSURL *) getPicUrl:(long long ) shareId picName:(NSString *) name itemName:(NSString *) iName
 {
-    return nil;
+    NSString *pShareIdDir = [[NSNumber numberWithLongLong:shareId] stringValue];
+    NSString *pHdir = NSHomeDirectory();
+    NSString *pImgs = @"/Documents/";
+    NSString *pImgsDir = [pHdir stringByAppendingString:pImgs];
+    pImgsDir = [pImgsDir stringByAppendingString:pShareIdDir];
+    pImgsDir = [pImgsDir stringByAppendingString:@"/images"];
+    NSURL *pImgsURL = [NSURL fileURLWithPath:pImgsDir isDirectory:YES];
+    NSString   *pThumbNailsDir = [pImgsDir stringByAppendingString:@"/thumbnails"];
+    NSURL *pThumbNailsUrl = [NSURL fileURLWithPath:pThumbNailsDir isDirectory:YES];
+    NSURL *pFlUrl;
+    NSError *err;
+    if (pThumbNailsUrl != nil && [pThumbNailsUrl checkResourceIsReachableAndReturnError:&err])
+    {
+        
+        pFlUrl = [pImgsURL URLByAppendingPathComponent:name isDirectory:NO];
+    }
+    else
+    {
+        [pFlMgr createDirectoryAtURL:pThumbNailsUrl withIntermediateDirectories:YES attributes:nil error:nil];
+        pFlUrl = [pImgsURL URLByAppendingPathComponent:name isDirectory:NO];
+    }
+    
+    return pFlUrl;
 }
 
--(void) storeThumbNailImage:(NSURL *)picUrl
-{
-    
-}
 
 -(void) setShareId : (long long) shareId
 {

@@ -23,10 +23,12 @@
 @property (nonatomic, retain) ChatViewController2 *pChatInputView;
 @property (nonatomic) bool bViewWithKeyBoard;
 @property CGFloat notesHeight;
+@property double defaultNotesHeight;
 
 
 -(void) gotMsgNow:(NSString *)msg;
 -(void) showViewWithoutKeyBoard;
 -(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText;
+-(void) setViewWithKeyBoard: (CGFloat) inputTextViewSize text:(NSString *) notesTxt;
 
 @end

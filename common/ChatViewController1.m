@@ -33,7 +33,7 @@
         nRows = 0;
         ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
         //100 limit will be enough for now, biggest phone iPhoneX
-        chatItems = [pShrDelegate.dbIntf getChatItems:100 with:to];
+        chatItems = [pShrDelegate.dbIntf getChatItems:500 with:to];
         CGRect mainScrn= [[UIScreen mainScreen] bounds];
         int maxRows = 75;
         int maxCharsPerRow = 35;
@@ -193,7 +193,7 @@
 
 -(void) deletedPhotoAtIndx:(NSUInteger)nIndx
 {
-    
+    [ChatsSharingDelegate  sharedInstance].bRedrawViewsOnPhotoDelete = true;
 }
 #pragma mark - Table view data source
 
@@ -210,12 +210,12 @@
 
 - (void)albumContentsTableViewCell:(AlbumContentsTableViewCell *)cell selectedPhotoAtIndex:(NSUInteger)index
 {
-    PhotoDisplayViewController *photoViewController = [PhotoDisplayViewController alloc];
+    
     
     NSUInteger arryIndx = cell.rowNumber + index;
     
+    NSString *pImgsDir = nil;
     
-    photoViewController = [photoViewController initWithNibName:nil bundle:nil];
     NSInteger i=arryIndx;
     for (; i >=0; --i)
     {
@@ -232,18 +232,26 @@
             break;
         NSString *pImgFlName = [pChatItem.text lastPathComponent];
         [thumbnails addObject:[pImgFlName stringByDeletingPathExtension]];
+        if (pImgsDir == nil)
+        {
+            pImgsDir = [pChatItem.text stringByDeletingLastPathComponent];
+        }
     }
+    if (pImgsDir == nil)
+    {
+        NSLog(@"Invalid picture selected at index %ld", index);
+        return;
+    }
+    PhotoDisplayViewController *photoViewController = [PhotoDisplayViewController alloc];
+    photoViewController = [photoViewController initWithNibName:nil bundle:nil];
     [photoViewController setCurrIndx:arryIndx-startIndx];
     [photoViewController setDelphoto:true];
     [photoViewController setDelegate:self];
     [photoViewController setThumbnails:thumbnails];
     [photoViewController setSubject:@"Pictures"];
     [photoViewController setNavViewController:[self navigationController]];
-    NSString *pHdir = NSHomeDirectory();
-    NSString *pImgs = @"/Documents/images";
-    NSString *pImgsDir = [pHdir stringByAppendingString:pImgs];
     [photoViewController setPAlName:pImgsDir];
-    [photoViewController setPFlMgr:[[NSFileManager alloc] init] ];
+    [photoViewController setPFlMgr:[ChatsSharingDelegate  sharedInstance].pFlMgr];
     [[self navigationController] pushViewController:photoViewController animated:YES];
     
 }
@@ -318,12 +326,21 @@
         Chats *pChatItem = [chatItems objectAtIndex:arryIndx+i];
         if (pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture)
         {
-            NSURL *pImgUrl = [NSURL URLWithString:pChatItem.text];
-            NSURL *pImgDirUrl = [pImgUrl URLByDeletingLastPathComponent];
-            NSString *pImgFile = [pImgUrl lastPathComponent];
-            NSURL *pThumbNailUrl = [pImgDirUrl URLByAppendingPathComponent:@"thumbnails" isDirectory:YES];
-            pThumbNailUrl = [pThumbNailUrl URLByAppendingPathComponent:pImgFile isDirectory:NO];
+            NSString *pHdir = NSHomeDirectory();
+            NSString *pThumbNails = @"/Documents/images/thumbnails/";
+            NSString *pThumbNailsDir = [pHdir stringByAppendingString:pThumbNails];
+            NSString *pThumbNailsFile = [pThumbNailsDir stringByAppendingString:pChatItem.text];
+            NSURL *pThumbNailUrl = [NSURL fileURLWithPath:pThumbNailsFile];
             UIImage *thumbnail = [UIImage imageWithData:[NSData dataWithContentsOfURL:pThumbNailUrl]];
+             NSLog(@"Displaying thumbnail url=%@",  pThumbNailUrl);
+            if ([[[ChatsSharingDelegate sharedInstance] pFlMgr] fileExistsAtPath:[pThumbNailUrl path]])
+            {
+                NSLog(@"File exists at thumbnail path url=%@", pThumbNailUrl);
+            }
+            else
+            {
+                NSLog(@"File does not exist at thumbnail path %@", pThumbNailUrl);
+            }
             switch (i) {
                 case 0:
                     [cell photo1].image = thumbnail;
@@ -403,14 +420,14 @@
            // [cell.contentView addSubview:pLabel];
         }
         break;
-            
+       
         case eMsgTypePicture:
         case eMsgTypeVideo:
         {
             return [self cellForThumbNails:indexPath.section];
         }
             break;
-            
+           
         default:
             break;
     }

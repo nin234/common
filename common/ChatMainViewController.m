@@ -21,6 +21,7 @@
 @synthesize pChatInputView;
 @synthesize bViewWithKeyBoard;
 @synthesize notesHeight;
+@synthesize defaultNotesHeight;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -28,8 +29,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        defaultNotesHeight = 45.0;
         bViewWithKeyBoard = false;
-        notesHeight = 45.0;
+        notesHeight = defaultNotesHeight;
         kbsize.height = 0.0;
         kbsize.width = 0.0;
         maxTextHeight = 0.0;
@@ -55,6 +57,23 @@
     
 }
 
+-(void) viewWillAppear:(BOOL)animated
+{
+    if ([ChatsSharingDelegate sharedInstance].bRedrawViewsOnPhotoDelete)
+    {
+        NSString *notesTxt = pChatInputView.notes.text;
+        bViewWithKeyBoard = false;
+        NSArray *pVws = [self.view subviews];
+        for (NSUInteger i = 0; i < [pVws count]; ++i)
+        {
+            [[pVws objectAtIndex:i] removeFromSuperview];
+        }
+        NSLog(@"Show view with out keyboard textViewSize=,%f", notesHeight);
+        [ChatsSharingDelegate sharedInstance].bRedrawViewsOnPhotoDelete = false;
+        [self setViewWithoutKeyBoard:notesHeight text:notesTxt];
+    }
+}
+
 -(void) setViewWithKeyBoard: (CGFloat) inputTextViewSize text:(NSString *) notesTxt
 {
     
@@ -77,7 +96,10 @@
     pChatInputView = [ChatViewController2 alloc];
     pChatInputView.notesHeight = inputTextViewSize - 15;
     pChatInputView.bShowKeyBoard = true;
-    pChatInputView.initialText = notesTxt;
+    if (notesTxt != nil)
+    {
+        pChatInputView.initialText = notesTxt;
+    }
     pChatInputView.to = to;
     UITableView *pInputTblVw = [[UITableView alloc] initWithFrame:inputViewRect style:UITableViewStylePlain];
       pChatInputView.tableView = pInputTblVw;

@@ -235,12 +235,13 @@
     NSString *pFlPath = [pImgsDir stringByAppendingString:@"/"];
     pFlPath = [pFlPath stringByAppendingString:pFlName];
     NSData *data = UIImageJPEGRepresentation(image, 1.0);
-    NSURL *imgurl = [NSURL URLWithString:pFlPath];
+    NSURL *imgurl = [NSURL fileURLWithPath:pFlPath];
+    
     if ([data writeToURL:imgurl atomically:YES] == NO)
     {
-        printf("Failed to write to file %ld\n", filno);
+        NSLog(@"Failed to write to file %@\n", imgurl);
         // --nAlNo;
-        
+        return;
     }
     else
     {
@@ -261,19 +262,21 @@
     NSData *thumbnaildata = UIImageJPEGRepresentation(thumbnail, 0.3);
     NSString *pTmpNlFlPath = [pThumbNailsDir stringByAppendingString:@"/"];
     pTmpNlFlPath = [pTmpNlFlPath stringByAppendingString:pFlName];
-    NSURL *thumburl = [NSURL URLWithString:pTmpNlFlPath];
+    NSURL *thumburl = [NSURL fileURLWithPath:pTmpNlFlPath];
     if ([thumbnaildata writeToURL:thumburl atomically:YES] == NO)
     {
         printf("Failed to write to thumbnail file %ld\n", filno);
-        // --nAlNo;
+        return;
         
     }
     else
     {
         NSLog(@"Save thumbnail file %ld in album %s file %@\n", filno, [pThumbNailsDir UTF8String], thumburl);
     }
+    dispatch_sync(dispatch_get_main_queue(), ^{
+       [delegate imageFurtherAction:imgurl thumbUrl:thumburl];
+    });
     
-    [delegate imageFurtherAction:imgurl thumbUrl:thumburl];
 }
 
 -(void) saveMovie:(NSURL *)movie
@@ -288,7 +291,7 @@
     NSString *pFlPath = [pImgsDir stringByAppendingString:@"/"];
     
     pFlPath = [pFlPath stringByAppendingString:pFlName];
-    NSURL *movurl = [NSURL URLWithString:pFlPath];
+    NSURL *movurl = [NSURL fileURLWithPath:pFlPath];
     NSData *data = [NSData dataWithContentsOfURL:movie];
     if ([data writeToURL:movurl atomically:YES] == NO)
     {
@@ -332,7 +335,7 @@
     NSData *thumbnaildata = UIImageJPEGRepresentation(thumbnail, 0.3);
     NSString *pTmpNlFlPath = [pThumbNailsDir stringByAppendingString:@"/"];
     pTmpNlFlPath = [pTmpNlFlPath stringByAppendingString:pImgFlName];
-    NSURL *thumburl = [NSURL URLWithString:pTmpNlFlPath];
+    NSURL *thumburl = [NSURL fileURLWithPath:pTmpNlFlPath];
     // [tnailurls addObject:thumburl];
     // [movurls addObject:movurl];
     /*
@@ -348,13 +351,19 @@
     {
         NSLog(@"Failed to write to thumbnail file %ld thumburl %@\n", filno, thumburl);
         // --nAlNo;
+        return;
         
     }
     else
     {
         NSLog(@"Save thumbnail file %ld in album %s file %@\n", filno, [pThumbNailsDir UTF8String], thumburl);
     }
-    [delegate movieFurtherAction:movurl thumbUrl:thumburl];
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [delegate movieFurtherAction:movurl thumbUrl:thumburl];
+        
+    });
+    
     return;
 }
 

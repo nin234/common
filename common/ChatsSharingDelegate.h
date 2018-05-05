@@ -43,6 +43,8 @@
 @property  (nonatomic, retain) ChatsViewController *pChatsVwCntrl;
 @property  (nonatomic, retain) UINavigationController *pChatsNavCntrl;
 @property (nonatomic) bool bInRedrawViews;
+@property bool bRedrawViewsOnPhotoDelete;
+@property (nonatomic, retain) NSFileManager *pFlMgr;
 
 -(void) processItems;
 -(void) getItems;
@@ -53,5 +55,7 @@
 -(void) redrawViews:(CGFloat) inputTextViewHeight text:(NSString *) notesText;
 -(void) showTabBar;
 @property (strong, nonatomic) NSOperationQueue *saveQ;
+
+
 
 @end

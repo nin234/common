@@ -76,11 +76,11 @@
 
 -(bool) insertPicture:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSURL *) picurl
 {
-  return [self insertMsg:to From:from Msg:[picurl absoluteString] msgTyp:eMsgTypePicture];
+  return [self insertMsg:to From:from Msg:[picurl lastPathComponent] msgTyp:eMsgTypePicture];
 }
 -(bool) insertVideo:(FriendDetails *) to From:(FriendDetails *)from Msg:(NSURL *) movurl
 {
-    return [self insertMsg:to From:from Msg:[movurl absoluteString] msgTyp:eMsgTypeVideo];
+    return [self insertMsg:to From:from Msg:[movurl lastPathComponent] msgTyp:eMsgTypeVideo];
 }
 
 -(NSArray *) getChatItems:(NSUInteger) limit with:(FriendDetails *) frnd
