@@ -168,12 +168,44 @@
     }
     [nameLabel setFont:[UIFont boldSystemFontOfSize:20]];
     
-    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, mainScrn.size.width-15, 55)];
-    [contentLabel setText:pItem.text];
+    
+    
     [cell.contentView addSubview:nameLabel];
-    [cell.contentView addSubview:contentLabel];
+    [cell.contentView addSubview:[self getContentLabel:pItem]];
     
     return cell;
+}
+
+-(UILabel *) getContentLabel:(ChatsHeader *) pItem
+{
+    CGRect mainScrn= [[UIScreen mainScreen] bounds];
+    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, mainScrn.size.width-15, 55)];
+    NSMutableAttributedString *nonTextStr;
+    if (pItem.type == eMsgTypeText)
+    {
+        [contentLabel setText:pItem.text];
+        return contentLabel;
+    }
+    else if (pItem.type == eMsgTypePicture)
+    {
+        attachment.image = [UIImage imageNamed:@"camera1.png"];
+        
+        NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
+        nonTextStr= [[NSMutableAttributedString alloc] initWithAttributedString:attachmentString];
+        [nonTextStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"    photo"]];
+        
+        
+    }
+    else if (pItem.type == eMsgTypeVideo)
+    {
+        attachment.image = [UIImage imageNamed:@"video.png"];
+        NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
+        nonTextStr= [[NSMutableAttributedString alloc] initWithAttributedString:attachmentString];
+        [nonTextStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"    video"]];
+    }
+    contentLabel.attributedText = nonTextStr;
+    return contentLabel;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -193,6 +225,8 @@
     FriendDetails *frndDetails = [frndDic objectForKey:frndName];
     if (frndDetails != nil)
     {
+        NSLog(@"Launching chat for row=%ld", (long)indexPath.row);
+        
         [pShrDelegate launchChat:frndDetails];
     }
 }

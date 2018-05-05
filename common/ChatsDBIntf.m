@@ -46,7 +46,7 @@
     [req setEntity:chatsHeaderEntity];
     long long fromShareId = [from.name longLongValue];
     long long toShareId = [to.name longLongValue];
-    [req setPredicate:[NSPredicate predicateWithFormat:@"from == %ld AND to == %ld", fromShareId, toShareId]];
+    [req setPredicate:[NSPredicate predicateWithFormat:@"(from == %ld AND to == %ld) OR (from == %ld AND to == %ld)", fromShareId, toShareId, toShareId, fromShareId]];
     NSError *error = nil;
     NSArray *chatsHeaders = [self.managedObjectContext executeFetchRequest:req error:&error];
     if (chatsHeaders != nil && [chatsHeaders count] > 0)
@@ -63,7 +63,7 @@
     newHeaderItem.from = [from.name longLongValue];
     newHeaderItem.to = [to.name longLongValue];
     newHeaderItem.text = msg;
-    newHeaderItem.type = eMsgTypeText;
+    newHeaderItem.type = mtyp;
     newHeaderItem.timestamp = now.tv_sec;
     [self saveContext];
     return true;
