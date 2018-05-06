@@ -44,7 +44,7 @@
         {
             self.tableView.scrollEnabled = NO;
         }
-        
+        self.tableView.allowsSelection = NO;
     }
     
     
