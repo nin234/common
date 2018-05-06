@@ -46,6 +46,8 @@
 @property bool bRedrawViewsOnPhotoDelete;
 @property (nonatomic, retain) NSFileManager *pFlMgr;
 
+@property bool bRedrawChatsVwCntrl;
+
 -(void) processItems;
 -(void) getItems;
 -(bool) insertTextMsg:(FriendDetails *) from Msg:(NSString *) msg;

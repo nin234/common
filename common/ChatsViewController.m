@@ -87,6 +87,12 @@
         self.navigationItem.rightBarButtonItem = pBarItem1;
     ChatsSharingDelegate *pShrDelegate = [ChatsSharingDelegate sharedInstance];
     [pShrDelegate showTabBar];
+    if (pShrDelegate.bRedrawChatsVwCntrl)
+    {
+        pShrDelegate.bRedrawChatsVwCntrl = false;
+        chatHeaders = [pShrDelegate.dbIntf getChatHeaders:100];
+        [self.tableView reloadData];
+    }
     
 }
 

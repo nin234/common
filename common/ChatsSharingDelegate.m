@@ -23,6 +23,7 @@
 @synthesize saveQ;
 @synthesize bRedrawViewsOnPhotoDelete;
 @synthesize pFlMgr;
+@synthesize bRedrawChatsVwCntrl;
 
 
 -(instancetype) init
@@ -37,6 +38,7 @@
         bRedrawViewsOnPhotoDelete = false;
         saveQ = [[NSOperationQueue alloc] init];
         pFlMgr = [[NSFileManager alloc] init];
+        bRedrawChatsVwCntrl = false;
         NSLog (@"initialized saveQ %s %d \n", __FILE__, __LINE__);
         return self;
     }
@@ -56,6 +58,7 @@
 
 -(bool) fillMeDetailsifRequd
 {
+    bRedrawChatsVwCntrl = true;
     if (me == nil)
     {
         if (pShrMgr.share_id)
