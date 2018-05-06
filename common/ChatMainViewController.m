@@ -80,7 +80,8 @@
     bViewWithKeyBoard = true;
     CGRect tableRect;
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
-    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize- kbsize.height);
+    double statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height+statusBarHeight, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize- kbsize.height-statusBarHeight);
     pChatOutputView = [ChatViewController1 alloc];
     pChatOutputView.to = to;
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
@@ -92,7 +93,7 @@
     [pChatOutputView scrollToBottom];
     
     CGRect  inputViewRect;
-    inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-inputTextViewSize-kbsize.height, mainScrn.size.width, inputTextViewSize+kbsize.height);
+    inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-inputTextViewSize-kbsize.height-statusBarHeight/2, mainScrn.size.width, inputTextViewSize+kbsize.height);
     pChatInputView = [ChatViewController2 alloc];
     pChatInputView.notesHeight = inputTextViewSize - 15;
     pChatInputView.bShowKeyBoard = true;
@@ -116,8 +117,10 @@
     CGRect mainScrn= [[UIScreen mainScreen] bounds];
     
     CGRect tableRect;
-    
-    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize);
+    double statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    double chat1Height = mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize-statusBarHeight;
+    NSLog(@"statusBarHeight=%lf chat1Height=%lf", statusBarHeight, chat1Height);
+    tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + statusBarHeight, mainScrn.size.width, chat1Height);
     pChatOutputView = [ChatViewController1 alloc];
      pChatOutputView.to = to;
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
@@ -128,7 +131,9 @@
     [pChatOutputView scrollToBottom];
     
     CGRect  inputViewRect;
-    inputViewRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height-inputTextViewSize, mainScrn.size.width, inputTextViewSize);
+    double y =mainScrn.origin.y + mainScrn.size.height-inputTextViewSize-statusBarHeight/2;
+    NSLog(@"inputTextViewSize=%lf y=%lf", inputTextViewSize, y);
+    inputViewRect = CGRectMake(0, y, mainScrn.size.width, inputTextViewSize);
     pChatInputView = [ChatViewController2 alloc];
     pChatInputView.bShowKeyBoard = false;
     pChatInputView.notesHeight = inputTextViewSize - 15;

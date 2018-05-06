@@ -210,7 +210,7 @@
     NSLog (@"Notes initialized screen bounds height=%f width=%lf", mainScrn.size.height, mainScrn.size.width);
     [cell.contentView addSubview:notes];
     CGRect buttonRect;
-    buttonRect = CGRectMake(mainScrn.size.width-25, 0, 20, 20);
+    buttonRect = CGRectMake(mainScrn.size.width-25, 0, 25, 30);
     UIButton *button = [[UIButton alloc] initWithFrame:buttonRect];
     [button setBackgroundImage:[[UIImage imageNamed:@"ic_share_48pt.png"]
                                 stretchableImageWithLeftCapWidth:0.0f
