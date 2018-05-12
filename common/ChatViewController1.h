@@ -11,6 +11,9 @@
 #import "AlbumContentsTableViewCell.h"
 #import "PhotoDisplayViewController.h"
 
+#define PHOTOCELL_HEIGHT 70.0
+#define TEXTCELL_HEIGHT_PER_ROW 30.0
+
 @interface ChatViewController1 : UITableViewController<AlbumContentsTableViewCellSelectionDelegate, PhotoDisplayViewControllerDelegate>
 {
     int nRows;
@@ -21,7 +24,9 @@
     CGFloat toLeftInset;
     CGFloat toRightInset;
     CGFloat preferredMaxWidth;
-    
+    NSArray *rowHeights;
+    NSInteger lastPicIndx;
+    NSMutableDictionary *photoIndexToChatItem;
 }
 
 @property (nonatomic, retain) FriendDetails *to;

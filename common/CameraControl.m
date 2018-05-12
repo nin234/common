@@ -485,7 +485,7 @@
     
     
     [imagePickerController dismissViewControllerAnimated:NO completion:nil];
-    [delegate reloadViews];
+   // [delegate reloadViews];
     bInShowCam = false;
 }
 

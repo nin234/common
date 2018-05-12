@@ -27,7 +27,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        
+        lastPicIndx = -1;
+        photoIndexToChatItem = [[NSMutableDictionary alloc] init];
         [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         [self.tableView setSeparatorColor:[UIColor clearColor]];
         nRows = 0;
@@ -88,10 +89,13 @@
             preferredMaxWidth = 307;
         }
         
+        
+        
         int picCnt =0;
         int nImaginaryRows = 0;
         NSUInteger arryIndex = 0;
         NSMutableArray *rowIndexesTmp = [[NSMutableArray alloc] init];
+         NSMutableArray *rowHeightsTmp = [[NSMutableArray alloc] init];
         for (Chats *pChat in chatItems)
         {
             
@@ -110,6 +114,7 @@
                         index = NSMaxRange([pChat.text lineRangeForRange:NSMakeRange(index, 0)]);
                     nImaginaryRows += numberOfLines;
                     [rowIndexesTmp addObject:[NSNumber numberWithUnsignedInteger:arryIndex]];
+                    [rowHeightsTmp addObject:[NSNumber numberWithFloat:numberOfLines*TEXTCELL_HEIGHT_PER_ROW]]; 
                      nRows += 1;
                     picCnt =0;
                 }
@@ -124,6 +129,8 @@
                         nRows += 1;
                         nImaginaryRows += 3;
                         [rowIndexesTmp addObject:[NSNumber numberWithUnsignedInteger:arryIndex]];
+                        [rowHeightsTmp addObject:[NSNumber numberWithFloat:PHOTOCELL_HEIGHT]];
+                        NSLog(@"Adding picture at arryIndex=%lu", (unsigned long)arryIndex);
                     }
                     ++picCnt;
                     if (picCnt >= 4)
@@ -145,6 +152,8 @@
             }
             ++arryIndex;
         }
+        NSLog(@"Array index END=%lu", (unsigned long)arryIndex);
+        rowHeights = [[rowHeightsTmp reverseObjectEnumerator] allObjects];
         rowIndexes = [[rowIndexesTmp reverseObjectEnumerator] allObjects];
         NSLog(@"Initialized rowIndexes array size=%ld", (unsigned long)[rowIndexes count]);
         //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -212,47 +221,68 @@
 {
     
     
-    NSUInteger arryIndx = cell.rowNumber + index;
+    NSUInteger photoIndx = cell.rowNumber + index;
     
     NSString *pImgsDir = nil;
     
-    NSInteger i=arryIndx;
+    NSNumber *chatIndx = [photoIndexToChatItem objectForKey:[NSNumber numberWithUnsignedInteger:photoIndx]];
+    NSInteger i=[chatIndx integerValue];
+    NSUInteger arryIndx = i;
+    Chats *pChatItem = [chatItems objectAtIndex:i];
+    long long from = pChatItem.from;
     for (; i >=0; --i)
     {
         Chats *pChatItem = [chatItems objectAtIndex:i];
-        if (pChatItem.type != eMsgTypePicture || pChatItem.type != eMsgTypeVideo)
+        if ((pChatItem.type != eMsgTypePicture && pChatItem.type != eMsgTypeVideo) || pChatItem.from != from)
             break;
     }
     NSUInteger startIndx = ++i;
-    NSMutableArray *thumbnails = [[NSMutableArray alloc] init];
+    NSMutableArray *thumbnailsTmp = [[NSMutableArray alloc] init];
     for (NSUInteger j=startIndx; j < [chatItems count]; ++j)
     {
         Chats *pChatItem = [chatItems objectAtIndex:j];
-        if (pChatItem.type != eMsgTypePicture || pChatItem.type != eMsgTypeVideo)
+        if ((pChatItem.type != eMsgTypePicture && pChatItem.type != eMsgTypeVideo) || pChatItem.from != from)
             break;
-        NSString *pImgFlName = [pChatItem.text lastPathComponent];
-        [thumbnails addObject:[pImgFlName stringByDeletingPathExtension]];
+        NSString *pImgFlName = pChatItem.text;
+        [thumbnailsTmp addObject:[pImgFlName stringByDeletingPathExtension]];
         if (pImgsDir == nil)
         {
-            pImgsDir = [pChatItem.text stringByDeletingLastPathComponent];
+            NSString *pHdir = NSHomeDirectory();
+            NSString *pImgsDirSfx = @"/Documents/images/";
+            if (pChatItem.from != [ChatsSharingDelegate  sharedInstance].pShrMgr.share_id)
+            {
+                pImgsDirSfx = @"/Documents/";
+                pImgsDirSfx = [pImgsDirSfx stringByAppendingString:[[NSNumber numberWithLongLong:pChatItem.from] stringValue]];
+                pImgsDirSfx = [pImgsDirSfx stringByAppendingString:@"/images/"];
+                
+            }
+            pImgsDir = [pHdir stringByAppendingString:pImgsDirSfx];
         }
     }
     if (pImgsDir == nil)
     {
-        NSLog(@"Invalid picture selected at index %ld", index);
+        NSLog(@"Invalid picture selected at index %lu", (unsigned long)index);
         return;
     }
+    
+     NSArray *thumbnails = [[thumbnailsTmp reverseObjectEnumerator] allObjects];
+    
+    NSUInteger revIndx =arryIndx-startIndx;
+    NSUInteger indxCnt = [thumbnails count] - 1;
+    NSUInteger currIndx = indxCnt - revIndx;
+    NSLog(@"Selected photo at index=%lu currIndx=%lu indxCnt=%lu revIndx=%lu arryIndx=%lu startIndx=%lu", (unsigned long)index, (unsigned long)currIndx, (unsigned long)indxCnt,(unsigned long)revIndx,(unsigned long)arryIndx,(unsigned long)startIndx);
     PhotoDisplayViewController *photoViewController = [PhotoDisplayViewController alloc];
     photoViewController = [photoViewController initWithNibName:nil bundle:nil];
-    [photoViewController setCurrIndx:arryIndx-startIndx];
+    [photoViewController setCurrIndx:currIndx];
     [photoViewController setDelphoto:true];
     [photoViewController setDelegate:self];
     [photoViewController setThumbnails:thumbnails];
     [photoViewController setSubject:@"Pictures"];
     [photoViewController setNavViewController:[self navigationController]];
-    [photoViewController setPAlName:pImgsDir];
+    [photoViewController setPAlName:[[NSURL fileURLWithPath:pImgsDir] absoluteString]];
     [photoViewController setPFlMgr:[ChatsSharingDelegate  sharedInstance].pFlMgr];
-    [[self navigationController] pushViewController:photoViewController animated:YES];
+    [[ChatsSharingDelegate sharedInstance].pChatsNavCntrl pushViewController:photoViewController animated:YES];
+    
     
 }
 
@@ -303,6 +333,14 @@
     return v;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+   CGFloat height = [[rowHeights objectAtIndex:indexPath.section] floatValue];
+    NSLog(@"height=%lf for row=%ld is ",  height, (long)indexPath.section);
+    return height;
+}
+ 
+
 -(AlbumContentsTableViewCell  *) cellForThumbNails:(NSUInteger) row
 {
     static NSString *CellIdentifier = @"ChatVwImgsCell";
@@ -316,32 +354,64 @@
     cell.selectionDelegate = self;
     NSNumber *arryIndexNum = [rowIndexes objectAtIndex:row];
     NSUInteger arryIndx = [arryIndexNum unsignedIntegerValue];
+    NSLog(@"Picture arryIndx = %lu row = %lu", (unsigned long) arryIndx, (unsigned long)row);
     cell.rowNumber = arryIndx;
+    int noPics = 0;
+    NSUInteger startIndx = arryIndx;
     for (NSUInteger i=0; i < 4; ++i)
     {
-        if (arryIndx + i >= [chatItems count])
+        if (arryIndx + i >= [chatItems count] || arryIndx + i >= lastPicIndx)
         {
             break;
         }
         Chats *pChatItem = [chatItems objectAtIndex:arryIndx+i];
         if (pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture)
         {
+            ++noPics;
+            startIndx = arryIndx + i;
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    NSInteger indx = startIndx;
+    for (NSUInteger i=0; i < 4; ++i)
+    {
+        if (indx >= [chatItems count] || indx < 0 )
+        {
+            break;
+        }
+        Chats *pChatItem = [chatItems objectAtIndex:indx];
+        if (pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture)
+        {
+            lastPicIndx = indx;
             NSString *pHdir = NSHomeDirectory();
             NSString *pThumbNails = @"/Documents/images/thumbnails/";
+            NSNumber *chatIndxNum = [NSNumber numberWithInteger:indx];
+            NSNumber  *photoIndxNum = [NSNumber numberWithUnsignedInteger:cell.rowNumber +i];
+            [photoIndexToChatItem setObject:chatIndxNum forKey:photoIndxNum];
+            
+            if (pChatItem.from != [ChatsSharingDelegate  sharedInstance].pShrMgr.share_id)
+            {
+                pThumbNails = @"/Documents/";
+                pThumbNails = [pThumbNails stringByAppendingString:[[NSNumber numberWithLongLong:pChatItem.from] stringValue]];
+                pThumbNails = [pThumbNails stringByAppendingString:@"/images/thumbnails"];
+            }
             NSString *pThumbNailsDir = [pHdir stringByAppendingString:pThumbNails];
-            NSString *pThumbNailsFile = [pThumbNailsDir stringByAppendingString:pChatItem.text];
+            NSString *pThumbNailFileName = [pChatItem.text stringByDeletingPathExtension];
+            pThumbNailFileName = [pThumbNailFileName stringByAppendingPathExtension:@"jpg"];
+            NSString *pThumbNailsFile = [pThumbNailsDir stringByAppendingString:pThumbNailFileName];
             NSURL *pThumbNailUrl = [NSURL fileURLWithPath:pThumbNailsFile];
             UIImage *thumbnail = [UIImage imageWithData:[NSData dataWithContentsOfURL:pThumbNailUrl]];
              NSLog(@"Displaying thumbnail url=%@",  pThumbNailUrl);
-            if ([[[ChatsSharingDelegate sharedInstance] pFlMgr] fileExistsAtPath:[pThumbNailUrl path]])
+            if (![[[ChatsSharingDelegate sharedInstance] pFlMgr] fileExistsAtPath:[pThumbNailUrl path]])
             {
-                NSLog(@"File exists at thumbnail path url=%@", pThumbNailUrl);
+                NSLog(@"File does not exist at thumbnail path url=%@", pThumbNailUrl);
             }
-            else
-            {
-                NSLog(@"File does not exist at thumbnail path %@", pThumbNailUrl);
-            }
-            switch (i) {
+            
+            switch ( i) {
                 case 0:
                     [cell photo1].image = thumbnail;
                 break;
@@ -362,6 +432,7 @@
         {
             break;
         }
+        --indx;
     }
     
     return cell;

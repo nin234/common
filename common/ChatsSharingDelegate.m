@@ -24,6 +24,7 @@
 @synthesize bRedrawViewsOnPhotoDelete;
 @synthesize pFlMgr;
 @synthesize bRedrawChatsVwCntrl;
+@synthesize pChatVw;
 
 
 -(instancetype) init

@@ -18,7 +18,7 @@
 @interface ChatsSharingDelegate : NSObject<ContactsViewControllerDelegate, ShareMgrDelegate, UITabBarControllerDelegate, ChatsViewControllerDelegate>
 {
     FriendDetails *me;
-    ChatMainViewController *pChatVw;
+   
     
 }
 
@@ -45,7 +45,7 @@
 @property (nonatomic) bool bInRedrawViews;
 @property bool bRedrawViewsOnPhotoDelete;
 @property (nonatomic, retain) NSFileManager *pFlMgr;
-
+@property  (nonatomic, retain)  ChatMainViewController *pChatVw;
 @property bool bRedrawChatsVwCntrl;
 
 -(void) processItems;

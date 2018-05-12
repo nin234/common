@@ -97,7 +97,7 @@
 -(void) showCamera
 {
     NSLog(@"Showing camera");
-    [pCameraCntrl showCamera:self];
+    [pCameraCntrl showCamera:[ChatsSharingDelegate sharedInstance].pChatVw];
     
 }
 

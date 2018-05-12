@@ -191,6 +191,7 @@
     if (pItem.type == eMsgTypeText)
     {
         [contentLabel setText:pItem.text];
+        NSLog(@"getContentLabel msg=%@ to=%lld from=%lld", pItem.text, pItem.to, pItem.from);
         return contentLabel;
     }
     else if (pItem.type == eMsgTypePicture)
