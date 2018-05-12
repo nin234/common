@@ -221,7 +221,7 @@
 {
     
     
-    NSUInteger photoIndx = cell.rowNumber + index;
+    NSUInteger photoIndx = cell.rowNumber*4 + index;
     
     NSString *pImgsDir = nil;
     
@@ -270,7 +270,7 @@
     NSUInteger revIndx =arryIndx-startIndx;
     NSUInteger indxCnt = [thumbnails count] - 1;
     NSUInteger currIndx = indxCnt - revIndx;
-    NSLog(@"Selected photo at index=%lu currIndx=%lu indxCnt=%lu revIndx=%lu arryIndx=%lu startIndx=%lu", (unsigned long)index, (unsigned long)currIndx, (unsigned long)indxCnt,(unsigned long)revIndx,(unsigned long)arryIndx,(unsigned long)startIndx);
+    NSLog(@"Selected photo at index=%lu currIndx=%lu indxCnt=%lu revIndx=%lu arryIndx=%lu startIndx=%lu photoIndx=%lu", (unsigned long)index, (unsigned long)currIndx, (unsigned long)indxCnt,(unsigned long)revIndx,(unsigned long)arryIndx,(unsigned long)startIndx, (unsigned long)photoIndx);
     PhotoDisplayViewController *photoViewController = [PhotoDisplayViewController alloc];
     photoViewController = [photoViewController initWithNibName:nil bundle:nil];
     [photoViewController setCurrIndx:currIndx];
@@ -355,7 +355,7 @@
     NSNumber *arryIndexNum = [rowIndexes objectAtIndex:row];
     NSUInteger arryIndx = [arryIndexNum unsignedIntegerValue];
     NSLog(@"Picture arryIndx = %lu row = %lu", (unsigned long) arryIndx, (unsigned long)row);
-    cell.rowNumber = arryIndx;
+    cell.rowNumber = row;
     int noPics = 0;
     NSUInteger startIndx = arryIndx;
     for (NSUInteger i=0; i < 4; ++i)
@@ -390,8 +390,9 @@
             NSString *pHdir = NSHomeDirectory();
             NSString *pThumbNails = @"/Documents/images/thumbnails/";
             NSNumber *chatIndxNum = [NSNumber numberWithInteger:indx];
-            NSNumber  *photoIndxNum = [NSNumber numberWithUnsignedInteger:cell.rowNumber +i];
+            NSNumber  *photoIndxNum = [NSNumber numberWithUnsignedInteger:cell.rowNumber*4 +i];
             [photoIndexToChatItem setObject:chatIndxNum forKey:photoIndxNum];
+            
             
             if (pChatItem.from != [ChatsSharingDelegate  sharedInstance].pShrMgr.share_id)
             {
@@ -405,7 +406,7 @@
             NSString *pThumbNailsFile = [pThumbNailsDir stringByAppendingString:pThumbNailFileName];
             NSURL *pThumbNailUrl = [NSURL fileURLWithPath:pThumbNailsFile];
             UIImage *thumbnail = [UIImage imageWithData:[NSData dataWithContentsOfURL:pThumbNailUrl]];
-             NSLog(@"Displaying thumbnail url=%@",  pThumbNailUrl);
+             NSLog(@"Displaying thumbnail url=%@ chatIndxNum=%@ photoIndxNum=%@",  pThumbNailUrl, chatIndxNum, photoIndxNum);
             if (![[[ChatsSharingDelegate sharedInstance] pFlMgr] fileExistsAtPath:[pThumbNailUrl path]])
             {
                 NSLog(@"File does not exist at thumbnail path url=%@", pThumbNailUrl);
