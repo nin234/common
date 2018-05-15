@@ -96,6 +96,7 @@
         NSUInteger arryIndex = 0;
         NSMutableArray *rowIndexesTmp = [[NSMutableArray alloc] init];
          NSMutableArray *rowHeightsTmp = [[NSMutableArray alloc] init];
+        long long prevShareId = 0;
         for (Chats *pChat in chatItems)
         {
             
@@ -131,12 +132,21 @@
                         [rowIndexesTmp addObject:[NSNumber numberWithUnsignedInteger:arryIndex]];
                         [rowHeightsTmp addObject:[NSNumber numberWithFloat:PHOTOCELL_HEIGHT]];
                         NSLog(@"Adding picture at arryIndex=%lu", (unsigned long)arryIndex);
+                        prevShareId = pChat.from;
                     }
-                    ++picCnt;
-                    if (picCnt >= 4)
+                    if (prevShareId == pChat.from)
                     {
-                        picCnt =0;
+                        ++picCnt;
+                        if (picCnt >= 4)
+                        {
+                            picCnt =0;
+                        }
                     }
+                    else
+                    {
+                        picCnt = 0;
+                    }
+                        
                 }
                     break;
                     
@@ -244,7 +254,7 @@
         if ((pChatItem.type != eMsgTypePicture && pChatItem.type != eMsgTypeVideo) || pChatItem.from != from)
             break;
         NSString *pImgFlName = pChatItem.text;
-        [thumbnailsTmp addObject:[pImgFlName stringByDeletingPathExtension]];
+        [thumbnailsTmp addObject:[NSNumber numberWithInt:[[pImgFlName stringByDeletingPathExtension] intValue]]];
         if (pImgsDir == nil)
         {
             NSString *pHdir = NSHomeDirectory();
@@ -344,16 +354,36 @@
 -(AlbumContentsTableViewCell  *) cellForThumbNails:(NSUInteger) row
 {
     static NSString *CellIdentifier = @"ChatVwImgsCell";
-    
+    NSNumber *arryIndexNum = [rowIndexes objectAtIndex:row];
+    NSUInteger arryIndx = [arryIndexNum unsignedIntegerValue];
+    Chats *pItem = [chatItems objectAtIndex:arryIndx];
+    bool bRightAligned = false;
+    if (pItem.from == [ChatsSharingDelegate  sharedInstance].pShrMgr.share_id)
+    {
+        bRightAligned = true;
+    }
     AlbumContentsTableViewCell *cell = (AlbumContentsTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        [[NSBundle bundleForClass:[AlbumContentsTableViewCell class]] loadNibNamed:@"AlbumContentsTableViewCell" owner:self options:nil];
+        
+        CGRect mainScrn= [[UIScreen mainScreen] bounds];
+        
+        if (mainScrn.size.width == 375 && bRightAligned)
+        {
+         [[NSBundle bundleForClass:[AlbumContentsTableViewCell class]] loadNibNamed:@"AlbumContentsTableViewCellR" owner:self options:nil];
+        }
+        else if (mainScrn.size.width == 414 && bRightAligned)
+        {
+            [[NSBundle bundleForClass:[AlbumContentsTableViewCell class]] loadNibNamed:@"AlbumContentsTableViewCellR2" owner:self options:nil];
+        }
+        else
+        {
+            [[NSBundle bundleForClass:[AlbumContentsTableViewCell class]] loadNibNamed:@"AlbumContentsTableViewCell" owner:self options:nil];
+        }
         cell = tmpCell;
         tmpCell = nil;
     }
     cell.selectionDelegate = self;
-    NSNumber *arryIndexNum = [rowIndexes objectAtIndex:row];
-    NSUInteger arryIndx = [arryIndexNum unsignedIntegerValue];
+    
     NSLog(@"Picture arryIndx = %lu row = %lu", (unsigned long) arryIndx, (unsigned long)row);
     cell.rowNumber = row;
     int noPics = 0;
@@ -365,7 +395,7 @@
             break;
         }
         Chats *pChatItem = [chatItems objectAtIndex:arryIndx+i];
-        if (pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture)
+        if ((pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture) && pItem.from == pChatItem.from)
         {
             ++noPics;
             startIndx = arryIndx + i;
@@ -375,7 +405,7 @@
             break;
         }
     }
-    
+    long long to=0;
     NSInteger indx = startIndx;
     for (NSUInteger i=0; i < 4; ++i)
     {
@@ -384,7 +414,8 @@
             break;
         }
         Chats *pChatItem = [chatItems objectAtIndex:indx];
-        if (pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture)
+        to = pChatItem.to;
+        if ((pChatItem.type == eMsgTypeVideo || pChatItem.type == eMsgTypePicture) && pItem.from == pChatItem.from)
         {
             lastPicIndx = indx;
             NSString *pHdir = NSHomeDirectory();
@@ -435,7 +466,7 @@
         }
         --indx;
     }
-    
+   
     return cell;
 }
 

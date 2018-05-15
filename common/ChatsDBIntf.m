@@ -41,12 +41,15 @@
     gettimeofday(&now, NULL);
     newItem.timestamp = now.tv_sec;
     
+    
     NSEntityDescription *chatsHeaderEntity = [NSEntityDescription entityForName:@"ChatsHeader" inManagedObjectContext:self.managedObjectContext];
     NSFetchRequest *req = [[NSFetchRequest alloc] init];
     [req setEntity:chatsHeaderEntity];
     long long fromShareId = [from.name longLongValue];
     long long toShareId = [to.name longLongValue];
-    [req setPredicate:[NSPredicate predicateWithFormat:@"(from == %ld AND to == %ld) OR (from == %ld AND to == %ld)", fromShareId, toShareId, toShareId, fromShareId]];
+    NSNumber *fromShareIdNum = [NSNumber numberWithLongLong:fromShareId];
+    NSNumber *toShareIdNum = [NSNumber numberWithLongLong:toShareId];
+    [req setPredicate:[NSPredicate predicateWithFormat:@"(from == %@ AND to == %@) OR (from == %@ AND to == %@)", fromShareIdNum, toShareIdNum, toShareIdNum, fromShareIdNum]];
     NSError *error = nil;
     NSArray *chatsHeaders = [self.managedObjectContext executeFetchRequest:req error:&error];
     if (chatsHeaders != nil && [chatsHeaders count] > 0)
@@ -66,6 +69,7 @@
     newHeaderItem.type = mtyp;
     newHeaderItem.timestamp = now.tv_sec;
     [self saveContext];
+    
     return true;
 }
 
@@ -93,8 +97,9 @@
     NSSortDescriptor* rownoDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp"
                                                                     ascending:NO];
     [req setFetchLimit:limit];
-    long long share_id = [frnd.name longLongValue];
-    [req setPredicate:[NSPredicate predicateWithFormat:@"from == %ld OR to == %ld", share_id, share_id]];
+   long long share_id = [frnd.name longLongValue];
+   // [req setPredicate:[NSPredicate predicateWithFormat:@"(from == %ld OR to == %ld)", share_id, share_id]];
+    [req setPredicate:[NSPredicate predicateWithFormat:@"(from == %@ OR to == %@)", [NSNumber numberWithLongLong:share_id], [NSNumber numberWithLongLong:share_id]]];
     NSArray *sortDescriptors = [NSArray arrayWithObjects: rownoDescriptor, nil];
     NSError *error = nil;
     return  [[moc executeFetchRequest:req error:&error]sortedArrayUsingDescriptors:sortDescriptors];
