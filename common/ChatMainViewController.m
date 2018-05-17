@@ -84,7 +84,7 @@
     tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height+statusBarHeight, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height-inputTextViewSize- kbsize.height-statusBarHeight);
     pChatOutputView = [ChatViewController1 alloc];
     pChatOutputView.to = to;
-    UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
+    UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStyleGrouped];
       pChatOutputView.tableView = pTVw;
     pChatOutputView = [pChatOutputView initWithNibName:nil bundle:nil];
     

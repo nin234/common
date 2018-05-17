@@ -27,6 +27,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
+        UITableViewHeaderFooterView *aTableViewHeaderFooterView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:@"chatTimeLabel"];
+        // Register the above class for a header view reuse.
+        [self.tableView registerClass:[aTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"chatTimeLabel"];
+        
         lastPicIndx = -1;
         photoIndexToChatItem = [[NSMutableDictionary alloc] init];
         [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -187,7 +191,7 @@
     [super viewWillAppear:animated];
      [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.tableView setSeparatorColor:[UIColor clearColor]];
-   
+    
     NSLog(@"ChatViewController1 viewWillAppear");
 }
 
@@ -330,17 +334,57 @@
     
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     
     return 20.0;
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    UIView *v = [UIView new];
-    [v setBackgroundColor:[UIColor clearColor]];
-    return v;
+   // UIView *v = [UIView new];
+   // [v setBackgroundColor:[UIColor clearColor]];
+    NSNumber *arryIndexNum = [rowIndexes objectAtIndex:section];
+    NSUInteger arryIndx = [arryIndexNum unsignedIntegerValue];
+    Chats *pItem = [chatItems objectAtIndex:arryIndx];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:pItem.timestamp];
+    static NSString *headerReuseIdentifier = @"chatTimeLabel";
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    
+    NSDateComponents *otherDay = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
+    if([today year] == [otherDay year])
+    {
+        [dateFormatter setDateFormat:@"MMM dd, HH:mm"];
+    }
+    else
+    {
+        [dateFormatter setDateFormat:@"MMM dd, YYYY HH:mm"];
+    }
+    NSString *dateString = [dateFormatter stringFromDate:date];
+    
+    // Reuse the instance that was created in viewDidLoad, or make a new one if not enough.
+    UITableViewHeaderFooterView *sectionHeaderView = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier:headerReuseIdentifier];
+    
+    sectionHeaderView.textLabel.text = dateString;
+   
+   // sectionHeaderView.textLabel.font = [sectionHeaderView.textLabel.font fontWithSize:4.0];
+    //sectionHeaderView.textLabel.textColor = [UIColor redColor];
+   // [sectionHeaderView setBackgroundColor:[UIColor clearColor]];
+    
+    return sectionHeaderView;
+    //return v;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayFooterView:(UIView *)view forSection:(NSInteger)section {
+    
+    UITableViewHeaderFooterView *footer = (UITableViewHeaderFooterView *)view;
+    
+    
+    footer.textLabel.font = [UIFont boldSystemFontOfSize:6];
+   // CGRect footerFrame = footer.frame;
+  //  footer.textLabel.frame = footerFrame;
+    footer.textLabel.textAlignment = NSTextAlignmentCenter;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -429,7 +473,7 @@
             {
                 pThumbNails = @"/Documents/";
                 pThumbNails = [pThumbNails stringByAppendingString:[[NSNumber numberWithLongLong:pChatItem.from] stringValue]];
-                pThumbNails = [pThumbNails stringByAppendingString:@"/images/thumbnails"];
+                pThumbNails = [pThumbNails stringByAppendingString:@"/images/thumbnails/"];
             }
             NSString *pThumbNailsDir = [pHdir stringByAppendingString:pThumbNails];
             NSString *pThumbNailFileName = [pChatItem.text stringByDeletingPathExtension];
@@ -469,6 +513,7 @@
    
     return cell;
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
