@@ -370,7 +370,7 @@
    
    // sectionHeaderView.textLabel.font = [sectionHeaderView.textLabel.font fontWithSize:4.0];
     //sectionHeaderView.textLabel.textColor = [UIColor redColor];
-   // [sectionHeaderView setBackgroundColor:[UIColor clearColor]];
+   
     
     return sectionHeaderView;
     //return v;
@@ -385,6 +385,9 @@
    // CGRect footerFrame = footer.frame;
   //  footer.textLabel.frame = footerFrame;
     footer.textLabel.textAlignment = NSTextAlignmentCenter;
+    footer.alpha = 0.3;
+    footer.textLabel.alpha = 1.0;
+  //  [footer setBackgroundColor:[UIColor redColor]];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
