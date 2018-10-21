@@ -180,7 +180,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"DisplayViewController will appear\n");
+    NSLog(@"AlbumContentsViewController will appear\n");
     
 
 }

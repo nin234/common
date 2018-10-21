@@ -31,6 +31,7 @@
 		3BA1086D2068699400026680 /* ChatMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086B2068699400026680 /* ChatMainViewController.m */; };
 		3BA108702069185100026680 /* ChatViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086F2069185100026680 /* ChatViewController2.m */; };
 		3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */; };
+		3BCE2CA7217D39D8008DE290 /* ThumbnailImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DB00E4BD1C7AA6B600E898F7 /* ThumbnailImageView.h */; };
 		3BDCB4F220498214005F8E0D /* Chats.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4E920498212005F8E0D /* Chats.m */; };
 		3BDCB4F320498214005F8E0D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EA20498213005F8E0D /* ChatViewController.m */; };
 		3BDCB4F420498214005F8E0D /* ChatsHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EB20498213005F8E0D /* ChatsHeader.m */; };
@@ -117,6 +118,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				3BCE2CA7217D39D8008DE290 /* ThumbnailImageView.h in CopyFiles */,
 				DB00E4B51C7A9FF700E898F7 /* common.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -501,7 +503,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
 		};
 		DB00E4C41C7AAC5700E898F7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
