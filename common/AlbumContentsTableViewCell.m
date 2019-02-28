@@ -97,7 +97,9 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     [photo4 clearSelection];
 }
 
-- (void)thumbnailImageViewWasSelected:(ThumbnailImageView *)thumbnailImageView {
+- (void)thumbnailImageViewWasSelected:(id)tImageView {
+    
+    ThumbnailImageView * thumbnailImageView = (ThumbnailImageView *) tImageView;
     NSUInteger selectedPhotoIndex = 0;
     if (thumbnailImageView == photo1) {
         selectedPhotoIndex = 0;

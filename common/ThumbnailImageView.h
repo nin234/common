@@ -47,10 +47,9 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 #import <UIKit/UIKit.h>
 
-@class ThumbnailImageView;
 
 @protocol ThumbnailImageViewSelectionDelegate <NSObject>
-- (void)thumbnailImageViewWasSelected:(ThumbnailImageView *)thumbnailImageView;
+- (void)thumbnailImageViewWasSelected:(id)thumbnailImageView;
 @end
 
 @interface ThumbnailImageView : UIImageView {

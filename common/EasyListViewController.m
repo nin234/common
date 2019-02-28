@@ -61,6 +61,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 {
     [super viewDidLoad];
 
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -112,6 +113,16 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     
 
 #pragma mark - Table view data source
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        ItemKey *itk = [list objectAtIndex:indexPath.row];
+        [pAppCmnUtil.dataSync deletedEasyItem:itk];
+        [self.tableView reloadData];
+    }
+}
 
 -(void) refreshList
 {

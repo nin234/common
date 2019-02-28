@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -31,7 +31,7 @@
 		3BA1086D2068699400026680 /* ChatMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086B2068699400026680 /* ChatMainViewController.m */; };
 		3BA108702069185100026680 /* ChatViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086F2069185100026680 /* ChatViewController2.m */; };
 		3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */; };
-		3BCE2CA7217D39D8008DE290 /* ThumbnailImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DB00E4BD1C7AA6B600E898F7 /* ThumbnailImageView.h */; };
+		3BCE2CA8217D4304008DE290 /* ThumbnailImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DB00E4BD1C7AA6B600E898F7 /* ThumbnailImageView.h */; };
 		3BDCB4F220498214005F8E0D /* Chats.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4E920498212005F8E0D /* Chats.m */; };
 		3BDCB4F320498214005F8E0D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EA20498213005F8E0D /* ChatViewController.m */; };
 		3BDCB4F420498214005F8E0D /* ChatsHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EB20498213005F8E0D /* ChatsHeader.m */; };
@@ -91,6 +91,7 @@
 			isEditable = 1;
 			outputFiles = (
 			);
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n";
 		};
 		3B9CF8BF1EF2AAE8004F009D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -99,6 +100,7 @@
 			isEditable = 1;
 			outputFiles = (
 			);
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n";
 		};
 /* End PBXBuildRule section */
 
@@ -118,7 +120,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				3BCE2CA7217D39D8008DE290 /* ThumbnailImageView.h in CopyFiles */,
+				3BCE2CA8217D4304008DE290 /* ThumbnailImageView.h in CopyFiles */,
 				DB00E4B51C7A9FF700E898F7 /* common.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,7 +464,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0830;
-				ORGANIZATIONNAME = Sinacama;
+				ORGANIZATIONNAME = nshare;
 				TargetAttributes = {
 					DB00E4B01C7A9FF700E898F7 = {
 						CreatedOnToolsVersion = 7.2;
@@ -473,7 +475,7 @@
 				};
 			};
 			buildConfigurationList = DB00E4AC1C7A9FF700E898F7 /* Build configuration list for PBXProject "common" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -628,7 +630,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = /Users/ninanthomas/projects/sharing;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -668,7 +670,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = /Users/ninanthomas/projects/sharing;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
