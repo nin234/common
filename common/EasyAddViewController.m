@@ -384,7 +384,7 @@
     // Reuse the instance that was created in viewDidLoad, or make a new one if not enough.
     UITableViewHeaderFooterView *sectionHeaderView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headerReuseIdentifier];
     // Add any optional custom views of your own
-    sectionHeaderView.textLabel.text = @"Create list from Template lists";
+    sectionHeaderView.textLabel.text = @"Create list from Planner";
     
     return sectionHeaderView;
     

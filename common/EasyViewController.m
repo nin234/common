@@ -222,9 +222,7 @@
     
     
     self.navigationItem.rightBarButtonItem = pBarItem;
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(mainScrnActions)];
-    
-    self.navigationItem.leftBarButtonItem = pBarItem1;
+   
 }
 
 -(void) shareContactsAdd

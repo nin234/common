@@ -14,7 +14,6 @@
 #import "MasterListNames.h"
 #import "MasterList.h"
 #import "ListViewController.h"
-#import "TemplListViewController.h"
 #import "ListNames.h"
 #import "List.h"
 #import "AppCmnUtil.h"
@@ -41,9 +40,12 @@
 
 @synthesize masterListCnt;
 @synthesize navViewController;
+@synthesize templNavViewController;
 @synthesize listCnt;
 @synthesize refreshMainLst;
 @synthesize appName;
+@synthesize templListViewController;
+@synthesize bReady;
 
 
 -(void) setRefreshNow:(bool)refNow
@@ -111,7 +113,7 @@
     NSLog(@"Updating MasterLstVwCntrl waiting for main queue");
     dispatch_sync(dispatch_get_main_queue(), ^{
         NSLog(@"Updating MasterLstVwCntrl in main queue");
-        NSArray *vws = [navViewController viewControllers];
+        NSArray *vws = [templNavViewController viewControllers];
         NSUInteger vwcnt = [vws count];
         //NSLog(@"No of view controllers EasyDataOps:updateMasterLstVwCntrl %lu", (unsigned long)vwcnt);
         for (NSUInteger i=0; i < vwcnt; ++i)
@@ -123,18 +125,14 @@
                 [pLst refreshMasterList];
                 [pLst.tableView reloadData];
             }
-            else if ([[vws objectAtIndex:i] isMemberOfClass:[TemplListViewController class]])
-            {
-                TemplListViewController *pLst = [vws objectAtIndex:i];
-                 NSLog(@"Refreshing TemplListViewController at index %lu", (unsigned long)i);
-                [pLst refreshMasterList];
-                [pLst.tableView reloadData];
-            }
             else
             {
                 // NSLog(@"View controller class EasyDataOps:updateMasterLstVwCntrl %@", NSStringFromClass([[vws objectAtIndex:i] class]));
             }
         }
+        NSLog(@"Refreshing TemplListViewController");
+        [templListViewController refreshMasterList];
+        [templListViewController.tableView reloadData];
        
     });
    
@@ -370,6 +368,7 @@
     {
         
         appName = [[NSString alloc] init];
+        bReady = false;
         return self;
         
     }
@@ -450,6 +449,7 @@
         [self refreshItemData];
         [self updateEasyMainLstVwCntrl];
         [self refreshTemplData];
+        [self updateMasterLstVwCntrl];
         
         
     }
@@ -461,7 +461,7 @@
         [self refreshItemData];
     }
    
-    
+    bReady = true;
     for(;;)
     {
         [workToDo lock];

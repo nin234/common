@@ -84,7 +84,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
    
     if (pAppCmnUtil.bEasyGroc)
     {
-        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Template list" message:@"Please enter name of Template list" delegate:self cancelButtonTitle:@"CANCEL" otherButtonTitles:@"OK", nil];
+        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"New Planner" message:@"Please enter name of store" delegate:self cancelButtonTitle:@"CANCEL" otherButtonTitles:@"OK", nil];
         pAvw.alertViewStyle = UIAlertViewStylePlainTextInput;
         [pAvw show];
     }
@@ -123,7 +123,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
             if (![pAppCmnUtil.dataSync checkMlistNameExist:templName])
             {
                 uniqueNameAlert = true;
-                NSString *msg = @"Template list name ";
+                NSString *msg = @"Planner name ";
                 msg = [msg stringByAppendingString:templName];
                 msg = [msg stringByAppendingString:@" exists, Please choose a different name"];
                 
@@ -167,13 +167,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 
 -(void) templScrnActions
 {
-    
-    
-    UIActionSheet *pSh;
-    
-    pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"New", @"Share", nil];
-        [pSh showInView:self.view];
-    [pSh setDelegate:self];
+     [self templItemAdd];
     
     
     return;
@@ -182,7 +176,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSString *title = @"Template Lists";
+    NSString *title = @"Planner";
     self.navigationItem.title = [NSString stringWithString:title];
     if (self.bShareTemplView)
     {
@@ -195,7 +189,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
     if (appCmnUtil.bEasyGroc == true)
     {
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(templScrnActions)];
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(templScrnActions)];
         
         self.navigationItem.rightBarButtonItem = pBarItem1;
     }
@@ -432,12 +426,36 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     if (pAppCmnUtil.bEasyGroc)
     {
-        ComponentsViewController *aViewController = [ComponentsViewController alloc];
+            ListViewController *aViewController = [ListViewController alloc];
+            NSString *name = itk.name;
+            aViewController.mlistName = [itk.name stringByAppendingString:@":INV"];
+            aViewController.masterListName = itk.name;
+            aViewController.masterInvListName = aViewController.mlistName;
+            aViewController.masterScrathListName = [itk.name stringByAppendingString:@":SCRTCH"];
+            aViewController.share_id = itk.share_id;
+            aViewController.easyGrocLstType = eInvntryLst;
+            itk.name = aViewController.mlistName;
+            NSArray *mlistInv = [pAppCmnUtil.dataSync getMasterList:itk];
+            itk.name = name;
+            bool invLstExists = false;
+            if (mlistInv)
+                invLstExists = true;
+            else
+                invLstExists = false;
         
-        aViewController.masterListName = itk.name;
-        aViewController.share_id = itk.share_id;
-        aViewController = [aViewController initWithNibName:nil bundle:nil];
-        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+            if (!invLstExists)
+            {
+                aViewController.editMode = eViewModeAdd;
+                aViewController.invLst = aViewController;
+            }
+            else
+            {
+                aViewController.editMode = eViewModeDisplay;
+                aViewController.invLstDisp = aViewController;
+                
+            }
+            aViewController = [aViewController initWithNibName:nil bundle:nil];
+            [pAppCmnUtil.templNavViewController pushViewController:aViewController animated:NO];
     }
     else
     {

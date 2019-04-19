@@ -15,6 +15,7 @@
 
 @synthesize dataSync;
 @synthesize navViewController ;
+@synthesize templNavViewController;
 @synthesize bEasyGroc;
 @synthesize pFlMgr;
 @synthesize pPicsDir;

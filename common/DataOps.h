@@ -11,6 +11,7 @@
 #import <CoreData/CoreData.h>
 #import "MainViewController.h"
 #import "ItemKey.h"
+#import "TemplListViewController.h"
 
 
 @protocol DataOpsDelegate <NSObject>
@@ -94,6 +95,7 @@
     NSMutableArray *masterListEditNames;
     NSMutableArray *masterListEditMps;
     int templItemsEdited;
+    
      NSMutableArray *masterListDeletedNames;
     int templItemsDeleted;
     NSMutableArray *listNames;
@@ -157,8 +159,11 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *easyPersistentStoreCoordinator;
 
 @property (nonatomic, retain) UINavigationController *navViewController;
+@property (nonatomic, retain) UINavigationController *templNavViewController;
+@property (nonatomic, retain) TemplListViewController *templListViewController;
 @property (nonatomic, retain) NSString *appName;
 @property (nonatomic) bool refreshMainLst;
+@property (nonatomic) bool bReady;
 
 - (void)saveContext;
 -(NSString *) getAlbumName:(long long ) shareId itemName:(NSString *) iName;
@@ -169,6 +174,8 @@
 -(void) addTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) addShareTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) editedTemplItemNoUpdate:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
+
 -(void) deletedTemplItem:(ItemKey *)name;
 -(void) addPicItem:(ItemKey *)name picItem:(NSString *)picUrl;
 -(NSArray *) getList: (ItemKey *)key;

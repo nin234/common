@@ -37,6 +37,18 @@ enum eEasyGrocType {
 @property (nonatomic, retain) NSString *mlistName;
 @property (nonatomic, retain) NSString *default_name;
 @property (nonatomic, retain) NSMutableDictionary *itemMp;
+
+@property (nonatomic, retain) ListViewController *recurrLst;
+@property (nonatomic, retain) ListViewController *recurrLstDisp;
+@property (nonatomic, retain) ListViewController *invLst;
+@property (nonatomic, retain) ListViewController *invLstDisp;
+@property (nonatomic, retain) ListViewController *scrtchLst;
+@property (nonatomic, retain) ListViewController *scrtchLstDisp;
+
+@property (nonatomic, retain) NSString *masterListName;
+@property (nonatomic, retain) NSString *masterInvListName;
+@property (nonatomic, retain) NSString *masterScrathListName;
+
 @property enum eViewMode editMode;
 @property enum eEasyGrocType easyGrocLstType;
 @property NSUInteger nRows;
