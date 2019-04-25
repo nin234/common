@@ -37,8 +37,25 @@ enum templateNameButtons
 
 @property (nonatomic, weak) id<TemplListViewControllerDelegate> delegate;
 
+@property (nonatomic, retain) ListViewController *recurrLst;
+@property (nonatomic, retain) ListViewController *recurrLstDisp;
+@property (nonatomic, retain) ListViewController *invLst;
+@property (nonatomic, retain) ListViewController *invLstDisp;
+@property (nonatomic, retain) ListViewController *scrtchLst;
+@property (nonatomic, retain) ListViewController *scrtchLstDisp;
+
+@property (nonatomic, retain) NSString *masterListName;
+@property (nonatomic, retain) NSString *masterInvListName;
+@property (nonatomic, retain) NSString *masterScrathListName;
+
 @property bool bShareTemplView;
 -(ItemKey *) getSelectedItem;
 @property bool bCheckListView;
+-(void) showScratchPad;
+- (void) showRecurringList;
+- (void) showInventoryList;
+- (void)templItemEdit;
+-(void) templItemEditCancel;
+- (void) templItemEditDone;
 
 @end

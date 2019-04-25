@@ -11,6 +11,7 @@
 #import "MasterList.h"
 #import "LocalMasterList.h"
 #import "SeasonPickerViewController.h"
+#import "TemplListViewController.h"
 
 
 
@@ -65,16 +66,8 @@
 @synthesize pCompVwCntrl;
 @synthesize bCheckListView;
 @synthesize share_id;
-@synthesize invLst;
-@synthesize invLstDisp;
-@synthesize recurrLst;
-@synthesize recurrLstDisp;
-@synthesize scrtchLst;
-@synthesize scrtchLstDisp;
 
-@synthesize  masterListName;
-@synthesize  masterInvListName;
-@synthesize  masterScrathListName;
+
 
 -(void) showSeasonPicker : (NSUInteger) rowNo
 {
@@ -252,30 +245,6 @@
     NSLog(@"itemMp dictionary to set view %@\n", itemMp);
 }
 
--(void) templItemEditCancel
-{
-    
-     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-     [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
-    
-    return;
-}
-
-- (void)templItemEdit
-{
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil popView];
-    
-    ListViewController *aViewController = [ListViewController alloc];
-    aViewController.editMode = eViewModeEdit;
-    aViewController.easyGrocLstType = easyGrocLstType;
-    aViewController.mlistName = mlistName;
-    aViewController.share_id = share_id;
-    [self setMasterListNames:aViewController];
-    aViewController = [aViewController initWithNibName:nil bundle:nil];
-    [pAppCmnUtil.templNavViewController pushViewController:aViewController animated:YES];
-    return;
-}
 
 -(void) templItemDisplay:(NSString *)templ_name lstcntr:(ListViewController *) pLst
 {
@@ -285,7 +254,7 @@
     aViewController.easyGrocLstType = easyGrocLstType;
     aViewController.name = templ_name;
     aViewController.share_id = share_id;
-    [self setMasterListNames:aViewController];
+   
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
     [aViewController refreshMasterListCpyFromLstVwCntrl:pLst];
@@ -383,24 +352,6 @@
     [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
 }
 
-- (void) templItemEditDone
-{
-     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    /*
-     NSArray *vwCntrls = [pAppCmnUtil.templNavViewController viewControllers];
-     NSUInteger cnt = [vwCntrls count];
-    ListViewController *pListDispView = (ListViewController *) [vwCntrls objectAtIndex:cnt-2];
-    [pListDispView refreshMasterList];
-     */
-    ListViewController *pListView = (ListViewController *)[pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
-    [pListView cleanUpItemMp];
-    ItemKey *mtk = [[ItemKey alloc] init];
-    mtk.name = pListView.name;
-    mtk.share_id = pListView.share_id;
-    [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:pListView.itemMp];
-    return;
-}
-
 - (void)switchToggled:(id)sender
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
@@ -448,137 +399,7 @@
     return;
 }
 
--(void) saveContext: (ListViewController *) current
-{
-    invLstDisp = current.invLstDisp;
-    invLst      = current.invLst;
-    recurrLstDisp = current.recurrLstDisp;
-    recurrLst     = current.recurrLst;
-    scrtchLstDisp = current.scrtchLstDisp;
-    scrtchLst     = current.scrtchLst;
-    
-}
 
-- (void) showRecurringList
-{
-    
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    ListViewController *aViewController = nil;
-    ListViewController *aViewControllerDisp = nil;
-    aViewControllerDisp = recurrLstDisp;
-    if (editMode != eViewModeDisplay)
-    {
-        aViewController = recurrLst;
-    }
-    
-    if (aViewController == nil)
-    {
-        aViewController = [ListViewController alloc];
-        aViewController.easyGrocLstType = eRecurrngLst;
-        aViewController.mlistName = masterListName;
-        [self setParams:aViewController];
-        aViewController = [aViewController initWithNibName:nil bundle:nil];
-    }
-    [aViewController saveContext:self];
-     aViewControllerDisp.recurrLstDisp = aViewControllerDisp;
-    if (editMode != eViewModeDisplay)
-    {
-        aViewController.recurrLst = aViewController;
-    }
-   
-    [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
-    [pAppCmnUtil.templNavViewController pushViewController:aViewController animated:YES];
-    
-}
-
-- (void) showInventoryList
-{
-    
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    ListViewController *aViewController = nil;
-    if (editMode == eViewModeDisplay)
-    {
-        aViewController = invLstDisp;
-    }
-    else
-    {
-        aViewController = invLst;
-    }
-    if (aViewController == nil)
-    {
-        aViewController = [ListViewController alloc];
-        aViewController.easyGrocLstType = eInvntryLst;
-        aViewController.mlistName = masterInvListName;
-        [self setParams:aViewController];
-        aViewController = [aViewController initWithNibName:nil bundle:nil];
-    }
-    [aViewController saveContext:self];
-    if (editMode == eViewModeDisplay)
-    {
-        aViewController.invLstDisp = aViewController;
-    }
-    else
-    {
-        aViewController.invLst = aViewController;
-    }
-    
-    [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
-    [pAppCmnUtil.templNavViewController pushViewController:aViewController animated:YES];
-     
-}
-
--(void) setParams:(ListViewController *)aViewController
-{
-    aViewController.editMode = editMode;
-    aViewController.share_id = share_id;
-    aViewController.masterScrathListName = masterScrathListName;
-    aViewController.masterInvListName = masterInvListName;
-    aViewController.masterListName = masterListName;
-}
-
--(void) setMasterListNames:(ListViewController *)aViewController
-{
-    aViewController.masterScrathListName = masterScrathListName;
-    aViewController.masterInvListName = masterInvListName;
-    aViewController.masterListName = masterListName;
-}
-
--(void) showScratchPad
-{
-    
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    ListViewController *aViewController = nil;
-    if (editMode == eViewModeDisplay)
-    {
-        aViewController = scrtchLstDisp;
-    }
-    else
-    {
-        aViewController = scrtchLst;
-    }
-    if (aViewController == nil)
-    {
-        aViewController = [ListViewController alloc];
-        aViewController.easyGrocLstType = eScratchLst;
-        aViewController.mlistName = masterScrathListName;
-        [self setParams:aViewController];
-        aViewController = [aViewController initWithNibName:nil bundle:nil];
-    }
-    [aViewController saveContext:self];
-    if (editMode == eViewModeDisplay)
-    {
-        aViewController.scrtchLstDisp = aViewController;
-    }
-    else
-    {
-        aViewController.scrtchLst = aViewController;
-    }
-    
-    [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
-    [pAppCmnUtil.templNavViewController pushViewController:aViewController animated:YES];
-    
-    
-}
 
 -(void) setButtonColors
 {
@@ -612,31 +433,39 @@
     NSLog (@"In view will appear %s %d", __FILE__, __LINE__);
    
     
-    UIBarButtonItem *pRecurring = [[UIBarButtonItem alloc] initWithTitle:@"Always" style:UIBarButtonItemStylePlain target:self action:@selector(showRecurringList)];
+    //NSLog(@"No of view controllers EasyDataOps:updateMasterLstVwCntrl %lu", (unsigned long)vwcnt);
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+       NSArray *vws =  [pAppCmnUtil.templNavViewController viewControllers];
+    NSUInteger vwcnt = [vws count];
+    TemplListViewController *pTemplVwCntrl = nil;
+    for (NSUInteger i=0; i < vwcnt; ++i)
+    {
+        if ([[vws objectAtIndex:i] isMemberOfClass:[TemplListViewController class]])
+        {
+            pTemplVwCntrl = [vws objectAtIndex:i];
+            break;
+        }
+    }
+    
+    UIBarButtonItem *pRecurring = [[UIBarButtonItem alloc] initWithTitle:@"Always" style:UIBarButtonItemStylePlain target:pTemplVwCntrl action:@selector(showRecurringList)];
     pRecurring.tintColor = [UIColor orangeColor];
-     UIBarButtonItem *pInventory = [[UIBarButtonItem alloc] initWithTitle:@"Inventory" style:UIBarButtonItemStylePlain target:self action:@selector(showInventoryList)];
+     UIBarButtonItem *pInventory = [[UIBarButtonItem alloc] initWithTitle:@"Replenish" style:UIBarButtonItemStylePlain target:pTemplVwCntrl action:@selector(showInventoryList)];
     pInventory.tintColor = [UIColor orangeColor];
-    UIBarButtonItem *pScratchPad = [[UIBarButtonItem alloc] initWithTitle:@"One-time" style:UIBarButtonItemStylePlain target:self action:@selector(showScratchPad)];
+    UIBarButtonItem *pScratchPad = [[UIBarButtonItem alloc] initWithTitle:@"One-time" style:UIBarButtonItemStylePlain target:pTemplVwCntrl action:@selector(showScratchPad)];
     pScratchPad.tintColor = [UIColor orangeColor];
     UIBarButtonItem *pBarItem;
     if (editMode == eViewModeEdit)
     {
-        pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(templItemEditDone)];
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemEditCancel) ];
+        pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:pTemplVwCntrl action:@selector(templItemEditDone)];
+        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:pTemplVwCntrl action:@selector(templItemEditCancel) ];
         self.navigationItem.leftBarButtonItem = pBarItem1;
        
     }
     else if (editMode == eViewModeDisplay)
     {
-        pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(templItemEdit) ];
+        pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:pTemplVwCntrl action:@selector(templItemEdit) ];
     }
-    else
-    {
-        pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(templItemAddDone) ];
-        UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemAddCancel) ];
-        self.navigationItem.leftBarButtonItem = pBarItem1;
-        
-    }
+   
     
     NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pRecurring,pInventory,pScratchPad,nil];
     self.navigationItem.rightBarButtonItems =barItems;

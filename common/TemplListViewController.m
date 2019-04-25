@@ -21,6 +21,16 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 @synthesize delegate;
 @synthesize bShareTemplView;
 @synthesize bCheckListView;
+@synthesize invLst;
+@synthesize invLstDisp;
+@synthesize recurrLst;
+@synthesize recurrLstDisp;
+@synthesize scrtchLst;
+@synthesize scrtchLstDisp;
+@synthesize  masterListName;
+@synthesize  masterInvListName;
+@synthesize  masterScrathListName;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -228,6 +238,143 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     // Dispose of any resources that can be recreated.
 }
 
+-(void) showScratchPad
+{
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    NSArray *vws = [pAppCmnUtil.templNavViewController viewControllers];
+    NSUInteger cnt = [vws count];
+    if (cnt == 3)
+    {
+        [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+         [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:scrtchLstDisp animated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:scrtchLst animated:NO];
+    }
+    else if (cnt == 2)
+    {
+         [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+         [pAppCmnUtil.templNavViewController pushViewController:scrtchLstDisp animated:YES];
+    }
+}
+
+
+- (void) showRecurringList
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    NSArray *vws = [pAppCmnUtil.templNavViewController viewControllers];
+    NSUInteger cnt = [vws count];
+    if (cnt == 3)
+    {
+        [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+        [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:recurrLstDisp animated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:recurrLst animated:NO];
+    }
+    else if (cnt == 2)
+    {
+        [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:recurrLstDisp animated:YES];
+    }
+}
+
+- (void) showInventoryList
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    NSArray *vws = [pAppCmnUtil.templNavViewController viewControllers];
+    NSUInteger cnt = [vws count];
+    if (cnt == 3)
+    {
+        [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+        [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:invLstDisp animated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:invLst animated:NO];
+    }
+    else if (cnt == 2)
+    {
+        [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+        [pAppCmnUtil.templNavViewController pushViewController:invLstDisp animated:YES];
+    }
+}
+
+
+- (void) templItemEditDone
+{
+    
+    /*
+     NSArray *vwCntrls = [pAppCmnUtil.templNavViewController viewControllers];
+     NSUInteger cnt = [vwCntrls count];
+     ListViewController *pListDispView = (ListViewController *) [vwCntrls objectAtIndex:cnt-2];
+     [pListDispView refreshMasterList];
+     */
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+    [self saveEditedTemplItem:recurrLst];
+    [self saveEditedTemplItem:invLst];
+    [self saveEditedTemplItem:scrtchLst];
+    return;
+}
+
+-(void) saveEditedTemplItem:(ListViewController *)pListView
+{
+    
+    if (pListView == nil)
+    {
+        return;
+    }
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pListView cleanUpItemMp];
+    ItemKey *mtk = [[ItemKey alloc] init];
+    mtk.name = pListView.name;
+    mtk.share_id = pListView.share_id;
+    [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:pListView.itemMp];
+}
+
+-(void) templItemEditCancel
+{
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+    [invLst refreshMasterList];
+    [scrtchLst refreshMasterList];
+    [recurrLst refreshMasterList];
+    return;
+}
+
+- (void)templItemEdit
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    NSArray *vws =  [pAppCmnUtil.templNavViewController viewControllers];
+    
+    ListViewController *pVwCntrl = [vws objectAtIndex:1];
+    if (pVwCntrl == nil)
+        return;
+    switch (pVwCntrl.easyGrocLstType) {
+        case eRecurrngLst:
+            [pAppCmnUtil.templNavViewController pushViewController:recurrLst animated:YES];
+            break;
+            
+        case eInvntryLst:
+            [pAppCmnUtil.templNavViewController pushViewController:invLst animated:YES];
+            break;
+            
+        case eScratchLst:
+            [pAppCmnUtil.templNavViewController pushViewController:scrtchLst animated:YES];
+            break;
+            
+        default:
+            break;
+    }
+    
+   
+    return;
+}
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -369,6 +516,24 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 
 #pragma mark - Table view delegate
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+        
+        [pAppCmnUtil.dataSync deletedTemplItem:itk];
+        NSString *invName = [itk.name stringByAppendingString:@":INV"];
+        itk.name = [itk.name stringByAppendingString:@":SCRTCH"];
+        [pAppCmnUtil.dataSync deletedTemplItem:itk];
+        itk.name = invName;
+        [pAppCmnUtil.dataSync deletedTemplItem:itk];
+        
+        [self.tableView reloadData];
+    }
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
@@ -426,15 +591,35 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     if (pAppCmnUtil.bEasyGroc)
     {
-            ListViewController *aViewController = [ListViewController alloc];
+            invLstDisp = [ListViewController alloc];
+            invLst     = [ListViewController alloc];
+            recurrLstDisp = [ListViewController alloc];
+            recurrLst      = [ListViewController alloc];
+            scrtchLstDisp  = [ListViewController alloc];
+           scrtchLst      = [ListViewController alloc];
+        
             NSString *name = itk.name;
-            aViewController.mlistName = [itk.name stringByAppendingString:@":INV"];
-            aViewController.masterListName = itk.name;
-            aViewController.masterInvListName = aViewController.mlistName;
-            aViewController.masterScrathListName = [itk.name stringByAppendingString:@":SCRTCH"];
-            aViewController.share_id = itk.share_id;
-            aViewController.easyGrocLstType = eInvntryLst;
-            itk.name = aViewController.mlistName;
+            invLst.mlistName    = [itk.name stringByAppendingString:@":INV"];
+            invLstDisp.mlistName    = [itk.name stringByAppendingString:@":INV"];
+        invLst.share_id = itk.share_id;
+        invLstDisp.share_id = itk.share_id;
+        recurrLstDisp.share_id = itk.share_id;
+        recurrLst.share_id = itk.share_id;
+        scrtchLstDisp.share_id = itk.share_id;
+        scrtchLst.share_id = itk.share_id;
+            recurrLstDisp.mlistName = itk.name;
+            recurrLst.mlistName = itk.name;
+            scrtchLstDisp.mlistName = [itk.name stringByAppendingString:@":SCRTCH"];
+            scrtchLst.mlistName = [itk.name stringByAppendingString:@":SCRTCH"];
+        invLstDisp.easyGrocLstType = eInvntryLst;
+        invLst.easyGrocLstType = eInvntryLst;
+        recurrLst.easyGrocLstType = eRecurrngLst;
+        recurrLstDisp.easyGrocLstType = eRecurrngLst;
+        scrtchLst.easyGrocLstType = eScratchLst;
+        scrtchLstDisp.easyGrocLstType = eScratchLst;
+        
+        
+            itk.name = invLstDisp.mlistName;
             NSArray *mlistInv = [pAppCmnUtil.dataSync getMasterList:itk];
             itk.name = name;
             bool invLstExists = false;
@@ -442,20 +627,24 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
                 invLstExists = true;
             else
                 invLstExists = false;
-        
+            invLst.editMode = eViewModeEdit;
+        invLstDisp.editMode = eViewModeDisplay;
+        recurrLst.editMode = eViewModeEdit;
+        recurrLstDisp.editMode = eViewModeDisplay;
+        scrtchLst.editMode = eViewModeEdit;
+        scrtchLstDisp.editMode = eViewModeDisplay;
+        invLst = [invLst initWithNibName:nil bundle:nil];
+        invLstDisp = [invLstDisp initWithNibName:nil bundle:nil];
+        recurrLst = [recurrLst initWithNibName:nil bundle:nil];
+        recurrLstDisp = [recurrLstDisp initWithNibName:nil bundle:nil];
+        scrtchLst = [scrtchLst initWithNibName:nil bundle:nil];
+        scrtchLstDisp = [scrtchLstDisp initWithNibName:nil bundle:nil];
+        [pAppCmnUtil.templNavViewController pushViewController:invLstDisp animated:NO];
             if (!invLstExists)
             {
-                aViewController.editMode = eViewModeAdd;
-                aViewController.invLst = aViewController;
+                [pAppCmnUtil.templNavViewController pushViewController:invLst animated:NO];
             }
-            else
-            {
-                aViewController.editMode = eViewModeDisplay;
-                aViewController.invLstDisp = aViewController;
-                
-            }
-            aViewController = [aViewController initWithNibName:nil bundle:nil];
-            [pAppCmnUtil.templNavViewController pushViewController:aViewController animated:NO];
+        
     }
     else
     {

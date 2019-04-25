@@ -116,19 +116,29 @@
         NSArray *vws = [templNavViewController viewControllers];
         NSUInteger vwcnt = [vws count];
         //NSLog(@"No of view controllers EasyDataOps:updateMasterLstVwCntrl %lu", (unsigned long)vwcnt);
-        for (NSUInteger i=0; i < vwcnt; ++i)
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        if (pAppCmnUtil.bEasyGroc)
         {
+            
+            [templListViewController.recurrLstDisp refreshMasterList];
+            [templListViewController.recurrLstDisp.tableView reloadData];
+            [templListViewController.invLstDisp refreshMasterList];
+            [templListViewController.invLstDisp.tableView reloadData];
+            [templListViewController.scrtchLstDisp refreshMasterList];
+            [templListViewController.scrtchLstDisp.tableView reloadData];
+        }
+        else
+        {
+          for (NSUInteger i=0; i < vwcnt; ++i)
+          {
             if ([[vws objectAtIndex:i] isMemberOfClass:[ListViewController class]])
             {
                 ListViewController *pLst = [vws objectAtIndex:i];
-                 NSLog(@"Refreshing ListViewController at index %lu", (unsigned long)i);
+                NSLog(@"Refreshing ListViewController at index %lu", (unsigned long)i);
                 [pLst refreshMasterList];
                 [pLst.tableView reloadData];
             }
-            else
-            {
-                // NSLog(@"View controller class EasyDataOps:updateMasterLstVwCntrl %@", NSStringFromClass([[vws objectAtIndex:i] class]));
-            }
+          }
         }
         NSLog(@"Refreshing TemplListViewController");
         [templListViewController refreshMasterList];
@@ -2088,7 +2098,8 @@
                 [pLst.pAllItms.tableView reloadData];
             }
         }
-       
+        [pAppCmnUtil.aViewController1.pAllItms refreshList];
+        [pAppCmnUtil.aViewController1.pAllItms.tableView reloadData];
     });
     return;
 }

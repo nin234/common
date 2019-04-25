@@ -174,7 +174,7 @@
 -(void) addTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) addShareTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
--(void) editedTemplItemNoUpdate:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
+
 
 -(void) deletedTemplItem:(ItemKey *)name;
 -(void) addPicItem:(ItemKey *)name picItem:(NSString *)picUrl;
