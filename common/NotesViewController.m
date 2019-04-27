@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import "AppCmnUtil.h"
 #import "NotesViewController.h"
 
 
@@ -21,7 +22,18 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        notes = [[UITextView alloc] initWithFrame:CGRectMake(0, 20, 320, 420)];
+        CGRect mainScrn = [UIScreen mainScreen].bounds;
+        AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+        
+        if (pAppCmnUtil.bEasyGroc)
+        {
+            CGRect tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height - self.navigationController.tabBarController.tabBar.frame.size.height);
+            notes = [[UITextView alloc] initWithFrame:tableRect];
+        }
+        else
+        {
+            notes = [[UITextView alloc] initWithFrame:CGRectMake(0, 20, 320, 420)];
+        }
         if (notesTxt != nil && [notesTxt length] > 0)
         {
             notes.text = notesTxt;

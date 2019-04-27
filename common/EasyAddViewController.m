@@ -225,7 +225,7 @@
     
     if (pAppCmnUtil.bEasyGroc == true)
     {
-            return 3;
+            return 2;
     }
     
     return 1;
@@ -238,7 +238,7 @@
     if (pAppCmnUtil.bEasyGroc == true)
     {
         // Return the number of rows in the section.
-        if (section == 2)
+        if (section == 1)
         {
             if (!mcnt)
             {
@@ -303,16 +303,8 @@
     
     if (pAppCmnUtil.bEasyGroc == true)
     {
-        if (indexPath.section == 0 && indexPath.row ==0)
-        {
-            cell.imageView.image = [UIImage imageNamed:@"camera.png"];
-            cell.textLabel.text = @"Picture List";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            return cell;
-            
-        }
         
-        if (indexPath.section == 1 && indexPath.row ==0)
+        if (indexPath.section == 0 && indexPath.row ==0)
         {
             
             cell.textLabel.text = @"Brand New List";
@@ -321,7 +313,7 @@
             
         }
         
-        if (indexPath.section == 2 && mcnt)
+        if (indexPath.section == 1 && mcnt)
         {
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 275, 25)];
             label.textAlignment = NSTextAlignmentLeft;
@@ -362,7 +354,7 @@
     
     if (pAppCmnUtil.bEasyGroc == true)
     {
-        if (section <2)
+        if (section <1)
             return 10.0;
     }
     
@@ -376,7 +368,7 @@
     
     if (pAppCmnUtil.bEasyGroc == true)
     {
-        if (section <2)
+        if (section <1)
             return nil;
     }
     static NSString *headerReuseIdentifier = @"TableViewSectionHeaderViewIdentifier";
@@ -469,7 +461,7 @@
         return;
     }
     
-    if (indexPath.section == 2)
+    if (indexPath.section == 1)
     {
         if ([masterList count] < indexPath.row + 1)
         {
@@ -490,7 +482,7 @@
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
         
     }
-    else if (indexPath.section == 1)
+    else if (indexPath.section == 0)
     {
         
         List1ViewController *aViewController = [List1ViewController alloc];
@@ -501,24 +493,6 @@
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
          aViewController.share_id = pAppCmnUtil.share_id;
 
-    }
-    else if (indexPath.section ==0)
-    {
-        NSLog(@"Initializing and displaying camera\n");
-        if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear] == NO)
-            return;
-        self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-        self.imagePickerController.editing = YES;
-        self.imagePickerController.delegate = (id)self;
-        //self.imagePickerController.delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        self.imagePickerController.showsCameraControls = YES;
-        self.imagePickerController.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeImage];;
-        
-        NSLog(@"Media types %@\n", self.imagePickerController.mediaTypes);
-        
-        self.imagePickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
-        [self presentViewController:imagePickerController animated:NO completion:nil];
- 
     }
     else
     {
