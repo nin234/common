@@ -82,7 +82,7 @@
    pPickerVwCntrl = [pPickerVwCntrl initWithNibName:nil bundle:nil];
     reloadAfterSeasonPicked = true;
     NSLog(@"Launching season picker for row %lu", (unsigned long)rowNo);
-    [pAppCmnUtil.navViewController pushViewController:pPickerVwCntrl animated:NO];
+    [pAppCmnUtil.templNavViewController pushViewController:pPickerVwCntrl animated:NO];
     
 }
 
@@ -589,58 +589,6 @@
   return NO;
 }
 
-
--(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (inEditAction)
-    {
-        inEditAction = false;
-        switch (buttonIndex)
-        {
-            case eSaveList:
-            {
-                
-                [self templItemEditDone];
-            }
-            break;
-            
-            case eDeleteList:
-            [self DeleteConfirm];
-            break;
-            
-            default:
-            break;
-        }
-        return;
-    }
-    
-    if (inDeleteAction)
-    {
-        inDeleteAction = false;
-        printf("Clicked button at index %ld in delete template list\n", (long)buttonIndex);
-        if (buttonIndex == 0)
-        {
-            AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-            
-            ListViewController *pListView = (ListViewController *)[pAppCmnUtil.navViewController popViewControllerAnimated:NO];
-            
-            //[self templItemDisplay:pListView.name lstcntr:pListView];
-            [pListView cleanUpItemMp];
-            ItemKey *itk = [[ItemKey alloc] init];
-            itk.name = pListView.name;
-            if (pListView.share_id)
-            {
-                itk.share_id = pListView.share_id;
-            }
-            else
-            {
-                itk.share_id = pAppCmnUtil.share_id;
-            }
-            [pAppCmnUtil.dataSync deletedTemplItem:itk];
-        }
-    }
-    
-}
 
 
 #pragma mark - Table view data source

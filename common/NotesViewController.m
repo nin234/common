@@ -39,6 +39,12 @@
             notes.text = notesTxt;
             NSLog(@"Notes set to %@", notes.text);
         }
+        
+        if (mode == eNotesModeDisplay)
+        {
+            notes.editable = NO;
+           // notes.selectable =NO;
+        }
 
         
              notes.delegate = self;

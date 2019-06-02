@@ -48,7 +48,7 @@
         mitem.endMonth = (int)endMonth;
     }
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil.navViewController popViewControllerAnimated:YES];
+    [pAppCmnUtil.templNavViewController popViewControllerAnimated:YES];
     
     
 }

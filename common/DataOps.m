@@ -126,6 +126,13 @@
             [templListViewController.invLstDisp.tableView reloadData];
             [templListViewController.scrtchLstDisp refreshMasterList];
             [templListViewController.scrtchLstDisp.tableView reloadData];
+            
+            [templListViewController.recurrLst refreshMasterList];
+            [templListViewController.recurrLst.tableView reloadData];
+            [templListViewController.invLst refreshMasterList];
+            [templListViewController.invLst.tableView reloadData];
+            [templListViewController.scrtchLst refreshMasterList];
+            [templListViewController.scrtchLst.tableView reloadData];
         }
         else
         {
@@ -475,7 +482,7 @@
     for(;;)
     {
         [workToDo lock];
-        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd || templShareItemsToAdd || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
+        if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd || !templShareItemsToAdd || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
         {
           // NSLog(@"Waiting for work\n");
             NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:waitTime];

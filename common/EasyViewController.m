@@ -231,6 +231,7 @@
     //  albumContentsViewController.assetsGroup = group_;
     notesViewController.notes.editable = NO;
     notesViewController.mode = eNotesModeDisplay;
+    notesViewController.notes.selectable = NO;
     
     notesViewController.title = @"How to use";
     

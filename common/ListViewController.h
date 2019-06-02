@@ -55,11 +55,8 @@ enum eEasyGrocType {
 -(void) DeleteConfirm;
 -(void) addRow : (NSUInteger) rowNo;
 -(void) cleanUpItemMp;
--(void) templItemEditCancel;
-- (void) templItemEditDone;
 - (void)templItemAddDone;
 -(void) templItemDisplay:(NSString *)templ_name lstcntr:(ListViewController *) pLst;
-- (void)templItemEdit;
 -(void) showSeasonPicker : (NSUInteger) rowNo;
 
 @end
