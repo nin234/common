@@ -122,66 +122,8 @@
     [searchBar resignFirstResponder];
 }
 
--(void) mainScreenActions: (NSInteger) buttonIndex
-{
-     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    switch (buttonIndex)
-    {
-        case 0:
-        {
-            
-            EasyViewController *pMainVwCntrl = [pAppCmnUtil.navViewController.viewControllers objectAtIndex:0];
-            
-            
-            pMainVwCntrl.pSearchBar.text = nil;
-            [pMainVwCntrl.pSearchBar resignFirstResponder];
-            TemplListViewController *aViewController = [[TemplListViewController alloc]
-                                                        initWithNibName:nil bundle:nil];
-            aViewController.delegate = [delegate getTemplListVwCntrlDelegate];
-            [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
-        }
-        break;
-        
-        case 1:
-        {
-            NSLog(@"Calling shareMgrStartAndShow %s %d", __FILE__, __LINE__);
-            [delegate shareMgrStartAndShow];
-        }
-        break;
-        
-        default:
-        break;
-    }
-    
-}
 
--(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSLog(@"Clicked button Index %ld, %s %d", (long)buttonIndex, __FILE__, __LINE__);
-    
-    switch (eAction)
-    {
-        
-        
-        case eActnShetMainScreen:
-        [self mainScreenActions:buttonIndex];
-        break;
-        
-        default:
-        break;
-    }
-    
-}
 
--(void) mainScrnActions
-{
-    
-    eAction = eActnShetMainScreen;
-    
-    
-    
-    return;
-}
 
 
 - (void)itemAdd
