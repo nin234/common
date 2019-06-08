@@ -17,9 +17,8 @@ enum eActionSheet
 
 @protocol EasyViewControllerDelegate <NSObject>
 
--(void) shareMgrStartAndShow;
 -(void) shareContactsSetSelected;
--(id) getTemplListVwCntrlDelegate;
+
 
 @end
 

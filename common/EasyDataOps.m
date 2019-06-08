@@ -12,7 +12,8 @@
 
 
 
-#import "EasyViewController.h"
+
+
 #import "List1ViewController.h"
 
 #define TIMER_INTERVAL_EasyDataOps 3

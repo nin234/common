@@ -14,10 +14,9 @@ enum eActionSheet : Int {
     case eActnShetInAppPurchse
 }
 
-protocol EasyViewControllerDelegate: NSObjectProtocol {
-    func shareMgrStartAndShow()
-    func shareContactsSetSelected()
-    func getTemplListVwCntrlDelegate() -> Any?
+@objc public protocol EasyViewControllerDelegate: NSObjectProtocol {
+   @objc func shareContactsSetSelected()
+    
 }
 
 
@@ -25,16 +24,16 @@ protocol EasyViewControllerDelegate: NSObjectProtocol {
 @objc public class EasyViewController: UIViewController, UISearchBarDelegate, UIActionSheetDelegate {
     var eAction: eActionSheet!
     
-    var pAllItms: EasyListViewController?
+    @objc public var pAllItms: EasyListViewController?
     var pSearchBar: UISearchBar?
-    var bShareView = false
+    @objc public var bShareView = false
     
     
     
     func mainScreenActions(_ buttonIndex: Int) {
     }
     
-    weak var delegate: EasyViewControllerDelegate?
+   @objc public weak var delegate: EasyViewControllerDelegate?
     
  override   init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -154,8 +153,12 @@ protocol EasyViewControllerDelegate: NSObjectProtocol {
         
         let imageHelp = UIImage(named: "ic_help_outline_18pt_2x")
         let pHelpBtn = UIBarButtonItem(image: imageHelp, style: .plain, target: self, action: #selector(self.showHelpScreen))
+        let imageAlexa = UIImage(named: "alexa_button")
+        let pAlexaBtn = UIBarButtonItem(image: imageAlexa, style: .plain, target: self, action: #selector(showAlexaDialog))
+        
         //NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pHelpBtn,nil];
-        navigationItem.rightBarButtonItem = pBarItem
+        //navigationItem.rightBarButtonItem = pBarItem
+        navigationItem.rightBarButtonItems = [pBarItem, pAlexaBtn]
         navigationItem.leftBarButtonItem = pHelpBtn
         
         
@@ -168,12 +171,30 @@ protocol EasyViewControllerDelegate: NSObjectProtocol {
     // Dispose of any resources that can be recreated.
     }
 
-    func shareContactsAdd()
+    @objc func shareContactsAdd()
     {
         delegate?.shareContactsSetSelected();
     return;
     }
-    func showHelpScreen() {
+    
+   @objc func showAlexaDialog()
+    {
+         let alertController = UIAlertController(title: "Alexa code", message:"Add the Alexa skill EasyGrocList. Invoke the skill by saying Open Shopping List. Enter the  3 digit number said by Alexa to link the EasyGrocList iPhone App to the EasyGrocList Alexa skill", preferredStyle: .alert)
+        
+        let ok = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
+            print("Add code for Alexa actions here")
+        }
+        
+        let cxl = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction) in
+            print("You've pressed cancel");
+        }
+        
+        alertController.addAction(ok)
+        alertController.addAction(cxl)
+        self.present(alertController, animated: true)
+    }
+    
+    @objc func showHelpScreen() {
         print("Showing help screen")
         let notesViewController = NotesViewController(nibName: "NotesViewController", bundle: nil)
         print("Pushing Notes view controller \(#file) \(#line)\n")
@@ -184,7 +205,7 @@ protocol EasyViewControllerDelegate: NSObjectProtocol {
         
         notesViewController.title = "How to use"
         
-        notesViewController.notesTxt = "Create Planner lists. Click planner icon in the bottom tab bar to go to the Planner section of the App.\n\nCreate a new planner by clicking the + button on the top right hand corner. Enter the name of the store in the text box. Planners can be created for multiple stores.\n\nTo add items to planner, select the newly created planner item on the screen.\nThe planner list of a store is made up of three different sections (One-time, Replenish and Always). To switch between the sections click the buttons on the top navigation bar. Click the Edit button on top right corner to make changes to planner list and click the Save button to save the changes\n\nReplenish list keeps track of items that needs to be bought when they run out. The switch in the off position (red color) indicates that particular item has run out. When a list is created from the Home screen this item will be added to the list.\nAlways list are the items that are needed on every store visit. \n\nOne-time items are infrequently needed items. The items in this list are used the next time a new list is created from the Home screen. The items in the list are deleted after a new list is created and cannot be used again.\n\n After creating planner lists click the + button on the top right corner of the Home screen. Create a new list by selecting the appropriate Planner list. A new list created  from the planner list will merge items from these 3 components (Always, Replenish and One-time).\\nnClicking the brand new list on this screen will create an empty blank list. This can be used for one time lists.\n\n The list can be shared with friends. Notifications should be enabled for the app for sharing. Notifications can be enabled during intial start up or later in the Settings app.\n\n The first step to share is to add Contacts to share the list with. Click the Contacts icon in the bottom tab bar to bring up the Contacts screen. There will be a ME line. Selecting the ME line, shows the share Id of the EasyGrocList on this iPhone. This number uniquely identifies the App for sharing purposes. Now navigate back to Contacts screen by clicking the Contacts button on top left corner. Click the + button on top right corner to add a new contact. Enter the share Id and a name to identify the contact.The Share Id is the number in the ME row of your friend's EasyGrocList app. \n\nClick the Share icon in the bottom tab bar. This will bring up the Share screen. Select the List to share and click the People icon on the top right corner. This will bring up the Contacts screen. Select the contacts to share the item. Once the contacts are selected click the Done button. This will sent the list to the selected Contacts"
+        notesViewController.notes.text = "Create Planner lists. Click planner icon in the bottom tab bar to go to the Planner section of the App.\n\nCreate a new planner by clicking the + button on the top right hand corner. Enter the name of the store in the text box. Planners can be created for multiple stores.\n\nTo add items to planner, select the newly created planner item on the screen.\nThe planner list of a store is made up of three different sections (One-time, Replenish and Always). To switch between the sections click the buttons on the top navigation bar. Click the Edit button on top right corner to make changes to planner list and click the Save button to save the changes\n\nReplenish list keeps track of items that needs to be bought when they run out. The switch in the off position (red color) indicates that particular item has run out. When a list is created from the Home screen this item will be added to the list.\nAlways list are the items that are needed on every store visit. \n\nOne-time items are infrequently needed items. The items in this list are used the next time a new list is created from the Home screen. The items in the list are deleted after a new list is created and cannot be used again.\n\n After creating planner lists click the + button on the top right corner of the Home screen. Create a new list by selecting the appropriate Planner list. A new list created  from the planner list will merge items from these 3 components (Always, Replenish and One-time).\\nnClicking the brand new list on this screen will create an empty blank list. This can be used for one time lists.\n\n The list can be shared with friends. Notifications should be enabled for the app for sharing. Notifications can be enabled during intial start up or later in the Settings app.\n\n The first step to share is to add Contacts to share the list with. Click the Contacts icon in the bottom tab bar to bring up the Contacts screen. There will be a ME line. Selecting the ME line, shows the share Id of the EasyGrocList on this iPhone. This number uniquely identifies the App for sharing purposes. Now navigate back to Contacts screen by clicking the Contacts button on top left corner. Click the + button on top right corner to add a new contact. Enter the share Id and a name to identify the contact.The Share Id is the number in the ME row of your friend's EasyGrocList app. \n\nClick the Share icon in the bottom tab bar. This will bring up the Share screen. Select the List to share and click the People icon on the top right corner. This will bring up the Contacts screen. Select the contacts to share the item. Once the contacts are selected click the Done button. This will sent the list to the selected Contacts"
        
         notesViewController.notes.font = UIFont(name: "ArialMT", size: 20)
         navigationController?.pushViewController(notesViewController, animated: false)

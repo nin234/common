@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "DataOps.h"
-#import "EasyViewController.h"
+
+@class EasyViewController;
 
 enum eEditActionItems
 {
