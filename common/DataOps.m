@@ -1344,6 +1344,13 @@
     return masterListNamesArr;
 }
 
+-(void) putAlexaItems:(NSArray *)items
+{
+    [workToDo lock];
+    
+    [workToDo unlock];
+}
+
 -(NSArray *) getMasterList: (ItemKey *)key
 {
     [workToDo lock];

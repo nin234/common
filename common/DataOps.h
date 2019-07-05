@@ -190,5 +190,6 @@
 -(void) updateEasyMainLstVwCntrl;
 -(void) updateShareMainLstVwCntrl:(MainViewController *) pMainVwCntrl;
 -(void) updateMainLstVwCntrl;
+-(void) putAlexaItems:(NSArray *)items;
 
 @end
