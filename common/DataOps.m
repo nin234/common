@@ -1375,6 +1375,7 @@
     [workToDo lock];
     alexaEditDic = [[NSMutableDictionary alloc] init];
     alexaAddDic = [[NSMutableDictionary alloc] init];
+    ItemKey *alexaKey = [self getAlexaListName];
     NSUInteger cnt = [items count];
     for (NSUInteger i=0; i < cnt; ++i)
     {
@@ -1470,18 +1471,35 @@
             }
             if (!bFoundScrtchMlist)
             {
-                [self addToAlexaScrtchList:item itemKey:masterListName];
+                [self addToAlexaList:item itemKey:masterListName];
             }
         }
         else
         {
-            
+            [self addToAlexaList:item itemKey:alexaKey];
         }
     }
     [workToDo unlock];
 }
 
--(void) addToAlexaScrtchList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key
+-(ItemKey *) getAlexaListName
+{
+    ItemKey *itk = [[ItemKey alloc] init];
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    itk.share_id =  pAppCmnUtil.share_id;
+    NSString *name = @"List";
+    NSDate *today = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    NSString *formattedDateString = [dateFormatter stringFromDate:today];
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:formattedDateString];
+    itk.name = name;
+    return itk;
+}
+
+-(void) addToAlexaList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key
 {
     NSMutableDictionary *itemMp = [alexaAddDic objectForKey:key];
     if (itemMp != nil)
