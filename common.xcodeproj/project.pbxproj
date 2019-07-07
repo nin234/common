@@ -33,6 +33,7 @@
 		3BA108702069185100026680 /* ChatViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1086F2069185100026680 /* ChatViewController2.m */; };
 		3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */; };
 		3BCE2CA8217D4304008DE290 /* ThumbnailImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DB00E4BD1C7AA6B600E898F7 /* ThumbnailImageView.h */; };
+		3BD6EAD622CFFA020086B502 /* AlexaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6EAD522CFFA020086B502 /* AlexaItem.swift */; };
 		3BDCB4F220498214005F8E0D /* Chats.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4E920498212005F8E0D /* Chats.m */; };
 		3BDCB4F320498214005F8E0D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EA20498213005F8E0D /* ChatViewController.m */; };
 		3BDCB4F420498214005F8E0D /* ChatsHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCB4EB20498213005F8E0D /* ChatsHeader.m */; };
@@ -156,6 +157,7 @@
 		3BB193721EDCA33B00EC1B58 /* SeasonPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeasonPickerViewController.h; sourceTree = "<group>"; };
 		3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeasonPickerViewController.m; sourceTree = "<group>"; };
 		3BB193741EDCA33B00EC1B58 /* SeasonPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SeasonPickerViewController.xib; sourceTree = "<group>"; };
+		3BD6EAD522CFFA020086B502 /* AlexaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlexaItem.swift; sourceTree = "<group>"; };
 		3BDCB4E820498212005F8E0D /* Chats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chats.h; sourceTree = "<group>"; };
 		3BDCB4E920498212005F8E0D /* Chats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chats.m; sourceTree = "<group>"; };
 		3BDCB4EA20498213005F8E0D /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				DB00E5321C7D24C300E898F7 /* AddressAnnotation.m */,
 				DBD16AD21C8AF59100052A03 /* AddViewController.h */,
 				DBD16AD41C8AF5B900052A03 /* AddViewController.m */,
+				3BD6EAD522CFFA020086B502 /* AlexaItem.swift */,
 				DBD16AD31C8AF5A400052A03 /* AddViewController.xib */,
 				DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */,
 				DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */,
@@ -557,6 +560,7 @@
 				3B825ECC1ED305A70010339F /* LocalList.m in Sources */,
 				DB00E5271C7C912000E898F7 /* Photo.m in Sources */,
 				3BA108692066901300026680 /* ChatViewController1.m in Sources */,
+				3BD6EAD622CFFA020086B502 /* AlexaItem.swift in Sources */,
 				3BDCB4F520498214005F8E0D /* ChatsSharingDelegate.m in Sources */,
 				3BF7F78B1E74FD4200419F8D /* EasySlideScrollView.m in Sources */,
 				3B0E71E21F0B9B7600CC2B5C /* ItemKey.m in Sources */,
@@ -690,7 +694,7 @@
 		DB00E4BB1C7A9FF700E898F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -712,7 +716,7 @@
 		DB00E4BC1C7A9FF700E898F7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

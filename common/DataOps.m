@@ -158,10 +158,8 @@
     return;
 }
 
--(void) updateTemplEditedItems
+-(void) updateTemplEditedItemsImpl
 {
-   
-    [workToDo lock];
     NSUInteger mecnt = [masterListEditNames count];
     for (NSUInteger i=0; i < mecnt; ++i)
     {
@@ -183,11 +181,6 @@
         nStoreCnt += [[masterListEditMps objectAtIndex:i] count];
     }
     
-    
-    
-    [workToDo unlock];
-    
-    
     NSMutableArray *storeItems = [[NSMutableArray alloc] initWithCapacity:nStoreCnt];
     
     
@@ -205,8 +198,6 @@
         [storeItems addObject:newItem];
     }
     
-    
-    [workToDo lock];
     NSLog(@"Update Edited templ item aquired lock 1");
     NSUInteger nTotCnt=0;
     for (int i=0; i <mecnt; ++i)
@@ -258,12 +249,23 @@
         [masterListEditNames removeAllObjects];
     }
     templItemsEdited -= mecnt;
+    [self saveEasyContext];
+    return;
+}
+
+-(void) updateTemplEditedItems
+{
+   
+    [workToDo lock];
+   
+    [self updateTemplEditedItemsImpl];
+    
     [workToDo unlock];
+    
     
     NSLog(@"Update Edited templ item released lock 1");
     
-    [self saveEasyContext];
-    return;
+    
 }
 
 -(void) updateTemplDeletedItems
@@ -1344,12 +1346,261 @@
     return masterListNamesArr;
 }
 
+-(bool) shouldAddInScrtchList:(int)startMonth endM:(int) endMonth
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [calendar  components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
+    NSInteger month = [components month];
+    
+                if (endMonth > startMonth)
+                {
+                    if (month > endMonth || month < startMonth)
+                        return true;
+                    
+                }
+                else if (endMonth == startMonth)
+                {
+                    if (month != endMonth)
+                        return true;
+                }
+                else
+                {
+                    if (month < startMonth && month > endMonth)
+                        return true;
+                }
+    return false;
+}
 -(void) putAlexaItems:(NSArray *)items
 {
     [workToDo lock];
-    
+    alexaEditDic = [[NSMutableDictionary alloc] init];
+    alexaAddDic = [[NSMutableDictionary alloc] init];
+    NSUInteger cnt = [items count];
+    for (NSUInteger i=0; i < cnt; ++i)
+    {
+       
+            AlexaItem *item = (AlexaItem *)[items objectAtIndex:i];
+        NSLog(@"Adding item name=%@, masterList=%@, date=%ld add=%hhd", item.name, item.masterList, (long)item.date, (char)item.add);
+        NSString *masterList = [item.masterList stringByReplacingOccurrencesOfString:@" " withString:@""];
+        NSString *alexaItemName = [item.name stringByReplacingOccurrencesOfString:@" " withString:@""];
+        bool bFoundMlist = false;
+        NSArray *keys = [masterListArr allKeys];
+        NSUInteger mcnt = [keys count];
+        bool bAddInScrtch = true;
+        NSString *masterListInv = [masterList stringByAppendingString:@":INV"];
+        NSString *masterListScrtch = [masterList stringByAppendingString:@":SCRTCH"];
+        ItemKey *masterListName = nil;
+        for (NSUInteger j=0; j < mcnt; ++j)
+        {
+            ItemKey *key = [keys objectAtIndex:j];
+            
+            NSString *keyName = [key.name stringByReplacingOccurrencesOfString:@" " withString:@""];
+          
+            if ([masterList caseInsensitiveCompare:keyName] == NSOrderedSame)
+            {
+                bFoundMlist = true;
+                masterListName.name = key.name;
+                masterListName.share_id = key.share_id;
+                NSMutableArray* mlistarr =  [masterListArr objectForKey:key];
+                NSUInteger mecnt = [mlistarr count];
+                for (int k=0; k < mecnt; ++k)
+                {
+                    MasterList *itemM = [mlistarr objectAtIndex:k];
+                    NSString *masterListItem = [itemM.name stringByReplacingOccurrencesOfString:@" " withString:@""];
+                    if ([masterListItem caseInsensitiveCompare:alexaItemName] == NSOrderedSame)
+                    {
+                        bAddInScrtch = [self shouldAddInScrtchList:itemM.startMonth endM:itemM.endMonth];
+                        break;
+                      
+                    }
+                }
+            }
+            if ([masterListInv caseInsensitiveCompare:keyName] == NSOrderedSame)
+            {
+                bFoundMlist = true;
+                masterListName.name = [key.name substringToIndex:[key.name length]-4];
+                masterListName.share_id  = key.share_id;
+                NSMutableArray* mlistarr =  [masterListArr objectForKey:key];
+                NSUInteger mecnt = [mlistarr count];
+                for (int k=0; k < mecnt; ++k)
+                {
+                    MasterList *itemM = [mlistarr objectAtIndex:k];
+                    NSString *masterListItem = [itemM.name stringByReplacingOccurrencesOfString:@" " withString:@""];
+                    if ([masterListItem caseInsensitiveCompare:alexaItemName] == NSOrderedSame)
+                    {
+                        bAddInScrtch = false;
+                        if (item.add == YES)
+                        {
+                        itemM.inventory = 0;
+                        }
+                        else
+                        {
+                            itemM.inventory = 10;
+                        }
+                        if (![self updateAlexaTemplEditItem:itemM itemKey:key])
+                        {
+                            [self createAlexaTemplEditItems:mlistarr itemKey:key];
+                        }
+                    }
+                    
+                }
+            }
+            
+        }
+        
+        if(bFoundMlist && bAddInScrtch)
+        {
+            bool bFoundScrtchMlist=false;
+            for (NSUInteger j=0; j < mcnt; ++j)
+            {
+                ItemKey *key = [keys objectAtIndex:j];
+            
+                NSString *keyName = [key.name stringByReplacingOccurrencesOfString:@" " withString:@""];
+                if ([masterListScrtch caseInsensitiveCompare:keyName] == NSOrderedSame)
+                {
+                    bFoundScrtchMlist = true;
+                    NSMutableArray* mlistarr =  [masterListArr objectForKey:key];
+                    if (![self updateAlexaScrtchList:key alexaItem:item])
+                    {
+                        [self createAlexaTemplEditItems:mlistarr itemKey:key];
+                        [self updateAlexaScrtchList:key alexaItem:item];
+                    }
+                        
+                }
+            }
+            if (!bFoundScrtchMlist)
+            {
+                [self addToAlexaScrtchList:item itemKey:masterListName];
+            }
+        }
+        else
+        {
+            
+        }
+    }
     [workToDo unlock];
 }
+
+-(void) addToAlexaScrtchList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key
+{
+    NSMutableDictionary *itemMp = [alexaAddDic objectForKey:key];
+    if (itemMp != nil)
+    {
+        [self updateAlexaItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
+    }
+    else
+    {
+        if (alexaItem.add)
+        {
+            itemMp = [NSMutableDictionary dictionaryWithCapacity:10];
+            LocalMasterList *itemL = [[LocalMasterList alloc] init];
+            itemL.name = key.name;
+            itemL.item = alexaItem.name;
+            itemL.inventory = 10;
+            itemL.rowno = [itemMp count];
+            itemL.share_id = key.share_id;
+            [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
+        }
+    }
+}
+
+-(void) updateAlexaItemMp:(ItemKey *) key alexaItem:(AlexaItem*) alexaItem itemRowDic:(NSMutableDictionary *)itemMp
+{
+    bool bFound = false;
+    bool bRemove = false;
+    long long rowno = 0;
+    NSNumber *keyItem;
+    for(keyItem in itemMp) {
+        LocalMasterList* value = [itemMp objectForKey:keyItem];
+        if ([value.item isEqualToString:alexaItem.name])
+        {
+            bFound = true;
+            rowno = value.rowno;
+            if (!alexaItem.add)
+            {
+                bRemove = true;
+            }
+            break;
+        }
+    }
+    if (bFound && bRemove)
+    {
+        [itemMp removeObjectForKey:[NSNumber numberWithLongLong:rowno]];
+    }
+    if (!bFound)
+    {
+        if (alexaItem.add)
+        {
+            
+            LocalMasterList *itemL = [[LocalMasterList alloc] init];
+            itemL.name = key.name;
+            itemL.item = alexaItem.name;
+            itemL.inventory = 10;
+            itemL.rowno = [itemMp count];
+            itemL.share_id = key.share_id;
+            [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
+        }
+        
+    }
+}
+
+-(bool) updateAlexaScrtchList:(ItemKey *) key alexaItem:(AlexaItem*) alexaItem
+{
+    NSMutableDictionary *itemMp = [alexaEditDic objectForKey:key];
+   
+    if (itemMp != nil)
+    {
+        [self updateAlexaItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
+        return true;
+    }
+    
+    return false;
+}
+
+-(bool) updateAlexaTemplEditItem : (MasterList *)item itemKey:(ItemKey *) key
+{
+    NSMutableDictionary *itemMp = [alexaEditDic objectForKey:key];
+    if (itemMp != nil)
+    {
+        LocalMasterList *itemL = [itemMp objectForKey:[NSNumber numberWithLongLong:item.rowno]];
+        if (itemL != nil)
+        {
+            itemL.inventory = item.inventory;
+          return  true;
+        }
+        
+        
+    }
+    return false;
+}
+
+-(void) createAlexaTemplEditItems:(NSArray *)mlist itemKey:(ItemKey *) key
+{
+    if (mlist != nil)
+    {
+        NSUInteger nRows = [mlist count]+1;
+        NSUInteger mlistcnt = [mlist count];
+        
+       NSMutableDictionary * itemMp = [NSMutableDictionary dictionaryWithCapacity:nRows];
+        for (NSUInteger i=0; i < mlistcnt; ++i)
+        {
+            MasterList *itemML = [mlist objectAtIndex:i];
+            LocalMasterList *item = [[LocalMasterList alloc] initFromMasterList:itemML];
+            NSNumber *rowNm = [NSNumber numberWithLongLong:item.rowno];
+            if (item.rowno > nRows)
+                nRows = (NSUInteger) item.rowno;
+            [itemMp setObject:item forKey:rowNm];
+        }
+        [alexaEditDic setObject:itemMp forKey:key];
+     
+    NSLog(@"itemMp dictionary to set view %@\n", itemMp);
+     //   [masterListEditNames addObject:key];
+     //   [masterListEditMps addObject:itemMp];
+    //    ++templItemsEdited;
+     //   [self updateTemplEditedItemsImpl];
+    }
+}
+
 
 -(NSArray *) getMasterList: (ItemKey *)key
 {

@@ -86,6 +86,9 @@
      NSArray *masterListNamesTmp;
     NSArray *masterListTmp;
     NSMutableDictionary *masterListArr;
+    NSMutableDictionary *alexaEditDic;
+    NSMutableDictionary *alexaAddDic;
+    
     int templItemsToAdd;
     int templShareItemsToAdd;
     NSMutableArray *masterListNames;
