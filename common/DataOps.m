@@ -1375,6 +1375,7 @@
     [workToDo lock];
     alexaEditDic = [[NSMutableDictionary alloc] init];
     alexaAddDic = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *alexaNonTemplDic = [[NSMutableDictionary alloc] init];
     ItemKey *alexaKey = [self getAlexaListName];
     NSUInteger cnt = [items count];
     for (NSUInteger i=0; i < cnt; ++i)
@@ -1471,15 +1472,33 @@
             }
             if (!bFoundScrtchMlist)
             {
-                [self addToAlexaList:item itemKey:masterListName];
+                [self addToAlexaList:item itemKey:masterListName dic:alexaAddDic];
             }
         }
         else
         {
-            [self addToAlexaList:item itemKey:alexaKey];
+            [self addToAlexaList:item itemKey:alexaKey dic:alexaNonTemplDic];
         }
     }
     [workToDo unlock];
+    
+    for (ItemKey *itk in alexaEditDic)
+    {
+        NSMutableDictionary *itemMp = [alexaEditDic objectForKey:itk];
+        [self editedTemplItem:itk itemsDic:itemMp];
+    }
+    
+    for (ItemKey *itk in alexaAddDic)
+    {
+        NSMutableDictionary *itemMp = [alexaAddDic objectForKey:itk];
+        [self addTemplItem:itk itemsDic:itemMp];
+    }
+    
+    for (ItemKey *itk in alexaNonTemplDic)
+    {
+        NSMutableDictionary *itemMp = [alexaNonTemplDic objectForKey:itk];
+        [self addItem:itk itemsDic:itemMp];
+    }
 }
 
 -(ItemKey *) getAlexaListName
@@ -1499,9 +1518,9 @@
     return itk;
 }
 
--(void) addToAlexaList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key
+-(void) addToAlexaList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key dic:(NSMutableDictionary *)alexaDic
 {
-    NSMutableDictionary *itemMp = [alexaAddDic objectForKey:key];
+    NSMutableDictionary *itemMp = [alexaDic objectForKey:key];
     if (itemMp != nil)
     {
         [self updateAlexaItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
@@ -1518,6 +1537,7 @@
             itemL.rowno = [itemMp count];
             itemL.share_id = key.share_id;
             [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
+            [alexaDic setObject:itemMp forKey:key];
         }
     }
 }
