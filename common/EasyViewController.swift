@@ -16,6 +16,7 @@ enum eActionSheet : Int {
 
 @objc public protocol EasyViewControllerDelegate: NSObjectProtocol {
    @objc func shareContactsSetSelected()
+    @objc func getAlexaUserId(alexaCode code: String)
     
 }
 
@@ -179,10 +180,15 @@ enum eActionSheet : Int {
     
    @objc func showAlexaDialog()
     {
-         let alertController = UIAlertController(title: "Alexa code", message:"Add the Alexa skill EasyGrocList. Invoke the skill by saying Open Shopping List. Enter the  3 digit number said by Alexa to link the EasyGrocList iPhone App to the EasyGrocList Alexa skill", preferredStyle: .alert)
+         let alertController = UIAlertController(title: "Alexa code", message:"Enter the Alexa numerical code to link the App and Alexa skill", preferredStyle: .alert)
+        alertController.addTextField { (textField : UITextField!) -> Void in
+            textField.placeholder = "Enter Code"
+        }
         
         let ok = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
-            print("Add code for Alexa actions here")
+            
+            print ("Alexa code=" ,alertController.textFields![0].text ?? "no code")
+            self.delegate?.getAlexaUserId(alexaCode: alertController.textFields![0].text ?? "no code")
         }
         
         let cxl = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction) in
