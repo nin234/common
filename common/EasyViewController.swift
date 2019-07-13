@@ -16,7 +16,7 @@ enum eActionSheet : Int {
 
 @objc public protocol EasyViewControllerDelegate: NSObjectProtocol {
    @objc func shareContactsSetSelected()
-    @objc func getAlexaUserId(alexaCode code: String)
+    @objc func getAlexaUserId(_ code: String)
     
 }
 
@@ -188,7 +188,7 @@ enum eActionSheet : Int {
         let ok = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
             
             print ("Alexa code=" ,alertController.textFields![0].text ?? "no code")
-            self.delegate?.getAlexaUserId(alexaCode: alertController.textFields![0].text ?? "no code")
+            self.delegate?.getAlexaUserId(alertController.textFields![0].text ?? "no code")
         }
         
         let cxl = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction) in
