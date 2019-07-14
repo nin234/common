@@ -145,7 +145,7 @@ enum eActionSheet : Int {
         navigationItem.title = title
         if bShareView {
             
-            let pBarItem = UIBarButtonItem(title: "0001F46A0001F46A", style: .plain, target: self, action: #selector(self.shareContactsAdd))
+            let pBarItem = UIBarButtonItem(title: "\u{0001F46A}\u{0001F46A}", style: .plain, target: self, action: #selector(self.shareContactsAdd))
             navigationItem.rightBarButtonItem = pBarItem
             return
         }
