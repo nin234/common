@@ -49,6 +49,7 @@
 @synthesize templListViewController;
 @synthesize bReady;
 
+@class EasyViewController;
 
 -(void) setRefreshNow:(bool)refNow
 {
@@ -471,7 +472,7 @@
         [self updateEasyMainLstVwCntrl];
         [self refreshTemplData];
         [self updateMasterLstVwCntrl];
-        
+        [self getAlexaItems];
         
     }
     else
@@ -1375,7 +1376,7 @@
     [workToDo lock];
     alexaEditDic = [[NSMutableDictionary alloc] init];
     alexaAddDic = [[NSMutableDictionary alloc] init];
-    NSMutableDictionary *alexaNonTemplDic = [[NSMutableDictionary alloc] init];
+   NSMutableDictionary *alexaNonTemplDic = [[NSMutableDictionary alloc] init];
     ItemKey *alexaKey = [self getAlexaListName];
     NSUInteger cnt = [items count];
     for (NSUInteger i=0; i < cnt; ++i)
@@ -1391,7 +1392,7 @@
         bool bAddInScrtch = true;
         NSString *masterListInv = [masterList stringByAppendingString:@":INV"];
         NSString *masterListScrtch = [masterList stringByAppendingString:@":SCRTCH"];
-        ItemKey *masterListName = nil;
+        ItemKey *masterListName = [[ItemKey alloc] init];
         for (NSUInteger j=0; j < mcnt; ++j)
         {
             ItemKey *key = [keys objectAtIndex:j];
@@ -1427,7 +1428,7 @@
                 for (int k=0; k < mecnt; ++k)
                 {
                     MasterList *itemM = [mlistarr objectAtIndex:k];
-                    NSString *masterListItem = [itemM.name stringByReplacingOccurrencesOfString:@" " withString:@""];
+                    NSString *masterListItem = [itemM.item stringByReplacingOccurrencesOfString:@" " withString:@""];
                     if ([masterListItem caseInsensitiveCompare:alexaItemName] == NSOrderedSame)
                     {
                         bAddInScrtch = false;
@@ -1442,6 +1443,7 @@
                         if (![self updateAlexaTemplEditItem:itemM itemKey:key])
                         {
                             [self createAlexaTemplEditItems:mlistarr itemKey:key];
+                            [self updateAlexaTemplEditItem:itemM itemKey:key];
                         }
                     }
                     
@@ -1472,10 +1474,10 @@
             }
             if (!bFoundScrtchMlist)
             {
-                [self addToAlexaList:item itemKey:masterListName dic:alexaAddDic];
+                [self addToAlexaMasterList:item itemKey:masterListName dic:alexaAddDic];
             }
         }
-        else
+        else if (!bFoundMlist)
         {
             [self addToAlexaList:item itemKey:alexaKey dic:alexaNonTemplDic];
         }
@@ -1518,12 +1520,12 @@
     return itk;
 }
 
--(void) addToAlexaList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key dic:(NSMutableDictionary *)alexaDic
+-(void) addToAlexaMasterList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key dic:(NSMutableDictionary *)alexaDic
 {
     NSMutableDictionary *itemMp = [alexaDic objectForKey:key];
     if (itemMp != nil)
     {
-        [self updateAlexaItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
+        [self updateAlexaMasterListItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
     }
     else
     {
@@ -1536,13 +1538,14 @@
             itemL.inventory = 10;
             itemL.rowno = [itemMp count];
             itemL.share_id = key.share_id;
+            
             [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
             [alexaDic setObject:itemMp forKey:key];
         }
     }
 }
 
--(void) updateAlexaItemMp:(ItemKey *) key alexaItem:(AlexaItem*) alexaItem itemRowDic:(NSMutableDictionary *)itemMp
+-(void) updateAlexaMasterListItemMp:(ItemKey *) key alexaItem:(AlexaItem*) alexaItem itemRowDic:(NSMutableDictionary *)itemMp
 {
     bool bFound = false;
     bool bRemove = false;
@@ -1574,6 +1577,71 @@
             itemL.name = key.name;
             itemL.item = alexaItem.name;
             itemL.inventory = 10;
+            itemL.rowno = [itemMp count];
+            itemL.share_id = key.share_id;
+            [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
+        }
+        
+    }
+}
+
+-(void) addToAlexaList:(AlexaItem *) alexaItem itemKey:(ItemKey *) key dic:(NSMutableDictionary *)alexaDic
+{
+    NSMutableDictionary *itemMp = [alexaDic objectForKey:key];
+    if (itemMp != nil)
+    {
+        [self updateAlexaItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
+    }
+    else
+    {
+        if (alexaItem.add)
+        {
+            itemMp = [NSMutableDictionary dictionaryWithCapacity:10];
+            LocalList *itemL = [[LocalList alloc] init];
+            itemL.name = key.name;
+            itemL.item = alexaItem.name;
+            itemL.hidden = false;
+            itemL.rowno = [itemMp count];
+            itemL.share_id = key.share_id;
+            
+            [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
+            [alexaDic setObject:itemMp forKey:key];
+        }
+    }
+}
+
+-(void) updateAlexaItemMp:(ItemKey *) key alexaItem:(AlexaItem*) alexaItem itemRowDic:(NSMutableDictionary *)itemMp
+{
+    bool bFound = false;
+    bool bRemove = false;
+    long long rowno = 0;
+    NSNumber *keyItem;
+    for(keyItem in itemMp) {
+        LocalList* value = [itemMp objectForKey:keyItem];
+        if ([value.item isEqualToString:alexaItem.name])
+        {
+            bFound = true;
+            rowno = value.rowno;
+            if (!alexaItem.add)
+            {
+                bRemove = true;
+            }
+            break;
+        }
+    }
+    if (bFound && bRemove)
+    {
+        [itemMp removeObjectForKey:[NSNumber numberWithLongLong:rowno]];
+    }
+    if (!bFound)
+    {
+        if (alexaItem.add)
+        {
+            
+            LocalList *itemL = [[LocalList alloc] init];
+            itemL.name = key.name;
+            itemL.item = alexaItem.name;
+            itemL.hidden = false;
             itemL.rowno = [itemMp count];
             itemL.share_id = key.share_id;
             [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
@@ -2386,6 +2454,22 @@
     
 }
 
+
+-(void) getAlexaItems
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    NSArray *vws = [pAppCmnUtil.navViewController viewControllers];
+    NSUInteger vwcnt = [vws count];
+    for (NSUInteger i=0; i < vwcnt; ++i)
+    {
+        if ([[vws objectAtIndex:i] isMemberOfClass:[EasyViewController class]])
+        {
+            EasyViewController *pLst = [vws objectAtIndex:i];
+            [pLst getAlexaItems];
+            break;
+        }
+    }
+}
 
 -(void) updateEasyMainLstVwCntrl
 {

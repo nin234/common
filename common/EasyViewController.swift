@@ -17,7 +17,7 @@ enum eActionSheet : Int {
 @objc public protocol EasyViewControllerDelegate: NSObjectProtocol {
    @objc func shareContactsSetSelected()
     @objc func getAlexaUserId(_ code: String)
-    
+    @objc func runAlexaQuery()
 }
 
 
@@ -29,7 +29,10 @@ enum eActionSheet : Int {
     var pSearchBar: UISearchBar?
     @objc public var bShareView = false
     
-    
+    @objc public func getAlexaItems()
+    {
+        delegate?.runAlexaQuery();
+    }
     
     func mainScreenActions(_ buttonIndex: Int) {
     }
