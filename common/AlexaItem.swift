@@ -13,6 +13,6 @@ import Foundation
     @objc public var add = true
    @objc public var name: String?
    @objc public var masterList: String?
-    @objc public var date = 0
+    @objc public var date : Int64 = 0
     
 }
