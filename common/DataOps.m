@@ -1409,7 +1409,7 @@
                 for (int k=0; k < mecnt; ++k)
                 {
                     MasterList *itemM = [mlistarr objectAtIndex:k];
-                    NSString *masterListItem = [itemM.name stringByReplacingOccurrencesOfString:@" " withString:@""];
+                    NSString *masterListItem = [itemM.item stringByReplacingOccurrencesOfString:@" " withString:@""];
                     if ([masterListItem caseInsensitiveCompare:alexaItemName] == NSOrderedSame)
                     {
                         bAddInScrtch = [self shouldAddInScrtchList:itemM.startMonth endM:itemM.endMonth];
@@ -1474,6 +1474,7 @@
             }
             if (!bFoundScrtchMlist)
             {
+                masterListName.name = [masterListName.name stringByAppendingString:@":SCRTCH"];
                 [self addToAlexaMasterList:item itemKey:masterListName dic:alexaAddDic];
             }
         }
@@ -1536,7 +1537,7 @@
             itemL.name = key.name;
             itemL.item = alexaItem.name;
             itemL.inventory = 10;
-            itemL.rowno = [itemMp count];
+            itemL.rowno = [itemMp count]+1;
             itemL.share_id = key.share_id;
             
             [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
@@ -1577,7 +1578,7 @@
             itemL.name = key.name;
             itemL.item = alexaItem.name;
             itemL.inventory = 10;
-            itemL.rowno = [itemMp count];
+            itemL.rowno = [itemMp count]+1;
             itemL.share_id = key.share_id;
             [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
         }
@@ -1601,7 +1602,7 @@
             itemL.name = key.name;
             itemL.item = alexaItem.name;
             itemL.hidden = false;
-            itemL.rowno = [itemMp count];
+            itemL.rowno = [itemMp count]+1;
             itemL.share_id = key.share_id;
             
             [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
@@ -1642,7 +1643,7 @@
             itemL.name = key.name;
             itemL.item = alexaItem.name;
             itemL.hidden = false;
-            itemL.rowno = [itemMp count];
+            itemL.rowno = [itemMp count]+1;
             itemL.share_id = key.share_id;
             [itemMp setObject:itemL forKey:[NSNumber numberWithLongLong:itemL.rowno]];
         }
@@ -1656,7 +1657,7 @@
    
     if (itemMp != nil)
     {
-        [self updateAlexaItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
+        [self updateAlexaMasterListItemMp:key alexaItem:alexaItem itemRowDic:itemMp];
         return true;
     }
     
