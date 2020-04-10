@@ -142,6 +142,7 @@
 
 -(void) lock;
 -(void) unlock;
+-(void) unlockAndSignal;
 @property NSInteger masterListCnt;
  
 
@@ -177,7 +178,7 @@
 -(void) addTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) addShareTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
-
+-(void) editedTemplItemNoLock:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 
 -(void) deletedTemplItem:(ItemKey *)name;
 -(void) addPicItem:(ItemKey *)name picItem:(NSString *)picUrl;

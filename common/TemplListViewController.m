@@ -312,9 +312,11 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
      */
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+    [pAppCmnUtil.dataSync lock];
     [self saveEditedTemplItem:recurrLst];
     [self saveEditedTemplItem:invLst];
     [self saveEditedTemplItem:scrtchLst];
+    [pAppCmnUtil.dataSync unlockAndSignal];
     return;
 }
 
@@ -330,7 +332,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     ItemKey *mtk = [[ItemKey alloc] init];
     mtk.name = pListView.name;
     mtk.share_id = pListView.share_id;
-    [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:pListView.itemMp];
+    [pAppCmnUtil.dataSync editedTemplItemNoLock:mtk itemsDic:pListView.itemMp];
 }
 
 -(void) templItemEditCancel

@@ -83,7 +83,16 @@
     return;
 }
 
+-(void) editedTemplItemNoLock:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
 
+{
+   
+    [masterListEditNames addObject:name];
+    [masterListEditMps addObject:itmsMp];
+    ++templItemsEdited;
+    NSLog(@"Added edit templ item %@ %d and signalling work to do\n", name, templItemsEdited);
+    return;
+}
 
 -(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
 
@@ -113,6 +122,7 @@
 
 -(void) updateMasterLstVwCntrl
 {
+    
     NSLog(@"Updating MasterLstVwCntrl waiting for main queue");
     dispatch_sync(dispatch_get_main_queue(), ^{
         NSLog(@"Updating MasterLstVwCntrl in main queue");
@@ -127,7 +137,7 @@
             [templListViewController.recurrLstDisp.tableView reloadData];
             [templListViewController.invLstDisp refreshMasterList];
             [templListViewController.invLstDisp.tableView reloadData];
-            [templListViewController.scrtchLstDisp refreshMasterList];
+           [templListViewController.scrtchLstDisp refreshMasterList];
             [templListViewController.scrtchLstDisp.tableView reloadData];
             
             [templListViewController.recurrLst refreshMasterList];
@@ -744,7 +754,7 @@
 
 -(void) updateLstVwCntrl
 {
-   
+  
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     dispatch_sync(dispatch_get_main_queue(), ^{
         NSArray *vws = [pAppCmnUtil.navViewController viewControllers];
@@ -764,6 +774,7 @@
             
         }
     });
+   
     return;
 }
 
@@ -1341,7 +1352,7 @@
     return true;
 }
 
-
+//Lock and unlock manually
 -(NSArray *) getMasterListNames
 {
     return masterListNamesArr;
@@ -2540,8 +2551,16 @@
     return;
 }
 
+-(void) unlockAndSignal
+{
+    [workToDo signal];
+    [workToDo unlock];
+    return;
+}
+
 -(void) unlock
 {
+    
     [workToDo unlock];
     return;
 }
