@@ -181,6 +181,8 @@
 -(void) editedTemplItemNoLock:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 
 -(void) deletedTemplItem:(ItemKey *)name;
+-(void) deletedTemplItemNoLock:(ItemKey *)name;
+
 -(void) addPicItem:(ItemKey *)name picItem:(NSString *)picUrl;
 -(NSArray *) getList: (ItemKey *)key;
 -(void) selectedItem: (ItemKey *) selectedItem;

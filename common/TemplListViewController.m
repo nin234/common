@@ -524,14 +524,18 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         ItemKey *itk = [masterList objectAtIndex:indexPath.row];
         
-        [pAppCmnUtil.dataSync deletedTemplItem:itk];
-        NSString *invName = [itk.name stringByAppendingString:@":INV"];
-        itk.name = [itk.name stringByAppendingString:@":SCRTCH"];
-        [pAppCmnUtil.dataSync deletedTemplItem:itk];
-        itk.name = invName;
-        [pAppCmnUtil.dataSync deletedTemplItem:itk];
-        
-        [self.tableView reloadData];
+        [pAppCmnUtil.dataSync lock];
+        [pAppCmnUtil.dataSync deletedTemplItemNoLock:itk];
+        ItemKey *itkInv = [[ItemKey alloc] init];
+        itkInv.name = [itk.name stringByAppendingString:@":INV"];
+        itkInv.share_id = itk.share_id;
+         ItemKey *itkScrtch = [[ItemKey alloc] init];
+        itkScrtch.name = [itk.name stringByAppendingString:@":SCRTCH"];
+        itkScrtch.share_id = itk.share_id;
+        [pAppCmnUtil.dataSync deletedTemplItemNoLock:itkInv];
+        [pAppCmnUtil.dataSync deletedTemplItemNoLock:itkScrtch];
+        [pAppCmnUtil.dataSync unlockAndSignal];
+       
     }
 }
 
