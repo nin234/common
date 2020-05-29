@@ -8,6 +8,9 @@
 
 #import "EasyAddViewController.h"
 #import "AppCmnUtil.h"
+#import "List.h"
+#import "MasterList.h"
+#import "LocalList.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -213,6 +216,139 @@
     return;
 }
 
+-(void) createAndSaveListFromMasterList:(NSString *)mlistName shareId:(long long)mlist_share_id
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = mlistName;
+    itk.share_id = mlist_share_id;
+    NSArray* mlist = [pAppCmnUtil.dataSync getMasterList:itk];
+    
+    NSString *name = mlistName;
+    NSDate *today = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    NSString *formattedDateString = [dateFormatter stringFromDate:today];
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:formattedDateString];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [calendar  components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
+    NSInteger month = [components month];
+    NSMutableDictionary *itemMp = [NSMutableDictionary dictionaryWithCapacity:100];
+    NSLog(@"Master list %@ for name %@ %s %d\n", mlist, name, __FILE__, __LINE__);
+    NSUInteger nRows=1;
+    if (mlist != nil)
+    {
+        int recrLstCnt = (int)[mlist count];
+        
+        
+        for (NSUInteger i=0; i < recrLstCnt; ++i)
+        {
+            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
+            LocalList *newItem = [[LocalList alloc] init];
+            MasterList *mitem =[mlist objectAtIndex:i];
+            if (mitem.endMonth > mitem.startMonth)
+            {
+                if (month > mitem.endMonth || month < mitem.startMonth)
+                    continue;
+                    
+            }
+            else if (mitem.endMonth == mitem.startMonth)
+            {
+                if (month != mitem.endMonth)
+                    continue;
+            }
+            else
+            {
+                if (month < mitem.startMonth && month > mitem.endMonth)
+                    continue;
+            }
+            
+            newItem.rowno = nRows;
+            ++nRows;
+            newItem.item = mitem.item;
+            newItem.hidden = false;
+            [itemMp setObject:newItem forKey:rowNm];
+        }
+       
+        
+    }
+    
+    bool bInvChanged = false;
+    NSString *mInvListName = [mlistName stringByAppendingString:@":INV"];
+    itk.name = mInvListName;
+    NSArray *   mInvArr = [pAppCmnUtil.dataSync getMasterList:itk];
+    NSUInteger invArrCnt = [mInvArr count];
+    NSMutableDictionary *mInvMp = [[NSMutableDictionary alloc] init];
+    for (NSUInteger i=0; i < invArrCnt; ++i)
+    {
+        NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
+        LocalList *newItem = [[LocalList alloc] init];
+        MasterList *mitem =[mInvArr objectAtIndex:i];
+        NSNumber *invLstRowNo = [NSNumber numberWithUnsignedInteger:(NSUInteger)mitem.rowno];
+        [mInvMp setObject:mitem forKey:invLstRowNo];
+            
+        if (mitem.inventory)
+            continue;
+        bInvChanged = true;
+        newItem.rowno = nRows;
+        ++nRows;
+        newItem.item = mitem.item;
+        newItem.hidden = false;
+        [itemMp setObject:newItem forKey:rowNm];
+    }
+        
+    NSString *mScrtchListName = [mlistName stringByAppendingString:@":SCRTCH"];
+    itk.name = mScrtchListName;
+    NSArray *   mScrtchArr = [pAppCmnUtil.dataSync getMasterList:itk];
+    NSUInteger scrtchArrCnt = [mScrtchArr count];
+    for (NSUInteger i=0; i < scrtchArrCnt; ++i)
+    {
+        NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
+        LocalList *newItem = [[LocalList alloc] init];
+        MasterList *mitem =[mScrtchArr objectAtIndex:i];
+        newItem.rowno = nRows;
+        ++nRows;
+        newItem.item = mitem.item;
+        newItem.hidden = false;
+        [itemMp setObject:newItem forKey:rowNm];
+    }
+
+    if (nRows ==1)
+    {
+        return;
+    }
+    NSLog(@"itemMp dictionary to set view %@\n", itemMp);
+    NSLog(@"Setting nRows %lu\n", (unsigned long)nRows);
+    
+    itk.name = name;
+    [pAppCmnUtil.dataSync addItem:itk itemsDic:itemMp];
+    if (bInvChanged)
+    {
+        for (NSNumber *key in mInvMp)
+        {
+            MasterList *mitem = [mInvMp objectForKey:key];
+            mitem.inventory = 10;
+        }
+        ItemKey *mtk = [[ItemKey alloc] init];
+        mtk.name = mInvListName;
+        mtk.share_id = mlist_share_id;
+        [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:mInvMp];
+    }
+    if (mScrtchArr != nil && [mScrtchArr count])
+    {
+        ItemKey *mtk = [[ItemKey alloc] init];
+        mtk.name = mScrtchListName;
+        mtk.share_id = mlist_share_id;
+        [pAppCmnUtil.dataSync deletedTemplItem:mtk];
+    }
+        
+    
+    return;
+
+    
+}
 
 
 #pragma mark - Table view data source
@@ -445,10 +581,12 @@
             return;
         }
         [pAppCmnUtil popView];
+        ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+        
         List1ViewController *aViewController = [List1ViewController alloc];
         aViewController.editMode = listMode;
         aViewController.bEasyGroc = false;
-        ItemKey *itk = [masterList objectAtIndex:indexPath.row];
+        
         aViewController.mlistName = itk.name;
         aViewController.mlist_share_id = itk.share_id;
         
@@ -457,6 +595,8 @@
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+         
+        [self createAndSaveListFromMasterList:itk.name shareId:itk.share_id];
 
         return;
     }
@@ -468,18 +608,10 @@
             NSLog(@"Row count greater than template list items");
             return;
         }
-        
-        List1ViewController *aViewController = [List1ViewController alloc];
-        aViewController.editMode = eListModeAdd;
-        aViewController.bEasyGroc = true;
         ItemKey *itk = [masterList objectAtIndex:indexPath.row];
-        aViewController.mlistName = itk.name;
-        aViewController.mlist_share_id = itk.share_id;
-        aViewController.share_id = pAppCmnUtil.share_id;
         
-
-        aViewController = [aViewController initWithNibName:nil bundle:nil];
-        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+        [pAppCmnUtil popView];
+        [self createAndSaveListFromMasterList:itk.name shareId:itk.share_id];
         
     }
     else if (indexPath.section == 0)
