@@ -883,6 +883,10 @@
     cell.accessoryView = invOnOffSwtch;
    invOnOffSwtch.onTintColor = [UIColor greenColor];
    invOnOffSwtch.tintColor = [UIColor redColor];
+    invOnOffSwtch.backgroundColor =[UIColor redColor];
+    invOnOffSwtch.layer.cornerRadius = invOnOffSwtch.frame.size.height/2.0;
+   
+    
     if (item.inventory)
     {
         invOnOffSwtch.on = YES;
@@ -891,7 +895,8 @@
     {
         invOnOffSwtch.on = NO;
     }
-    NSLog(@"Setting inventory switch for row = %lu item=%@ inventory=%d", (unsigned long)row, item.item, item.inventory);
+    NSLog(@"Setting inventory switch for row = %lu item=%@ inventory=%d width=%f height=%f", (unsigned long)row, item.item, item.inventory, invOnOffSwtch.frame.size.width,
+          invOnOffSwtch.frame.size.height);
     invOnOffSwtch.tag = row;
 }
 
