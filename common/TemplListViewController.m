@@ -9,6 +9,7 @@
 #import "TemplListViewController.h"
 #import "ComponentsViewController.h"
 #import "AppCmnUtil.h"
+#import <StoreKit/StoreKit.h>
 
 const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 
@@ -208,7 +209,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(templItemAdd) ];
         self.navigationItem.rightBarButtonItem = pBarItem;
     }
-
+    [SKStoreReviewController requestReview];
 }
 
 - (void)viewDidLoad
@@ -222,7 +223,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     
-    
+   
 
 }
 
