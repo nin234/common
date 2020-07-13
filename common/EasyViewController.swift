@@ -148,7 +148,7 @@ enum eActionSheet : Int {
         navigationItem.title = title
         if bShareView {
             
-            let pBarItem = UIBarButtonItem(title: "\u{0001F46A}\u{0001F46A}", style: .plain, target: self, action: #selector(self.shareContactsAdd))
+            let pBarItem = UIBarButtonItem(title: "Recipients", style: .plain, target: self, action: #selector(self.shareContactsAdd))
             navigationItem.rightBarButtonItem = pBarItem
             return
         }
@@ -177,6 +177,20 @@ enum eActionSheet : Int {
 
     @objc func shareContactsAdd()
     {
+        if (pAllItms?.itemSelected == false)
+        {
+             let alertController = UIAlertController(title: "Select List", message:"Select a List to share with the Recipients", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
+                
+                print ("You have pressed OK");
+               
+            }
+            
+            alertController.addAction(ok)
+           
+            self.present(alertController, animated: true)
+            return;
+        }
         delegate?.shareContactsSetSelected();
     return;
     }

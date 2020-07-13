@@ -149,7 +149,7 @@
     if (bShareView)
     {
         
-        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"\U0001F46A\U0001F46A" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
+        UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithTitle:@"Recipients" style:UIBarButtonItemStylePlain target:self action:@selector(shareContactsAdd)];
         self.navigationItem.rightBarButtonItem = pBarItem;
         return;
     }

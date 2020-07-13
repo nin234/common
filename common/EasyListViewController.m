@@ -22,6 +22,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 
 @synthesize list;
 @synthesize bShareView;
+@synthesize itemSelected;
 
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -29,6 +30,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
+        itemSelected   = false;
     }
     return self;
 }
@@ -359,6 +361,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 
             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:NO]];
             textField.text = @"\u2B1C   ";
+            itemSelected = false;
             textField.text = [textField.text stringByAppendingString:itk.name];
         }
         else
@@ -368,6 +371,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
             NSUInteger crnt = indexPath.row;
             
             NSLog(@"Changing  image to selected at index %lu\n", (unsigned long)crnt);
+            itemSelected = true;
             [seletedItems replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:YES]];
             NSUInteger cnt = [seletedItems count];
             for (NSUInteger i=0; i < cnt; ++i)

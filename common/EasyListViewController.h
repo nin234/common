@@ -23,6 +23,8 @@
 @property (nonatomic, retain) NSArray *list;
 @property (nonatomic) bool bShareView;
 
+@property (nonatomic) bool itemSelected;
+
 
 -(void) refreshList;
 
