@@ -356,6 +356,7 @@
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     UISwitch *toggleSwitch = (UISwitch *)sender;
+    NSLog(@"Switch toggled for row number=%ld", (long)toggleSwitch.tag);
     NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
     LocalMasterList *item = [itemMp objectForKey:rowNm];
     if (item != nil)
@@ -476,6 +477,7 @@
         [self.tableView reloadData];
         reloadAfterSeasonPicked = false;
     }
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     
 }
@@ -787,6 +789,7 @@
         cell.textLabel.text = @"";
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.backgroundColor = nil;
+        cell.accessoryView = nil;
     }
     
     if (indexPath.section != 0)
