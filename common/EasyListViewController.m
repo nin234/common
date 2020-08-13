@@ -119,6 +119,10 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         //add code here for when you hit delete
+        if (indexPath.row >= [list count])
+        {
+            return;
+        }
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         ItemKey *itk = [list objectAtIndex:indexPath.row];
         [pAppCmnUtil.dataSync deletedEasyItem:itk];
