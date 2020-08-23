@@ -223,7 +223,18 @@
     
     mainTemplVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController2];
     
-    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl templNavCntrl:mainTemplVwNavCntrl ContactsDelegate:self];
+    
+    TemplListViewController *aViewController = [TemplListViewController alloc];
+    aViewController = [aViewController initWithNibName:nil bundle:nil];
+    aViewController.bCheckListView = true;
+    
+    UIImage *imagePlanner = [UIImage imageNamed:@"ic_event_note_white_36pt"];
+        UIImage *imagePlannerSel = [UIImage imageNamed:@"ic_event_note_36pt"];
+    aViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Checklists" image:imagePlanner selectedImage:imagePlannerSel];
+    
+    UINavigationController *checkListNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController];
+    
+    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl templNavCntrl:mainTemplVwNavCntrl     checkListCntrl:checkListNavCntrl ContactsDelegate:self];
 
 }
 

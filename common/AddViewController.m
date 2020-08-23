@@ -1223,6 +1223,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    NSLog(@"Loading Done Cancel buttons and title in Add Item");
     self.navigationItem.title = [NSString stringWithString:[delegate setTitle]];
     
     UIBarButtonItem *pBarItemAddDone = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(itemAddDone) ];
