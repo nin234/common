@@ -37,8 +37,8 @@
 {
     
      bool bUpgradeAlert;
-    UINavigationController *mainTemplVwNavCntrl;
-    UINavigationController *mainVwNavCntrl;
+    UINavigationController *mainShareVwNavCntrl;
+    
 }
 
 
@@ -48,11 +48,13 @@
 @property (nonatomic, retain) InAppPurchase *inapp;
 @property (nonatomic, retain) ShareMgr *pShrMgr;
 @property (nonatomic, weak) id<AppUtilDelegate> delegate;
+@property (nonatomic, retain) UINavigationController *mainVwNavCntrl;
 @property bool bFBAction;
 @property bool bEmailConfirm;
 @property bool bNoICloudAlrt;
 @property (nonatomic, strong) NSString *productId;
 @property (nonatomic, retain) MainViewController *aViewController1;
+@property (nonatomic, retain) MainViewController *aViewController2;
 @property (nonatomic, retain) UIWindow *window;
 
 

@@ -28,6 +28,8 @@
 @synthesize bEmailConfirm;
 @synthesize aViewController1;
 @synthesize window;
+@synthesize mainVwNavCntrl;
+@synthesize aViewController2;
 
 
 -(void) setPurchsd:(NSString *)trid
@@ -206,11 +208,16 @@
     aViewController1.bShareView = true;
     aViewController1 = [aViewController1 initWithNibName:nil bundle:nil];
     
-    MainViewController* aViewController2 = [MainViewController alloc];
+    aViewController2 = [MainViewController alloc];
     
+    aViewController2.pAllItms.bInICloudSync = false;
+    aViewController2.pAllItms.bInEmail = false;
+    aViewController2.pAllItms.bAttchmentsInit = false;
+   
+    aViewController2.bShareView = false;
    
     aViewController2.delegate = (id)delegate;
-    aViewController2.bShareView = true;
+    
     aViewController2.delegate_1  = (id) delegate;
     aViewController2 = [aViewController2 initWithNibName:nil bundle:nil];
     
@@ -218,10 +225,14 @@
     UIImage *imageSel = [UIImage imageNamed:@"895-user-group-selected@2x.png"];
     aViewController1.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Share" image:image selectedImage:imageSel];
     
-    mainVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController1];
+    mainShareVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController1];
     
+    UIImage *imageHome = [UIImage imageNamed:@"802-dog-house@2x.png"];
+    UIImage *imageHomeSel = [UIImage imageNamed:@"895-dog-house-selected@2x.png"];
     
-    mainTemplVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController2];
+    aViewController2.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Home" image:imageHome selectedImage:imageHomeSel];
+    
+    mainVwNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController2];
     
     
     TemplListViewController *aViewController = [TemplListViewController alloc];
@@ -234,7 +245,7 @@
     
     UINavigationController *checkListNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController];
     
-    [appShrUtl initializeTabBarCntrl:mainVwNavCntrl templNavCntrl:mainTemplVwNavCntrl     checkListCntrl:checkListNavCntrl ContactsDelegate:self];
+    [appShrUtl initializeTabBarCntrl:mainShareVwNavCntrl mainNavCntrl:mainVwNavCntrl     checkListCntrl:checkListNavCntrl ContactsDelegate:self];
 
 }
 
