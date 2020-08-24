@@ -7,7 +7,7 @@
 //
 
 #import "MainViewController.h"
-
+#import "NotesViewController.h"
 
 @implementation MainViewController
 @synthesize pSearchBar;
@@ -214,13 +214,35 @@
     
     
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
-    self.navigationItem.rightBarButtonItem = pBarItem;
-    UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(iCloudOrEmail)];
+   
+    UIImage *imageHelp = [UIImage imageNamed:@"ic_help_outline_18pt_2x"];
+       UIBarButtonItem *pHelpBtn = [[UIBarButtonItem alloc] initWithImage:imageHelp style:UIBarButtonItemStylePlain target:self action:@selector(showHelpScreen)];
     
-    self.navigationItem.leftBarButtonItem = pBarItem1;
+       //NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pHelpBtn,nil];
+       self.navigationItem.rightBarButtonItem =pBarItem;
+       self.navigationItem.leftBarButtonItem = pHelpBtn;
     //[pAllItms.tableView reloadData];
     
 }
+
+-(void) showHelpScreen
+{
+    NSLog(@"Showing help screen");
+    NotesViewController *notesViewController = [NotesViewController alloc] ;
+    NSLog(@"Pushing Notes view controller %s %d\n" , __FILE__, __LINE__);
+    //  albumContentsViewController.assetsGroup = group_;
+    notesViewController.notes.editable = NO;
+    notesViewController.mode = eNotesModeDisplay;
+    notesViewController.notes.selectable = NO;
+    
+    notesViewController.title = @"How to use";
+    
+    notesViewController.notesTxt = @"Create Checklists. ";
+    notesViewController = [notesViewController initWithNibName:@"NotesViewController" bundle:nil];
+    [notesViewController.notes setFont:[UIFont fontWithName:@"ArialMT" size:20]];
+    [self.navigationController pushViewController:notesViewController animated:NO];
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
