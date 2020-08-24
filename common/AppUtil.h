@@ -33,7 +33,7 @@
 
 @end
 
-@interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, UIAlertViewDelegate>
+@interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, AppShrUtilDelegate, UIAlertViewDelegate>
 {
     
      bool bUpgradeAlert;
