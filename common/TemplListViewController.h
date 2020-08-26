@@ -31,11 +31,14 @@ enum templateNameButtons
     NSArray *masterList;
     NSMutableArray *seletedItems;
     bool uniqueNameAlert;
+    ItemKey *itkDisp;
 }
 
 -(void) refreshMasterList;
 
 @property (nonatomic, weak) id<TemplListViewControllerDelegate> delegate;
+
+@property (nonatomic, retain) IBOutlet UINavigationController *navViewController;
 
 @property (nonatomic, retain) ListViewController *recurrLst;
 @property (nonatomic, retain) ListViewController *recurrLstDisp;
@@ -57,5 +60,5 @@ enum templateNameButtons
 - (void)templItemEdit;
 -(void) templItemEditCancel;
 - (void) templItemEditDone;
-
+-(void) templItemEditOHASpree;
 @end

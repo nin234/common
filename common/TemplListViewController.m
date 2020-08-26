@@ -31,6 +31,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 @synthesize  masterListName;
 @synthesize  masterInvListName;
 @synthesize  masterScrathListName;
+@synthesize navViewController;
 
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -109,7 +110,7 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         aViewController.share_id = 0;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
         aViewController.bCheckListView = bCheckListView;
-        [pAppCmnUtil.navViewController pushViewController:aViewController animated:YES];
+        [navViewController pushViewController:aViewController animated:YES];
     }
     return;
 }
@@ -188,7 +189,8 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 {
     [super viewWillAppear:animated];
     NSString *title = @"Planner";
-    self.navigationItem.title = [NSString stringWithString:title];
+    
+   
     if (self.bShareTemplView)
     {
         
@@ -206,9 +208,12 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     }
     else
     {
+        title = @"Check Lists";
         UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(templItemAdd) ];
         self.navigationItem.rightBarButtonItem = pBarItem;
+        [self refreshMasterList];
     }
+     self.navigationItem.title = [NSString stringWithString:title];
     [SKStoreReviewController requestReview];
 }
 
@@ -377,6 +382,17 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
     return;
 }
 
+-(void) templItemEditOHASpree
+{
+            ListViewController *aViewController = [ListViewController alloc];
+           aViewController.editMode = eViewModeEdit;
+           aViewController.mlistName= itkDisp.name;
+           aViewController.share_id = itkDisp.share_id;
+           aViewController.templViewController = self;
+           aViewController = [aViewController initWithNibName:nil bundle:nil];
+       
+           [navViewController pushViewController:aViewController animated:NO];
+}
 
 #pragma mark - Table view data source
 
@@ -660,9 +676,11 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
         aViewController.editMode = eViewModeDisplay;
         aViewController.mlistName= itk.name;
         aViewController.share_id = itk.share_id;
+        aViewController.templViewController = self;
         aViewController = [aViewController initWithNibName:nil bundle:nil];
     
-        [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
+        [navViewController pushViewController:aViewController animated:NO];
+        itkDisp = itk;
     }
     
 }

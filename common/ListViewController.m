@@ -35,6 +35,7 @@
 
 
 
+
 -(void) addRow1
 {
     [pLstVw addRow:rowNo];
@@ -66,7 +67,7 @@
 @synthesize pCompVwCntrl;
 @synthesize bCheckListView;
 @synthesize share_id;
-
+@synthesize templViewController;
 
 
 -(void) showSeasonPicker : (NSUInteger) rowNo
@@ -280,7 +281,7 @@
 - (void)templItemAddDone
 {
      AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    ListViewController *pListView = (ListViewController *)[pAppCmnUtil.templNavViewController topViewController];
+    ListViewController *pListView = (ListViewController *)[self.navigationController topViewController];
     ItemKey *itk = [[ItemKey alloc] init];
     itk.name = pListView.name;
     if (pListView.share_id)
@@ -300,7 +301,7 @@
             return;
         }
     }
-    [pAppCmnUtil.templNavViewController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:NO];
     
     //[self templItemDisplay:pListView.name lstcntr:pListView];
     [pListView cleanUpItemMp];
@@ -332,6 +333,11 @@
         }
  
     }
+}
+
+- (void)templItemEditDone
+{
+    
 }
 
 - (void)viewDidLoad
@@ -428,14 +434,36 @@
     
 }
 
+-(void) viewWillAppearOHAspree
+{
+    if (editMode == eViewModeAdd)
+      {
+          UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(templItemAddDone) ];
+          self.navigationItem.rightBarButtonItem = pBarItem1;
+          return;
+      }
+      else if (editMode == eViewModeDisplay)
+      {
+         UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:templViewController action:@selector(templItemEditOHASpree) ];
+          self.navigationItem.rightBarButtonItem = pBarItem1;
+          return;
+      }
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     NSLog (@"In view will appear %s %d", __FILE__, __LINE__);
-   
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (!pAppCmnUtil.bEasyGroc)
+    {
+        [self viewWillAppearOHAspree];
+        return;
+    }
+  
     
     //NSLog(@"No of view controllers EasyDataOps:updateMasterLstVwCntrl %lu", (unsigned long)vwcnt);
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
        NSArray *vws =  [pAppCmnUtil.templNavViewController viewControllers];
     NSUInteger vwcnt = [vws count];
     TemplListViewController *pTemplVwCntrl = nil;

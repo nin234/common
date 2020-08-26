@@ -244,6 +244,8 @@
     aViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Checklists" image:imagePlanner selectedImage:imagePlannerSel];
     
     UINavigationController *checkListNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController];
+    aViewController.navViewController = checkListNavCntrl;
+    
     
     [appShrUtl initializeTabBarCntrl:mainShareVwNavCntrl mainNavCntrl:mainVwNavCntrl     checkListCntrl:checkListNavCntrl ContactsDelegate:self];
 
