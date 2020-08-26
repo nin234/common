@@ -335,9 +335,16 @@
     }
 }
 
-- (void)templItemEditDone
+- (void) templItemOhAspreeEditDone
 {
-    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    [self cleanUpItemMp];
+    ItemKey *mtk = [[ItemKey alloc] init];
+    mtk.name = name;
+    mtk.share_id = share_id;
+    [pAppCmnUtil.dataSync editedTemplItem:mtk itemsDic:itemMp];
+    [self.navigationController popViewControllerAnimated:NO];
+   //  [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)viewDidLoad
@@ -434,12 +441,20 @@
     
 }
 
+-(void) templItemCancel
+{
+    [self.navigationController popViewControllerAnimated:NO];
+}
+
 -(void) viewWillAppearOHAspree
 {
     if (editMode == eViewModeAdd)
       {
-          UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(templItemAddDone) ];
-          self.navigationItem.rightBarButtonItem = pBarItem1;
+          UIBarButtonItem *pBarItemR = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(templItemAddDone) ];
+          self.navigationItem.rightBarButtonItem = pBarItemR;
+          
+          UIBarButtonItem *pBarItemL = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemCancel) ];
+                 self.navigationItem.leftBarButtonItem = pBarItemL;
           return;
       }
       else if (editMode == eViewModeDisplay)
@@ -447,6 +462,14 @@
          UIBarButtonItem *pBarItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:templViewController action:@selector(templItemEditOHASpree) ];
           self.navigationItem.rightBarButtonItem = pBarItem1;
           return;
+      }
+      else
+      {
+          UIBarButtonItem *pBarItemR = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(templItemOhAspreeEditDone) ];
+          self.navigationItem.rightBarButtonItem = pBarItemR;
+                   
+          UIBarButtonItem *pBarItemL = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(templItemCancel) ];
+          self.navigationItem.leftBarButtonItem = pBarItemL;
       }
 }
 

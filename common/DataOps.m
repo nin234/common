@@ -136,7 +136,7 @@
         NSLog(@"Updating MasterLstVwCntrl in main queue");
         NSArray *vws = [templNavViewController viewControllers];
         NSUInteger vwcnt = [vws count];
-        //NSLog(@"No of view controllers EasyDataOps:updateMasterLstVwCntrl %lu", (unsigned long)vwcnt);
+        NSLog(@"No of view controllers EasyDataOps:updateMasterLstVwCntrl %lu", (unsigned long)vwcnt);
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
         if (pAppCmnUtil.bEasyGroc)
         {

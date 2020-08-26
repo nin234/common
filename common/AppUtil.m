@@ -238,6 +238,7 @@
     TemplListViewController *aViewController = [TemplListViewController alloc];
     aViewController = [aViewController initWithNibName:nil bundle:nil];
     aViewController.bCheckListView = true;
+    dataSync.templListViewController = aViewController;
     
     UIImage *imagePlanner = [UIImage imageNamed:@"ic_event_note_white_36pt"];
         UIImage *imagePlannerSel = [UIImage imageNamed:@"ic_event_note_36pt"];
@@ -245,6 +246,7 @@
     
     UINavigationController *checkListNavCntrl = [[UINavigationController alloc] initWithRootViewController:aViewController];
     aViewController.navViewController = checkListNavCntrl;
+    dataSync.templNavViewController = checkListNavCntrl;
     
     
     [appShrUtl initializeTabBarCntrl:mainShareVwNavCntrl mainNavCntrl:mainVwNavCntrl     checkListCntrl:checkListNavCntrl ContactsDelegate:self];
