@@ -768,6 +768,18 @@
     return;
 }
 
+-(void) editItemNoSignal:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
+{
+    [workToDo lock];
+    [listEditNames addObject:name];
+    [listEditMps addObject:itmsMp];
+    ++itemsEasyEdited;
+    NSLog(@"Not Signalling work to do after Updating item %@ %d", name, itemsEasyEdited);
+    
+    [workToDo unlock];
+    return;
+}
+
 -(NSDictionary *) getPics
 {
     [workToDo lock];
@@ -2435,23 +2447,38 @@
     return;
 }
 
+-(void) addItemNoSignal:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp
+{
+    [workToDo lock];
+    [listNames addObject:name];
+    [listMps addObject:itmsMp];
+    ++easyItemsToAdd;
+    NSLog(@"Added  new item %@ %d and signalling work to do\n", name, easyItemsToAdd);
+    
+    [workToDo unlock];
+    return;
+}
+
 
 -(NSArray *) getList: (ItemKey *)key
 {
         [workToDo lock];
     
+            
             if (easyItemsToAdd || itemsEasyEdited)
             {
+                
                 NSLog (@"in getList easyItemsToAdd=%d itemsEasyEdited=%d", easyItemsToAdd, itemsEasyEdited);
                 NSDate *checkTime = [NSDate dateWithTimeIntervalSinceNow:1];
                 [workToDo waitUntilDate:checkTime];
+                
             }
         
         NSMutableArray* listarr =  [listArr objectForKey:key];
     NSArray *keys = [listArr allKeys];
     for (ItemKey *key in keys)
     {
-        NSLog(@"key.name=%@ key.share_id=%d %s %d" , key.name, key.share_id, __FILE__, __LINE__);
+        NSLog(@"key.name=%@ key.share_id=%lld %s %d" , key.name, key.share_id, __FILE__, __LINE__);
     }
      NSLog(@"Master list in data ops %@ for key %@ in dictionary %@\n %s %d", listarr, key, listArr, __FILE__, __LINE__);
         if (listarr != nil)

@@ -92,10 +92,44 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     NSLog(@"View loaded\n");
 }
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    
+    if (self)
+    {
+        bShowingVideo = false;
+    }
+    return self;
+}
+-(void) viewWillAppear:(BOOL)animated
+{
+    NSLog(@"Photodisplayviewcontroller will appear");
+    self.navigationItem.backBarButtonItem =
+       [[UIBarButtonItem alloc] initWithTitle:subject
+                style:UIBarButtonItemStylePlain
+               target:nil
+               action:nil];
+    if (bShowingVideo)
+    {
+        NSLog(@"Photodisplayviewcontroller popping video player");
+        [self.navigationController popViewControllerAnimated:NO];
+        bShowingVideo = false;
+    }
+    
+    if (bAboutToShowVideo)
+    {
+        bAboutToShowVideo = false;
+        bShowingVideo = true;
+    }
+     
+}
+
+
+
 - (void)viewDidLoad
 {
-    UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(photoAction) ];
-    self.navigationItem.rightBarButtonItem = pBarItem;
+    
     photo_scale = 1.0;
      audio =  [AVAudioSession sharedInstance];
     [audio setCategory:AVAudioSessionCategoryPlayback error:nil];
@@ -184,51 +218,26 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 {
     NSLog(@"Loading movie %@ \n", movUrl);
     currURL = movUrl;
-  
-    pMovP = [[MPMoviePlayerController alloc] initWithContentURL:currURL];
+    AVPlayer *player = [AVPlayer playerWithURL:movUrl];
+    pMovP = [AVPlayerViewController new];
+    pMovP.player = player;
     bPhoto = false;
     
-    pMovP.movieSourceType = MPMovieSourceTypeFile;
-    NSLog(@"Playable duration %f %@ %f", [pMovP playableDuration], [pMovP contentURL], [pMovP duration]);
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(movieLoaded:)
-                                                 name:MPMoviePlayerLoadStateDidChangeNotification object:pMovP];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(movieLoadFailed:)
-                                                 name:MPMoviePlayerPlaybackDidFinishNotification object:pMovP];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(hideNavBar:)
-                                                 name:MPMoviePlayerDidEnterFullscreenNotification object:pMovP];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(showNavBar:)
-                                                 name:MPMoviePlayerDidExitFullscreenNotification object:pMovP];
     
-    // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, 300, 420) animated:NO];
-    [pMovP prepareToPlay];
-    NSLog(@"Playable duration %f %f", [pMovP playableDuration], [pMovP duration]);
-    if ([[UIScreen mainScreen] bounds].size.height > 500.0)
-        [pMovP.view setFrame: CGRectMake(0.0, -35.0, 320, 520)];
-    else
-        [pMovP.view setFrame: CGRectMake(0.0, 0.0, 320, 408)];
+ 
     UISwipeGestureRecognizer * left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
     left.direction = UISwipeGestureRecognizerDirectionLeft;
     [pMovP.view addGestureRecognizer:left];
     
     UISwipeGestureRecognizer * right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
     right.direction = UISwipeGestureRecognizerDirectionRight;
+    //[pMovP.view disa]
     [pMovP.view addGestureRecognizer:right];
     
-    [imageScrollView addSubview:pMovP.view];
-    NSLog(@"Load state %lu %@", (unsigned long)[pMovP loadState], pMovP);
-    // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, pMovP.view.frame.size.width, pMovP.view.frame.size.height) animated:NO];
     
-    if ([pMovP isPreparedToPlay])
-    {
-        NSLog(@"Playing movie\n");
-        [pMovP play];
-        
-    }
+     [self.navigationController pushViewController:pMovP animated:NO];
+    bAboutToShowVideo = true;
 
 }
 
@@ -236,7 +245,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 {
     printf("Changing photo\n");
     if (pMovP != nil)
-        [pMovP pause];
+        [pMovP.player pause];
     
     NSString *pFlName = [[thumbnails objectAtIndex:currIndx] stringValue];
     NSString *pFlImgName = [pFlName stringByAppendingString:@".MOV"];
@@ -317,36 +326,13 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     [currView  removeFromSuperview];
     [pMovP.view removeFromSuperview];
     SlideScrollView *imageScrollView = (SlideScrollView *)self.view;
+    AVPlayer *player = [AVPlayer playerWithURL:movUrl];
+    pMovP = [AVPlayerViewController new];
+    pMovP.player = player;
     
-    pMovP = [[MPMoviePlayerController alloc] initWithContentURL:currURL];
     bPhoto = false;
     
-    pMovP.movieSourceType = MPMovieSourceTypeFile;
-    NSLog(@"Playable duration %f %@ %f", [pMovP playableDuration], [pMovP contentURL], [pMovP duration]);
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(movieLoaded:)
-                                                 name:MPMoviePlayerLoadStateDidChangeNotification object:pMovP];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(movieLoadFailed:)
-                                                 name:MPMoviePlayerPlaybackDidFinishNotification object:pMovP];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(hideNavBar:)
-                                                 name:MPMoviePlayerDidEnterFullscreenNotification object:pMovP];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(showNavBar:)
-                                                 name:MPMoviePlayerDidExitFullscreenNotification object:pMovP];
-    
-    
-    [pMovP prepareToPlay];
-    NSLog(@"Playable duration %f %f", [pMovP playableDuration], [pMovP duration]);
-    
-    if ([[UIScreen mainScreen] bounds].size.height > 500.0)
-        [pMovP.view setFrame: CGRectMake(0.0, -35.0, 320, 520)];
-    else
-        [pMovP.view setFrame: CGRectMake(0.0, 0.0, 320, 408)];
-    
+   
     
     [imageScrollView setContentSize:[pMovP.view frame].size];
     // currView = pMovP.view;
@@ -358,17 +344,8 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     right.direction = UISwipeGestureRecognizerDirectionRight;
     [pMovP.view addGestureRecognizer:right];
     
-    [imageScrollView addSubview:pMovP.view];
-    NSLog(@"Load state %lu %@", (unsigned long)[pMovP loadState], pMovP);
-    // [imageScrollView zoomToRect:CGRectMake(0.0, 0.0, pMovP.view.frame.size.width, pMovP.view.frame.size.height) animated:NO];
-    
-    if ([pMovP isPreparedToPlay])
-    {
-        NSLog(@"Playing movie\n");
-        [pMovP play];
-        
-    }
-
+    [self.navigationController pushViewController:pMovP animated:NO];
+    bShowingVideo = true;
 }
 
 - (void)didReceiveMemoryWarning
@@ -499,14 +476,11 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 -(void) handleLeftSwipe : (UISwipeGestureRecognizer *) left
 {
  
-    NSLog (@"Got left swipe in movie %ld\n", (long)[pMovP playbackState]);
+    NSLog (@"Got left swipe in movie ");
     printf("Curr Index %lu\n", (unsigned long)currIndx);
-    if ([pMovP playbackState] == MPMoviePlaybackStatePlaying)
-    {
-        NSLog(@"Play back state playing ignoring swipe \n");
-        [pMovP stop];
-        //return;
-    }
+    [pMovP.player pause];
+    bShowingVideo = false;
+    [self.navigationController popViewControllerAnimated:NO];
     
    
 
@@ -523,17 +497,11 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 -(void) handleRightSwipe : (UISwipeGestureRecognizer *) right
 {
     
-    NSLog (@"Got right swipe in movie load state %ld\n", (long)[pMovP playbackState]);
+    NSLog (@"Got right swipe in movie load state");
     printf("Curr Index %lu \n", (unsigned long)currIndx);
-    
-    if ([pMovP playbackState] == MPMoviePlaybackStatePlaying)
-    {
-        NSLog(@"Load state unknown ignoring swipe \n");
-       // return;
-        [pMovP stop];
-    }
-    
-    
+    [pMovP.player pause];
+    bShowingVideo = false;
+    [self.navigationController popViewControllerAnimated:NO];
     
     if (currIndx)
     {
@@ -560,28 +528,14 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 - (void)movieLoaded:(NSNotification *)notification
 {
-    NSLog(@"Movie loaded\n");
-     // pMovP.useApplicationAudioSession = NO;
-    MPMoviePlayerController *movie = [notification object];
-    pMovP.controlStyle = MPMovieControlStyleEmbedded;
-    NSLog(@"Playable duration %f %f mediatypes %lu", [movie   playableDuration], [movie duration], (unsigned long)[movie movieMediaTypes]);
-   [movie pause];
+    
   
     return;
 }
 
 - (void)movieLoadFailed:(NSNotification *)notification
 {
-    NSLog(@"Movie load failed\n");
-    MPMoviePlayerController* theMovie = [notification object];
-    
-    [[NSNotificationCenter defaultCenter]
-     removeObserver: self
-     name: MPMoviePlayerPlaybackDidFinishNotification
-     object: theMovie];
-    
-    // Release the movie instance created in playMovieAtURL:
-  //  [theMovie release];
+   
     return;
 }
 
@@ -702,7 +656,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
     NSLog(@"Photodisplay view controller, view will unload\n");
    // [super viewWillDisappear:YES];
     if (pMovP != nil)
-        [pMovP pause];
+        [pMovP.player pause];
    
 }
 

@@ -47,11 +47,13 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVPlayer.h>
 
 #import "TapDetectingImageView.h"
 #import "Photo.h"
 #import <MediaPlayer/MediaPlayer.h>
-#import <AVFoundation/AVAudioSession.h>
+#import <AVKit/AVKit.h>
+
 #import <MessageUI/MFMailComposeViewController.h>
 
 
@@ -68,13 +70,15 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 
     TapDetectingImageView *currView;
     CGFloat photo_scale;
+    bool bShowingVideo;
+    bool bAboutToShowVideo;
     
 }
 
 //@property (nonatomic, retain) ALAsset *asset;
 //@property (nonatomic, retain) NSMutableArray *assets;
 @property NSUInteger currIndx;
-@property  (nonatomic, retain) MPMoviePlayerController *pMovP;
+@property  (nonatomic, retain) AVPlayerViewController *pMovP;
 @property (nonatomic, retain) AVAudioSession *audio;
 @property (nonatomic, retain) NSURL *currURL;
 @property (nonatomic, retain) NSArray *thumbnails;

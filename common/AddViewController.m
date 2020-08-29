@@ -1204,7 +1204,7 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     NSString *name = [delegate getName];
-    [delegate itemAddDone];
+   
     if (pAppCmnUtil.itemsMp != nil &&  name != nil)
     {
         NSLog(@"Persisting checklist in itemAddDone %s %d", __FILE__, __LINE__);
@@ -1212,10 +1212,11 @@ tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPat
         ItemKey *itk = [[ItemKey alloc] init];
         itk.name =name;
         itk.share_id = pAppCmnUtil.share_id;
-        [pAppCmnUtil.dataSync addItem:itk itemsDic:pAppCmnUtil.itemsMp];
+        [pAppCmnUtil.dataSync addItemNoSignal:itk itemsDic:pAppCmnUtil.itemsMp];
         pAppCmnUtil.itemsMp = nil;
     }
     
+     [delegate itemAddDone];
     return;
 }
 #pragma mark - View lifecycle

@@ -151,6 +151,7 @@
 -(void) deletedItem: (id)item;
 
 -(void) addItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) addItemNoSignal:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 
 @property (nonatomic, weak) id<DataOpsDelegate> delegate;
 
@@ -179,6 +180,7 @@
 -(void) addShareTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) editedTemplItem:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 -(void) editedTemplItemNoLock:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
+-(void) editItemNoSignal:(ItemKey *)name itemsDic:(NSMutableDictionary*) itmsMp;
 
 -(void) deletedTemplItem:(ItemKey *)name;
 -(void) deletedTemplItemNoLock:(ItemKey *)name;

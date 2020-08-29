@@ -216,6 +216,37 @@
     return;
 }
 
+-(void) createListFromCheckList:(NSString *)mlistName shareId:(long long)mlist_share_id
+{
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    ItemKey *itk = [[ItemKey alloc] init];
+    itk.name = mlistName;
+    itk.share_id = mlist_share_id;
+    NSArray* mlist = [pAppCmnUtil.dataSync getMasterList:itk];
+    NSMutableDictionary *itemMp = [NSMutableDictionary dictionaryWithCapacity:100];
+    NSUInteger nRows=1;
+    if (mlist != nil)
+   {
+       int cnt = (int)[mlist count];
+       
+       
+       for (NSUInteger i=0; i < cnt; ++i)
+       {
+            NSNumber *rowNm = [NSNumber numberWithUnsignedInteger:nRows];
+            LocalList *newItem = [[LocalList alloc] init];
+            MasterList *mitem =[mlist objectAtIndex:i];
+            
+            newItem.rowno = nRows;
+            ++nRows;
+            newItem.item = mitem.item;
+            newItem.hidden = false;
+            [itemMp setObject:newItem forKey:rowNm];
+       }
+       
+       pAppCmnUtil.itemsMp = itemMp;
+   }
+}
+
 -(void) createAndSaveListFromMasterList:(NSString *)mlistName shareId:(long long)mlist_share_id
 {
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
@@ -596,7 +627,7 @@
         
         [pAppCmnUtil.navViewController pushViewController:aViewController animated:NO];
          
-        [self createAndSaveListFromMasterList:itk.name shareId:itk.share_id];
+        [self createListFromCheckList:itk.name shareId:itk.share_id];
 
         return;
     }
