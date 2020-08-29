@@ -93,7 +93,7 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, retain) NSString *subject;
 
 -(void) changePhoto;
--(void) photoAction;
+
 -(void) popView;
 @property(nonatomic, weak) id<PhotoDisplayViewControllerDelegate> delegate;
 

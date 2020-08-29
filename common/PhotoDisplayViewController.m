@@ -360,21 +360,6 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
 }
 
 
--(void) photoAction
-{
-    delconfirm = false;
-    UIActionSheet *pSh;
-    if (delphoto)
-        pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email Photo", @"Delete Photo", nil];
-    else 
-        pSh = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email Photo", nil];
-    
-    [pSh showInView:self.view];
-    [pSh setDelegate:self];
-    
-
-    return;
-}
 
 -(void) popView
 {
