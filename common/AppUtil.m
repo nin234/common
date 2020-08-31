@@ -462,6 +462,14 @@
     return;
 }
 
+-(void) shareDone
+{
+  
+    appShrUtl.selFrndCntrl.eViewCntrlMode = eModeContactsMgmt;
+    appShrUtl.tabBarController.selectedIndex = 0;
+}
+
+
 -(void) emailNow
 {
     if ([MFMailComposeViewController canSendMail])
