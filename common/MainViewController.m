@@ -237,7 +237,8 @@
     
     notesViewController.title = @"How to use";
     
-    notesViewController.notesTxt = @"Create Checklists. ";
+    notesViewController.notesTxt = [delegate helpTxt];
+    
     notesViewController = [notesViewController initWithNibName:@"NotesViewController" bundle:nil];
     [notesViewController.notes setFont:[UIFont fontWithName:@"ArialMT" size:20]];
     [self.navigationController pushViewController:notesViewController animated:NO];
