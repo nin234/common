@@ -67,6 +67,7 @@
 -(void) initShareTabBar;
 -(void) refreshShareView;
 -(void) refreshShareMainLst;
-
+- (void)cancelShare;
+-(void) shareDone;
 
 @end

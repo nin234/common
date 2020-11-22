@@ -469,6 +469,12 @@
     appShrUtl.tabBarController.selectedIndex = 0;
 }
 
+- (void)cancelShare
+{
+    
+    appShrUtl.selFrndCntrl.eViewCntrlMode = eModeContactsMgmt;
+    appShrUtl.tabBarController.selectedIndex = 0;
+}
 
 -(void) emailNow
 {

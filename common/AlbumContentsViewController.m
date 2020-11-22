@@ -422,8 +422,10 @@ Copyright (C) 2011 Apple Inc. All Rights Reserved.
             
             if (albumurl != nil && [albumurl checkResourceIsReachableAndReturnError:&err])
             {
-                imgUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
-                movUrl = [albumurl URLByAppendingPathComponent:pFlImgName isDirectory:NO];
+                imgUrl = [albumurl URLByAppendingPathComponent:@"sharing" isDirectory:YES];
+                imgUrl = [imgUrl URLByAppendingPathComponent:pFlName isDirectory:NO];
+                movUrl = [albumurl URLByAppendingPathComponent:@"sharing" isDirectory:YES];
+                movUrl = [movUrl URLByAppendingPathComponent:pFlImgName isDirectory:NO];
             }
             
             NSLog(@"Attaching object at index %lu  image file %@ movie file %@ \n", (unsigned long)i,  imgUrl, movUrl);

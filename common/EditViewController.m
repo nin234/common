@@ -600,7 +600,22 @@
         {
             NSLog(@"Save thumbnail file %@\n", pFlUrl);
         }
-
+    NSString *pFlShrPath = [pAlName stringByAppendingString:@"/sharing/"];
+    
+    pFlShrPath = [pFlShrPath stringByAppendingString:pFlName];
+    NSURL *movShareUrl = [NSURL URLWithString:pFlShrPath];
+  
+    if ([data writeToURL:movShareUrl atomically:YES] == NO)
+    {
+        printf("Failed to write to sharing file %ld\n", filno);
+        // --nAlNo;
+        return;
+    }
+    else
+    {
+        NSLog(@"Saved sharing file %ld in album %@ filename %@ URL %@\n", filno, movShareUrl, pFlShrPath, movie);
+        
+    }
      
     return;
 }
@@ -623,6 +638,10 @@
     {
 
         pFlUrl = [albumurl URLByAppendingPathComponent:pFlName isDirectory:NO];
+    }
+    else
+    {
+        return;
     }
     
     NSDictionary *dict = [pFlMgr attributesOfItemAtPath:[pFlUrl path] error:&err];
@@ -674,6 +693,21 @@
 
     }
     
+    
+    NSString *pShrFlPath = [pAlName stringByAppendingString:@"/sharing/"];
+    pShrFlPath = [pShrFlPath stringByAppendingString:pFlName];
+    NSURL *pSavUrl = [NSURL URLWithString:pShrFlPath];
+    NSData *pSavData = UIImageJPEGRepresentation(image, 0.3);
+    if ([pSavData writeToURL:pSavUrl atomically:YES] == NO)
+    {
+        printf("Failed to write to sharing file %ld\n", filno);
+       // --nAlNo;
+        
+    }
+    else
+    {
+        NSLog(@"Save file %ld in album %s file %@\n", filno, [pAlName UTF8String], pSavUrl);
+    }
     
     
 }

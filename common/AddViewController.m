@@ -111,6 +111,17 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize);
             NSString *pThumpnail = [pNewAlbum stringByAppendingPathComponent:@"thumbnails"];
             BOOL  bDirCr = [pFlMgr createDirectoryAtPath:pThumpnail withIntermediateDirectories:YES attributes:nil error:nil];
             NSURL *url = [NSURL fileURLWithPath:pNewAlbum isDirectory:YES];
+            NSString *pSharing = [pNewAlbum stringByAppendingPathComponent:@"sharing"];
+        NSError *error;
+            
+         if ([pFlMgr createDirectoryAtPath:pSharing withIntermediateDirectories:YES attributes:nil error:&error] == YES)
+         {
+             NSLog(@"Created sharing directory=%@", pSharing);
+         }
+        else
+        {
+            NSLog(@"Failed to create sharing directory=%@ error=%@", pSharing, error);
+        }
             [delegate setAlbumNames:intStr fullName:[url absoluteString]];
         pAlName = [url absoluteString];
             if(bDirCr == YES)
@@ -806,16 +817,7 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
         NSString *pTmpNlFlPath = [pAlName stringByAppendingString:@"/thumbnails/"];
         pTmpNlFlPath = [pTmpNlFlPath stringByAppendingString:pImgFlName];
         NSURL *thumburl = [NSURL URLWithString:pTmpNlFlPath];
-        // [tnailurls addObject:thumburl];
-        // [movurls addObject:movurl];
-        /*
-         if (bSaveLastPic)
-         {
-         bSaveLastPic = false;
-         UIImage *img;
-         [self saveThumbNails:img];
-         }
-         */
+      
         
         if ([thumbnaildata writeToURL:thumburl atomically:YES] == NO)
         {
@@ -828,6 +830,22 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
             NSLog(@"Save thumbnail file %ld in album %s file %@\n", filno, [pAlName UTF8String], thumburl);
         }
 
+    NSString *pFlShrPath = [pAlName stringByAppendingString:@"/sharing/"];
+    
+    pFlShrPath = [pFlShrPath stringByAppendingString:pFlName];
+    NSURL *movShareUrl = [NSURL URLWithString:pFlShrPath];
+  
+    if ([data writeToURL:movShareUrl atomically:YES] == NO)
+    {
+        printf("Failed to write to sharing file %ld\n", filno);
+        // --nAlNo;
+        return;
+    }
+    else
+    {
+        NSLog(@"Saved sharing file %ld in album %@ filename %@ URL %@\n", filno, movShareUrl, pFlShrPath, movie);
+        
+    }
        return;
 }
 
@@ -882,8 +900,21 @@ CGImageRef MyCreateThumbnailImageFromData (NSData * data, int imageSize)
          NSLog(@"Save thumbnail file %ld in album %s file %@\n", filno, [pAlName UTF8String], thumburl);
     }
     
+    NSString *pShrFlPath = [pAlName stringByAppendingString:@"/sharing/"];
+    pShrFlPath = [pShrFlPath stringByAppendingString:pFlName];
+    NSURL *pSavUrl = [NSURL URLWithString:pShrFlPath];
+    NSData *pSavData = UIImageJPEGRepresentation(image, 0.3);
+    if ([pSavData writeToURL:pSavUrl atomically:YES] == NO)
+    {
+        NSLog(@"Failed to write to sharing file %ld url=%@", filno, pSavUrl);
+       // --nAlNo;
+        
+    }
+    else
+    {
+        NSLog(@"Saved sharing file %ld in album %s file %@\n", filno, [pAlName UTF8String], pSavUrl);
+    }
     
-
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
