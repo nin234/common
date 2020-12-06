@@ -38,7 +38,7 @@
 
 @end
 
-@interface DataOps: NSThread<UIAlertViewDelegate> 
+@interface DataOps: NSObject<UIAlertViewDelegate> 
 {
     NSMutableArray *newItems;
     NSCondition *workToDo;
@@ -127,19 +127,22 @@
     
     int templNameItemsToAdd;
     NSMutableArray *masterListNamesOnly;
+    
+    struct timeval lastDbUpdate;
+    bool stop;
    
 }
 
--(void) main;
+-(void) start;
 @property NSInteger listCnt;
-@property(nonatomic) dispatch_queue_t shareQ;
+@property(nonatomic) dispatch_queue_t dataOpsQ;
 
 @property (nonatomic) bool refreshNow;
 @property (nonatomic) bool updateNow;
 @property (nonatomic) bool loginNow;
+@property (nonatomic)  bool bBackGroundMode;
 
-
-
+-(void ) mainProcessLoop;
 -(void) lock;
 -(void) unlock;
 -(void) unlockAndSignal;
@@ -155,6 +158,7 @@
 
 @property (nonatomic, weak) id<DataOpsDelegate> delegate;
 
+@property (nonatomic) UIBackgroundTaskIdentifier bgTaskId;
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -199,5 +203,10 @@
 -(void) updateShareMainLstVwCntrl:(MainViewController *) pMainVwCntrl;
 -(void) updateMainLstVwCntrl;
 -(void) putAlexaItems:(NSArray *)items;
+-(void) stopBackGroundTask;
+-(void) startBackGroundTask;
+- (void) endBackgroundUpdateTask;
+- (void) beginBackgroundUpdateTask;
+
 
 @end

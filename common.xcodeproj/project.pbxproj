@@ -82,6 +82,7 @@
 		DBD16B061C8EE95400052A03 /* DisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B051C8EE95400052A03 /* DisplayViewController.m */; };
 		DBD16B111C90549300052A03 /* DataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B101C90549300052A03 /* DataOps.m */; };
 		DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B4E1C9A407900052A03 /* AppUtil.m */; };
+		E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E838D7912579251B0066C94B /* BackGrndHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -272,6 +273,8 @@
 		DBD16B101C90549300052A03 /* DataOps.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataOps.m; sourceTree = "<group>"; };
 		DBD16B4D1C9A407900052A03 /* AppUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppUtil.h; sourceTree = "<group>"; };
 		DBD16B4E1C9A407900052A03 /* AppUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppUtil.m; sourceTree = "<group>"; };
+		E838D7902579251B0066C94B /* BackGrndHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackGrndHelper.h; sourceTree = "<group>"; };
+		E838D7912579251B0066C94B /* BackGrndHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackGrndHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -442,6 +445,8 @@
 				DB00E4BE1C7AA6B600E898F7 /* ThumbnailImageView.m */,
 				3B8B3C5222A378AC00158715 /* common-Bridging-Header.h */,
 				3B8B3C5922A66ED900158715 /* common */,
+				E838D7902579251B0066C94B /* BackGrndHelper.h */,
+				E838D7912579251B0066C94B /* BackGrndHelper.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -589,6 +594,7 @@
 				3BF7F77E1E74FB3700419F8D /* LocalMasterList.m in Sources */,
 				3BF7F7911E74FF2200419F8D /* MasterListNames.m in Sources */,
 				3BF7F7871E74FC6100419F8D /* List1ViewController.m in Sources */,
+				E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
 				3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */,
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
@@ -647,7 +653,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = /Users/ninan/ios/sharing;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -688,7 +694,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = /Users/ninan/ios/sharing;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

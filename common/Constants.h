@@ -9,5 +9,6 @@
 #ifndef Constants_h
 #define Constants_h
 
+#define MAX_IDLE_TIME 15
 
 #endif /* Constants_h */

@@ -23,6 +23,7 @@
 #import "List1ViewController.h"
 #import "LocalList.h"
 #import "LocalMasterList.h"
+#import "Constants.h"
 
 
 @implementation DataOps
@@ -30,7 +31,7 @@
 @synthesize refreshNow;
 @synthesize updateNow;
 @synthesize loginNow;
-@synthesize shareQ;
+@synthesize dataOpsQ;
 @synthesize delegate;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
@@ -48,6 +49,8 @@
 @synthesize appName;
 @synthesize templListViewController;
 @synthesize bReady;
+@synthesize bBackGroundMode;
+@synthesize bgTaskId;
 
 @class EasyViewController;
 
@@ -130,6 +133,8 @@
 
 -(void) updateMasterLstVwCntrl
 {
+    if (bBackGroundMode)
+        return;
     
     NSLog(@"Updating MasterLstVwCntrl waiting for main queue");
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -394,6 +399,9 @@
         
         appName = [[NSString alloc] init];
         bReady = false;
+        bBackGroundMode = false;
+        dataOpsQ = dispatch_queue_create("com.rekhaninan.dataops", DISPATCH_QUEUE_SERIAL);
+        stop = false;
         return self;
         
     }
@@ -402,7 +410,51 @@
     
 }
 
--(void) main
+-(void) start
+{
+    dispatch_async(dataOpsQ, ^{
+        [self beginBackgroundUpdateTask];
+        [self startInit];
+        [self mainProcessLoop];
+        [self endBackgroundUpdateTask];
+    });
+}
+
+
+-(void) stopBackGroundTask
+{
+    stop = true;
+}
+
+
+
+-(void) startBackGroundTask
+{
+    dispatch_async(dataOpsQ, ^{
+        [self startInit];
+        [self mainProcessLoop];
+    });
+   
+}
+
+- (void) beginBackgroundUpdateTask
+{
+    NSLog(@"Background task started");
+    bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [self endBackgroundUpdateTask];
+    }];
+}
+
+- (void) endBackgroundUpdateTask
+{
+    NSLog(@"DataOps extended background execution ended");
+    stop = true;
+    [[UIApplication sharedApplication] endBackgroundTask: bgTaskId];
+    bgTaskId = UIBackgroundTaskInvalid;
+}
+
+
+-(void) startInit
 {
     masterListEditNames = [[NSMutableArray alloc] init];
     masterListEditMps = [[NSMutableArray alloc] init];
@@ -468,7 +520,7 @@
     masterListNamesOnly = [[NSMutableArray alloc] init];
     
     
-    shareQ = dispatch_queue_create("P2P_SHAREQ", DISPATCH_QUEUE_SERIAL);
+   
     if ([appName isEqualToString:@"EasyGrocList"])
     {
         [self refreshItemData];
@@ -487,8 +539,37 @@
     }
    
     bReady = true;
+    
+}
+
+-(bool) doneBackGroundProcessing
+{
+    
+    if (templItemsDeleted || easyItemsToAdd || templItemsToAdd || templShareItemsToAdd || templItemsEdited || itemsToAdd  || itemsEdited || itemsDeleted || refreshNow || updateNow || loginNow || picItemsToAdd   || itemSelectedChanged || itemsEasyEdited || itemsHidden || itemsEasyDeleted || refreshMainLst || templNameItemsToAdd )
+    {
+        gettimeofday(&lastDbUpdate, NULL);
+        return false;
+    }
+    
+    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateBackground)
+        return false;
+    struct timeval now;
+    
+    gettimeofday(&now, NULL);
+    
+    if (now.tv_sec - lastDbUpdate.tv_sec > MAX_IDLE_TIME)
+        return true;
+    
+    return false;
+}
+    
+-(void) mainProcessLoop
+{
+    gettimeofday(&lastDbUpdate, NULL);
     for(;;)
     {
+        if (stop)
+            break;
         [workToDo lock];
         if (!templItemsDeleted || !easyItemsToAdd || !templItemsToAdd || !templShareItemsToAdd || !templItemsEdited || !itemsToAdd  || !itemsEdited ||!itemsDeleted || !refreshNow || !updateNow || !loginNow || !picItemsToAdd   || !itemSelectedChanged || !itemsEasyEdited || !itemsHidden || !itemsEasyDeleted || !refreshMainLst || !templNameItemsToAdd )
         {
@@ -498,7 +579,7 @@
         }
         [workToDo unlock];
         
-        
+       
         if (templItemsToAdd)
         {
             NSLog(@"Adding %d template items\n", templItemsToAdd);
@@ -791,7 +872,10 @@
 
 -(void) updateLstVwCntrl
 {
-  
+    if (bBackGroundMode)
+        return;
+    
+    
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     dispatch_sync(dispatch_get_main_queue(), ^{
         NSArray *vws = [pAppCmnUtil.navViewController viewControllers];
@@ -2517,6 +2601,9 @@
 
 -(void) updateEasyMainLstVwCntrl
 {
+    if (bBackGroundMode)
+        return;
+   
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -2555,6 +2642,9 @@
 
 -(void) updateMainLstVwCntrl
 {
+    
+    if (bBackGroundMode)
+        return;
     
    
     MainViewController *pMainVwCntrl = [delegate getMainViewController];
