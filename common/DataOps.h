@@ -130,7 +130,7 @@
     
     struct timeval lastDbUpdate;
     bool stop;
-   
+    bool shouldStart;
 }
 
 -(void) start;

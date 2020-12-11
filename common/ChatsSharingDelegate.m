@@ -156,7 +156,7 @@
 
 -(void) getItems
 {
-    [pShrMgr getItems];
+   
 }
 
 -(void) launchChat:(FriendDetails *) frnd

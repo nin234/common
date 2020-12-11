@@ -402,6 +402,7 @@
         bBackGroundMode = false;
         dataOpsQ = dispatch_queue_create("com.rekhaninan.dataops", DISPATCH_QUEUE_SERIAL);
         stop = false;
+        shouldStart = true;
         return self;
         
     }
@@ -413,6 +414,10 @@
 -(void) start
 {
     dispatch_async(dataOpsQ, ^{
+        if (!shouldStart)
+            return;
+        stop = false;
+        shouldStart = false;
         [self beginBackgroundUpdateTask];
         [self startInit];
         [self mainProcessLoop];
@@ -420,10 +425,12 @@
     });
 }
 
-
+//startBackGroundTask and stopBackGroundTask only for AutoSpree and OpenHouses and not for EasyGrocList
+//as it is required for pictures
 -(void) stopBackGroundTask
 {
     stop = true;
+    shouldStart = true;
 }
 
 
@@ -431,6 +438,10 @@
 -(void) startBackGroundTask
 {
     dispatch_async(dataOpsQ, ^{
+        if (!shouldStart)
+            return;
+        stop = false;
+        shouldStart = false;
         [self startInit];
         [self mainProcessLoop];
     });
@@ -439,7 +450,7 @@
 
 - (void) beginBackgroundUpdateTask
 {
-    NSLog(@"Background task started");
+    NSLog(@"Background task started in DataOps");
     bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
         [self endBackgroundUpdateTask];
     }];
@@ -449,6 +460,7 @@
 {
     NSLog(@"DataOps extended background execution ended");
     stop = true;
+    shouldStart = true;
     [[UIApplication sharedApplication] endBackgroundTask: bgTaskId];
     bgTaskId = UIBackgroundTaskInvalid;
 }
