@@ -83,6 +83,7 @@
 		DBD16B111C90549300052A03 /* DataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B101C90549300052A03 /* DataOps.m */; };
 		DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B4E1C9A407900052A03 /* AppUtil.m */; };
 		E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E838D7912579251B0066C94B /* BackGrndHelper.m */; };
+		E8C7F64625858897007C51FF /* ProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8C7F64525858897007C51FF /* ProgressViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -275,6 +276,8 @@
 		DBD16B4E1C9A407900052A03 /* AppUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppUtil.m; sourceTree = "<group>"; };
 		E838D7902579251B0066C94B /* BackGrndHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackGrndHelper.h; sourceTree = "<group>"; };
 		E838D7912579251B0066C94B /* BackGrndHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackGrndHelper.m; sourceTree = "<group>"; };
+		E8C7F64425858897007C51FF /* ProgressViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressViewController.h; sourceTree = "<group>"; };
+		E8C7F64525858897007C51FF /* ProgressViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -427,6 +430,8 @@
 				DBD16A9F1C830FA000052A03 /* PhotoDisplayViewController.h */,
 				DBD16A9D1C830F8E00052A03 /* PhotoDisplayViewController.m */,
 				DBD16AA11C830FF600052A03 /* PhotoDisplayViewController.xib */,
+				E8C7F64425858897007C51FF /* ProgressViewController.h */,
+				E8C7F64525858897007C51FF /* ProgressViewController.m */,
 				3BB193721EDCA33B00EC1B58 /* SeasonPickerViewController.h */,
 				3BB193731EDCA33B00EC1B58 /* SeasonPickerViewController.m */,
 				3BB193741EDCA33B00EC1B58 /* SeasonPickerViewController.xib */,
@@ -593,6 +598,7 @@
 				3BF7F7791E74F75C00419F8D /* EasyDataOps.m in Sources */,
 				3BF7F77E1E74FB3700419F8D /* LocalMasterList.m in Sources */,
 				3BF7F7911E74FF2200419F8D /* MasterListNames.m in Sources */,
+				E8C7F64625858897007C51FF /* ProgressViewController.m in Sources */,
 				3BF7F7871E74FC6100419F8D /* List1ViewController.m in Sources */,
 				E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,

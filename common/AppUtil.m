@@ -30,6 +30,7 @@
 @synthesize window;
 @synthesize mainVwNavCntrl;
 @synthesize aViewController2;
+@synthesize progressVwCntrl;
 
 
 -(void) setPurchsd:(NSString *)trid
@@ -112,6 +113,8 @@
 
     [pShrMgr shareItem:shrStr listName:name shrId:share_id];
     NSUInteger cnt =  [aViewController1.pAllItms.attchments count];
+    
+    [pShrMgr resetUploadStats];
     for (NSUInteger i =0; i < cnt; ++i)
     {
         NSURL *picUrl = [aViewController1.pAllItms.attchments objectAtIndex:i];
@@ -129,11 +132,43 @@
          */
         
         [pShrMgr sharePicture:picUrl metaStr:picMetaStr shrId:share_id];
+       
     }
+    
+    
+    if (cnt)
+    {
+        [self startProgressView];
+       
+    }
+    
     [aViewController1.pAllItms.attchments removeAllObjects];
     [aViewController1.pAllItms.movOrImg removeAllObjects];
 }
 
+-(void) updateTotalUpload:(long)uploaded
+{
+    progressVwCntrl.transferredTilNow = uploaded;
+    if (progressVwCntrl.nTotFileSize == uploaded)
+    {
+        [aViewController1 dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+-(void) startProgressView
+{
+    if (pShrMgr.nTopUpload >= pShrMgr.nTotalFileSize)
+        return;
+    progressVwCntrl = [ProgressViewController alloc];
+    progressVwCntrl.nTotFileSize = pShrMgr.nTotalFileSize;
+    progressVwCntrl.transferredTilNow = pShrMgr.nTopUpload;
+    progressVwCntrl.upload = true;
+    //progressVwCntrl.modalPresentationStyle = UIModalPresentationFullScreen;
+    progressVwCntrl.modalPresentationStyle = UIModalPresentationCurrentContext;
+    progressVwCntrl = [progressVwCntrl initWithNibName:nil bundle:nil];
+    
+    [aViewController1 presentViewController:progressVwCntrl animated:YES completion:nil];
+}
 
 
 - (NSString *) getAlbumDir: (NSString *) album_name

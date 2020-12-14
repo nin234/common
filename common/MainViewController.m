@@ -138,7 +138,7 @@
 -(void) loadView
 {
     [super loadView];
-    CGRect mainScrn = [UIScreen mainScreen].applicationFrame;
+    CGRect mainScrn = [UIScreen mainScreen].bounds;
     if (!bShareView)
     {
         CGRect  viewRect;

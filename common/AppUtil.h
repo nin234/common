@@ -15,6 +15,7 @@
 #import "sharing/ContactsViewController.h"
 #import <MessageUI/MFMailComposeViewController.h>
 #import "MainViewController.h"
+#import "ProgressViewController.h"
 
 #import "TemplListViewController.h"
 
@@ -56,6 +57,7 @@
 @property (nonatomic, retain) MainViewController *aViewController1;
 @property (nonatomic, retain) MainViewController *aViewController2;
 @property (nonatomic, retain) UIWindow *window;
+@property (nonatomic, retain) ProgressViewController *progressVwCntrl;
 
 
 -(void) iCloudEmailCancel;
@@ -69,5 +71,6 @@
 -(void) refreshShareMainLst;
 - (void)cancelShare;
 -(void) shareDone;
+-(void) updateTotalUpload:(long)uploaded;
 
 @end
