@@ -71,6 +71,8 @@
 -(void) refreshShareMainLst;
 - (void)cancelShare;
 -(void) shareDone;
--(void) updateTotalUpload:(long)uploaded;
+
+-(void) startDownLoadProgressVw;
+-(void) updateTotalTransferred:(long)transferred;
 
 @end

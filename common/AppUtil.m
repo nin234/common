@@ -146,13 +146,30 @@
     [aViewController1.pAllItms.movOrImg removeAllObjects];
 }
 
--(void) updateTotalUpload:(long)uploaded
+
+
+-(void) updateTotalTransferred:(long)transferred
 {
-    progressVwCntrl.transferredTilNow = uploaded;
-    if (progressVwCntrl.nTotFileSize == uploaded)
+    progressVwCntrl.transferredTilNow = transferred;
+    if (progressVwCntrl.nTotFileSize <= transferred)
     {
         [aViewController1 dismissViewControllerAnimated:YES completion:nil];
     }
+}
+
+-(void) startDownLoadProgressVw
+{
+    if (pShrMgr.nDownLoadedSoFar >= pShrMgr.nTotalDownLoadSize)
+        return;
+    progressVwCntrl = [ProgressViewController alloc];
+    progressVwCntrl.nTotFileSize = pShrMgr.nTotalDownLoadSize;
+    progressVwCntrl.transferredTilNow = pShrMgr.nDownLoadedSoFar;
+    progressVwCntrl.upload = false;
+    //progressVwCntrl.modalPresentationStyle = UIModalPresentationFullScreen;
+    progressVwCntrl.modalPresentationStyle = UIModalPresentationCurrentContext;
+    progressVwCntrl = [progressVwCntrl initWithNibName:nil bundle:nil];
+    appShrUtl.tabBarController.selectedIndex = 0;
+    [aViewController1 presentViewController:progressVwCntrl animated:YES completion:nil];
 }
 
 -(void) startProgressView

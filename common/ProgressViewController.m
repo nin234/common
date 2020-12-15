@@ -33,9 +33,17 @@
 {
     int percentComplete = (transferredTilNow/(double)nTotFileSize)*100.0;
     progressView.observedProgress.completedUnitCount = transferredTilNow;
-    NSString *labelText = [NSString stringWithFormat:@"Uploading items. Pleast wait\n Don't minimize App until complete\n %d %% Done", percentComplete];
     NSLog(@"transferredTilNow=%ld total=%ld", transferredTilNow, nTotFileSize);
-    [progressText setText:labelText];
+    if (upload)
+    {
+        NSString *labelText = [NSString stringWithFormat:@"Uploading items. Pleast wait\n Don't minimize App until complete\n %d %% Done", percentComplete];
+        [progressText setText:labelText];
+    }
+    else
+    {
+        NSString *labelText = [NSString stringWithFormat:@"Downloading items. Pleast wait\n Don't minimize App until complete\n %d %% Done", percentComplete];
+        [progressText setText:labelText];
+    }
 }
 
 #pragma mark - View lifecycle
@@ -55,6 +63,11 @@
     if (upload)
     {
         NSString *labelText = [NSString stringWithFormat:@"Uploading items. Pleast wait\nDon't minimize App until complete\n0 %% Done"];
+        [progressText setText:labelText];
+    }
+    else
+    {
+        NSString *labelText = [NSString stringWithFormat:@"Downloading items. Pleast wait\nDon't minimize App until complete\n0 %% Done"];
         [progressText setText:labelText];
     }
     progressRect = CGRectMake(0, mainScrn.origin.y + mainScrn.size.height/2.0, mainScrn.size.width, mainScrn.size.height/8.0);
