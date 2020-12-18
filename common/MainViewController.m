@@ -139,10 +139,11 @@
 {
     [super loadView];
     CGRect mainScrn = [UIScreen mainScreen].bounds;
+    CGFloat barHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
     if (!bShareView)
     {
         CGRect  viewRect;
-        viewRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, 50);
+        viewRect = CGRectMake(0, mainScrn.origin.y + barHeight, mainScrn.size.width, 50);
         self.pSearchBar = [[UISearchBar alloc] initWithFrame:viewRect];
         [self.pSearchBar setDelegate:self];
         [self.view addSubview:self.pSearchBar];
@@ -166,13 +167,15 @@
     pAllItms.bShareView = bShareView;
     pAllItms   = [pAllItms initWithNibName:nil bundle:nil];
     CGRect tableRect;
+    UITabBarController *tabBarController = [UITabBarController new];
+    CGFloat tabBarHeight = tabBarController.tabBar.frame.size.height;
     if (bShareView)
     {
-        tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
+        tableRect = CGRectMake(0, mainScrn.origin.y + barHeight, mainScrn.size.width, mainScrn.size.height - (barHeight + tabBarHeight));
     }
     else
     {
-        tableRect = CGRectMake(0, mainScrn.origin.y + self.navigationController.navigationBar.frame.size.height + 50, mainScrn.size.width, mainScrn.size.height - self.navigationController.navigationBar.frame.size.height);
+        tableRect = CGRectMake(0, mainScrn.origin.y + barHeight + 50, mainScrn.size.width, mainScrn.size.height - (barHeight + tabBarHeight));
     }
     UITableView *pTVw = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     pAllItms.tableView = pTVw;
