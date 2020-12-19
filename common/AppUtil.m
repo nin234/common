@@ -552,7 +552,7 @@
         }
         bEmailConfirm = true;
         
-        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Attach Pictures" message:@"" delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
+        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"Attach Pictures" message:@"Important to note: Sharing Pictures works well only in the WiFi environment." delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
         [pAvw show];
         
     }
