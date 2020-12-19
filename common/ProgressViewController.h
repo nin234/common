@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ProgressViewController : UIViewController
 {
-     NSProgress *progress;
+     
      UILabel *progressText;
     UIProgressView *progressView;
 }
@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) bool upload;
 @property (nonatomic) long nTotFileSize;
 @property (nonatomic) long transferredTilNow;
+@property (nonatomic, retain) NSProgress *progress;
 
--(void) updateTotalUpload:(long)uploaded;
 
 @end
 

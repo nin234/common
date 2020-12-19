@@ -17,6 +17,7 @@
 @synthesize upload;
 @synthesize nTotFileSize;
 @synthesize transferredTilNow;
+@synthesize progress;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -53,6 +54,7 @@
     //  printf("LOADING main table view %s %d\n" , __FILE__, __LINE__);
     [super loadView];
     CGRect mainScrn = [UIScreen mainScreen].bounds;
+   
     CGRect labelRect;
     CGRect progressRect;
     labelRect = CGRectMake(0, mainScrn.origin.y + (mainScrn.size.height)/4.0, mainScrn.size.width, mainScrn.size.height/8.0);
@@ -82,16 +84,21 @@
     [self.view addSubview:progressText];
     
     [self.view addSubview:progressView];
+   
 }
 
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     progressText.backgroundColor = [UIColor orangeColor];
     
     progressView.backgroundColor = [UIColor whiteColor];
+    
+    self.view.layer.borderWidth = 10;
+    self.view.layer.borderColor = UIColor.grayColor.CGColor;
     // Do any additional setup after loading the view.
 }
 

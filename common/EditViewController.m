@@ -1008,6 +1008,7 @@
             cell.imageView.image = nil;
             cell.textLabel.text = nil;
             cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.backgroundColor = nil;
         }
         if ([delegate isTwoFieldRow:row])
         {

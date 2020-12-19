@@ -164,9 +164,14 @@
     progressVwCntrl = [ProgressViewController alloc];
     progressVwCntrl.nTotFileSize = pShrMgr.nTotalDownLoadSize;
     progressVwCntrl.transferredTilNow = pShrMgr.nDownLoadedSoFar;
+    if (@available(iOS 13.0, *)) {
+        progressVwCntrl.modalInPresentation = true;
+    } else {
+        // Fallback on earlier versions
+    }
     progressVwCntrl.upload = false;
-    //progressVwCntrl.modalPresentationStyle = UIModalPresentationFullScreen;
-    progressVwCntrl.modalPresentationStyle = UIModalPresentationCurrentContext;
+    progressVwCntrl.modalPresentationStyle = UIModalPresentationFullScreen;
+   // progressVwCntrl.modalPresentationStyle = UIModalPresentationCurrentContext;
     progressVwCntrl = [progressVwCntrl initWithNibName:nil bundle:nil];
     appShrUtl.tabBarController.selectedIndex = 0;
     [aViewController1 presentViewController:progressVwCntrl animated:YES completion:nil];
@@ -180,10 +185,17 @@
     progressVwCntrl.nTotFileSize = pShrMgr.nTotalFileSize;
     progressVwCntrl.transferredTilNow = pShrMgr.nTopUpload;
     progressVwCntrl.upload = true;
-    //progressVwCntrl.modalPresentationStyle = UIModalPresentationFullScreen;
-    progressVwCntrl.modalPresentationStyle = UIModalPresentationCurrentContext;
-    progressVwCntrl = [progressVwCntrl initWithNibName:nil bundle:nil];
     
+    if (@available(iOS 13.0, *)) {
+        progressVwCntrl.modalInPresentation = true;
+    } else {
+        // Fallback on earlier versions
+    }
+     
+    progressVwCntrl.modalPresentationStyle = UIModalPresentationFullScreen;
+  //  progressVwCntrl.modalPresentationStyle = UIModalPresentationCurrentContext;
+    progressVwCntrl = [progressVwCntrl initWithNibName:nil bundle:nil];
+  //  [ aViewController1.navigationController setNavigationBarHidden:YES animated:NO];
     [aViewController1 presentViewController:progressVwCntrl animated:YES completion:nil];
 }
 
