@@ -30,6 +30,7 @@ enum eActionSheet
 @property (strong, nonatomic) EasyListViewController *pAllItms;
 @property (strong, nonatomic) UISearchBar *pSearchBar;
 @property (nonatomic) bool bShareView;
+@property (nonatomic) bool bShowAlexaBtn;
 
 - (void)enableCancelButton:(UISearchBar *)aSearchBar;
 - (void)itemAdd;

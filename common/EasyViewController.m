@@ -20,6 +20,7 @@
 
 @synthesize bShareView;
 @synthesize delegate;
+@synthesize bShowAlexaBtn;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

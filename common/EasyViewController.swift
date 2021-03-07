@@ -29,6 +29,8 @@ enum eActionSheet : Int {
     var pSearchBar: UISearchBar?
     @objc public var bShareView = false
     
+    @objc public var bShowAlexaBtn = true
+    
     @objc public func getAlexaItems()
     {
         delegate?.runAlexaQuery();
@@ -162,7 +164,14 @@ enum eActionSheet : Int {
         
         //NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pHelpBtn,nil];
         //navigationItem.rightBarButtonItem = pBarItem
-        navigationItem.rightBarButtonItems = [pBarItem, pAlexaBtn]
+        if bShowAlexaBtn
+        {
+            navigationItem.rightBarButtonItems = [pBarItem, pAlexaBtn]
+        }
+        else
+        {
+            navigationItem.rightBarButtonItems = [pBarItem]
+        }
         navigationItem.leftBarButtonItem = pHelpBtn
         
         

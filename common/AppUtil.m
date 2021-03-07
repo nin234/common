@@ -314,6 +314,7 @@
     
     
     [appShrUtl initializeTabBarCntrl:mainShareVwNavCntrl mainNavCntrl:mainVwNavCntrl     checkListCntrl:checkListNavCntrl ContactsDelegate:self];
+    NSLog(@"Created TABBAR");
 
 }
 
