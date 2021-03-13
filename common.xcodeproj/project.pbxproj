@@ -84,6 +84,9 @@
 		DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B4E1C9A407900052A03 /* AppUtil.m */; };
 		E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E838D7912579251B0066C94B /* BackGrndHelper.m */; };
 		E8C7F64625858897007C51FF /* ProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8C7F64525858897007C51FF /* ProgressViewController.m */; };
+		E8E8DFF625FCE3B500F93623 /* ListDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E8DFF425FCE3B500F93623 /* ListDecoder.m */; };
+		E8E8DFFD25FCE3D600F93623 /* ListTranslator.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E8DFFA25FCE3D600F93623 /* ListTranslator.m */; };
+		E8E8DFFE25FCE3D600F93623 /* ListShareMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E8DFFB25FCE3D600F93623 /* ListShareMgr.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -278,6 +281,12 @@
 		E838D7912579251B0066C94B /* BackGrndHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackGrndHelper.m; sourceTree = "<group>"; };
 		E8C7F64425858897007C51FF /* ProgressViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressViewController.h; sourceTree = "<group>"; };
 		E8C7F64525858897007C51FF /* ProgressViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressViewController.m; sourceTree = "<group>"; };
+		E8E8DFF425FCE3B500F93623 /* ListDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListDecoder.m; sourceTree = "<group>"; };
+		E8E8DFF525FCE3B500F93623 /* ListDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListDecoder.h; sourceTree = "<group>"; };
+		E8E8DFF925FCE3D600F93623 /* ListTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListTranslator.h; sourceTree = "<group>"; };
+		E8E8DFFA25FCE3D600F93623 /* ListTranslator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListTranslator.m; sourceTree = "<group>"; };
+		E8E8DFFB25FCE3D600F93623 /* ListShareMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListShareMgr.m; sourceTree = "<group>"; };
+		E8E8DFFC25FCE3D600F93623 /* ListShareMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListShareMgr.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -314,16 +323,18 @@
 				DB00E5321C7D24C300E898F7 /* AddressAnnotation.m */,
 				DBD16AD21C8AF59100052A03 /* AddViewController.h */,
 				DBD16AD41C8AF5B900052A03 /* AddViewController.m */,
-				3BD6EAD522CFFA020086B502 /* AlexaItem.swift */,
 				DBD16AD31C8AF5A400052A03 /* AddViewController.xib */,
 				DB00E5611C7DE1DF00E898F7 /* AlbumContentsTableViewCell.h */,
 				DB00E5601C7DE1DF00E898F7 /* AlbumContentsTableViewCell.m */,
 				DBD16A9B1C830F7900052A03 /* AlbumContentsViewController.h */,
 				DBD16A9A1C830F7900052A03 /* AlbumContentsViewController.m */,
+				3BD6EAD522CFFA020086B502 /* AlexaItem.swift */,
 				3BF7F7B31E76044D00419F8D /* AppCmnUtil.h */,
 				3BF7F7B41E76044D00419F8D /* AppCmnUtil.m */,
 				DBD16B4D1C9A407900052A03 /* AppUtil.h */,
 				DBD16B4E1C9A407900052A03 /* AppUtil.m */,
+				E838D7902579251B0066C94B /* BackGrndHelper.h */,
+				E838D7912579251B0066C94B /* BackGrndHelper.m */,
 				3B5581CF2083EBFE00F49188 /* CameraControl.h */,
 				3B5581D02083EBFE00F49188 /* CameraControl.m */,
 				3B5581C6207C58E900F49188 /* ChatInputTextView.h */,
@@ -350,6 +361,8 @@
 				3BA108682066901300026680 /* ChatViewController1.xib */,
 				3BA1086E2069185100026680 /* ChatViewController2.h */,
 				3BA1086F2069185100026680 /* ChatViewController2.m */,
+				3B8B3C5922A66ED900158715 /* common */,
+				3B8B3C5222A378AC00158715 /* common-Bridging-Header.h */,
 				DB00E4B41C7A9FF700E898F7 /* common.h */,
 				DB00E4B61C7A9FF700E898F7 /* common.m */,
 				DB7061421CAA88350031C445 /* CommonDecoder.h */,
@@ -383,8 +396,8 @@
 				3BF7F79A1E75001F00419F8D /* EasyTapDetectingImageView.h */,
 				3BF7F79B1E75002600419F8D /* EasyTapDetectingImageView.m */,
 				3BF7F7961E74FF7700419F8D /* EasyViewController.h */,
-				3B8B3C5322A378AC00158715 /* EasyViewController.swift */,
 				3BF7F7971E74FF7E00419F8D /* EasyViewController.m */,
+				3B8B3C5322A378AC00158715 /* EasyViewController.swift */,
 				3BF7F7811E74FB8100419F8D /* EasyViewController.xib */,
 				DBD16AF61C8DD17E00052A03 /* EditViewController.h */,
 				DBD16AF51C8DD17E00052A03 /* EditViewController.m */,
@@ -398,8 +411,14 @@
 				3BF7F7851E74FC5900419F8D /* List1ViewController.h */,
 				3BF7F7861E74FC6100419F8D /* List1ViewController.m */,
 				3BF7F7881E74FC8700419F8D /* List1ViewController.xib */,
+				E8E8DFF525FCE3B500F93623 /* ListDecoder.h */,
+				E8E8DFF425FCE3B500F93623 /* ListDecoder.m */,
 				3BF7F7A41E75064A00419F8D /* ListNames.h */,
 				3BF7F7A51E75065200419F8D /* ListNames.m */,
+				E8E8DFFC25FCE3D600F93623 /* ListShareMgr.h */,
+				E8E8DFFB25FCE3D600F93623 /* ListShareMgr.m */,
+				E8E8DFF925FCE3D600F93623 /* ListTranslator.h */,
+				E8E8DFFA25FCE3D600F93623 /* ListTranslator.m */,
 				3BF7F7661E74949A00419F8D /* ListViewController.h */,
 				3BF7F7671E74949A00419F8D /* ListViewController.m */,
 				3BF7F7681E74949A00419F8D /* ListViewController.xib */,
@@ -448,10 +467,6 @@
 				DB00E5551C7DDB2600E898F7 /* textdefs.h */,
 				DB00E4BD1C7AA6B600E898F7 /* ThumbnailImageView.h */,
 				DB00E4BE1C7AA6B600E898F7 /* ThumbnailImageView.m */,
-				3B8B3C5222A378AC00158715 /* common-Bridging-Header.h */,
-				3B8B3C5922A66ED900158715 /* common */,
-				E838D7902579251B0066C94B /* BackGrndHelper.h */,
-				E838D7912579251B0066C94B /* BackGrndHelper.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -582,6 +597,7 @@
 				3BF7F7651E74396300419F8D /* TemplListViewController.m in Sources */,
 				3BF7F7A11E75060400419F8D /* EasyAddViewController.m in Sources */,
 				DB00E4F91C7BCC8300E898F7 /* TapDetectingImageView.m in Sources */,
+				E8E8DFFE25FCE3D600F93623 /* ListShareMgr.m in Sources */,
 				DB00E51D1C7C8ED600E898F7 /* MySlider.m in Sources */,
 				DB00E4B71C7A9FF700E898F7 /* common.m in Sources */,
 				DB7061491CAA88350031C445 /* CommonTranslator.m in Sources */,
@@ -599,7 +615,9 @@
 				3BF7F77E1E74FB3700419F8D /* LocalMasterList.m in Sources */,
 				3BF7F7911E74FF2200419F8D /* MasterListNames.m in Sources */,
 				E8C7F64625858897007C51FF /* ProgressViewController.m in Sources */,
+				E8E8DFFD25FCE3D600F93623 /* ListTranslator.m in Sources */,
 				3BF7F7871E74FC6100419F8D /* List1ViewController.m in Sources */,
+				E8E8DFF625FCE3B500F93623 /* ListDecoder.m in Sources */,
 				E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
 				3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */,
