@@ -24,6 +24,7 @@
 @synthesize listName;
 @synthesize itemsMp;
 @synthesize share_id;
+@synthesize appId;
 
 -(instancetype) init
 {

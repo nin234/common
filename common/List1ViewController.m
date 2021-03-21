@@ -11,6 +11,7 @@
 #import "LocalList.h"
 #import "AppCmnUtil.h"
 #import "EditViewController.h"
+#import "sharing/Consts.h"
 #import "MasterList.h"
 
 const NSInteger TEXTFIELD_TAG = 54325;
@@ -588,6 +589,11 @@ const NSInteger TEXTFIELD_TAG = 54325;
     
 }
 
+-(void) nsharelistEditCB
+{
+    [self itemEdit];
+}
+
 -(void) itemDispActions
 {
     
@@ -610,6 +616,11 @@ const NSInteger TEXTFIELD_TAG = 54325;
     
     
     return;
+}
+
+-(void) nsharelistSaveCB
+{
+    [self itemEditDone];
 }
 
 -(void) DeleteConfirm
@@ -697,7 +708,7 @@ const NSInteger TEXTFIELD_TAG = 54325;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
    
     if (editMode == eListModeAdd)
     {
@@ -724,7 +735,15 @@ const NSInteger TEXTFIELD_TAG = 54325;
             NSString *title = @"Edit List";
             self.navigationItem.title = [NSString stringWithString:title];
         
-            UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemEditActions)];
+            UIBarButtonItem *pBarItem;
+            if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+            {
+                pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemEditActions)];
+            }
+            else if (pAppCmnUtil.appId == NSHARELIST_ID)
+            {
+                pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave   target:self action:@selector(nsharelistSaveCB)];
+            }
         
             self.navigationItem.rightBarButtonItem = pBarItem;
 
@@ -745,8 +764,19 @@ const NSInteger TEXTFIELD_TAG = 54325;
             NSString *title = @"List";
             self.navigationItem.title = [NSString stringWithString:title];
         
-            UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemDispActions)];
-        
+            UIBarButtonItem *pBarItem;
+            
+            
+            if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+            {
+                pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(itemDispActions)];
+            }
+            else if (pAppCmnUtil.appId == NSHARELIST_ID)
+            {
+                
+                pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit    target:self action:@selector(nsharelistEditCB)];
+            }
+            
             self.navigationItem.rightBarButtonItem = pBarItem;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackGroundActions:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         }
@@ -757,6 +787,8 @@ const NSInteger TEXTFIELD_TAG = 54325;
         }
     }
 }
+
+
 
 - (void)applicationEnterBackGroundActions:(NSNotification *)notification
 {
@@ -816,6 +848,8 @@ const NSInteger TEXTFIELD_TAG = 54325;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {

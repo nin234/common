@@ -33,6 +33,8 @@ enum eEditActionItems
 @property (nonatomic, retain) NSMutableDictionary* itemsMp;
 @property long long share_id;
 
+@property (nonatomic) int appId;
+
 + (instancetype)sharedInstance;
 
 -(void) popView;
