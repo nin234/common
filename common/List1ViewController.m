@@ -470,12 +470,21 @@ const NSInteger TEXTFIELD_TAG = 54325;
             NSLog (@"Setting item %@ to itempMp %@", item.item, rowNm);
             if (editMode == eListModeDisplay)
             {
-                NSNumber *rowVal = [NSNumber numberWithBool:item.hidden];
-                [hiddenMp setObject:rowVal forKey:rowNm];
-                if (item.hidden == YES)
+                AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+                if (pAppCmnUtil.appId == NSHARELIST_ID)
                 {
-                  //  NSLog (@"Setting hiddent item %@ to itempMp %@", item, rowNm);
-                    [hiddenCells setObject:rowVal forKey:rowNm];
+                    NSNumber *rowVal = [NSNumber numberWithBool:NO];
+                    [hiddenMp setObject:rowVal forKey:rowNm];
+                }
+                else if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+                {
+                    NSNumber *rowVal = [NSNumber numberWithBool:item.hidden];
+                    [hiddenMp setObject:rowVal forKey:rowNm];
+                    if (item.hidden == YES)
+                    {
+                        //  NSLog (@"Setting hiddent item %@ to itempMp %@", item, rowNm);
+                        [hiddenCells setObject:rowVal forKey:rowNm];
+                    }
                 }
             }
         }
@@ -1288,15 +1297,30 @@ const NSInteger TEXTFIELD_TAG = 54325;
     NSNumber *swtchKey = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
     
     NSNumber *swtchKey1 = [NSNumber numberWithUnsignedInteger:toggleSwitch.tag];
-    [hiddenCells setObject:swtchKey1 forKey:swtchKey];
+   
     
     LocalList *item = [itemMp objectForKey:swtchKey];
-    item.hidden = YES;
-    [undoArry addObject:swtchKey];
-    
-    NSNumber *hidden = [NSNumber numberWithBool:YES];
-    [hiddenMp setObject:hidden forKey:swtchKey];
-    [self.tableView reloadData];
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (pAppCmnUtil.appId == NSHARELIST_ID)
+    {
+        if (item.hidden == YES)
+        {
+            item.hidden = NO;
+        }
+        else
+        {
+            item.hidden = YES;
+        }
+    }
+    else if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+    {
+        [hiddenCells setObject:swtchKey1 forKey:swtchKey];
+        item.hidden = YES;
+        [undoArry addObject:swtchKey];
+        NSNumber *hidden = [NSNumber numberWithBool:YES];
+        [hiddenMp setObject:hidden forKey:swtchKey];
+        [self.tableView reloadData];
+    }
 }
 
 
@@ -1321,6 +1345,13 @@ const NSInteger TEXTFIELD_TAG = 54325;
         cell.hidden = NO;
         return false;
     }
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (pAppCmnUtil.appId == NSHARELIST_ID)
+    {
+        cell.hidden = NO;
+        return false;
+    }
+    
     NSNumber *key = [NSNumber numberWithInteger:row-1];
     if ([hiddenCells objectForKey:key] != nil)
     {
@@ -1334,14 +1365,32 @@ const NSInteger TEXTFIELD_TAG = 54325;
     return false;
 }
 
--(void) setHidelCellSwitch:(UITableViewCell *) cell rowU : (NSUInteger) row
+-(void) setHidelCellSwitch:(UITableViewCell *) cell rowU : (NSUInteger) row itm : (LocalList *) item
 {
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     CGRect switchFrame = CGRectMake(cell.bounds.size.width - 15, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height);
     UISwitch *hideCell = [[UISwitch alloc] initWithFrame:switchFrame];
     [hideCell addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
     cell.accessoryView = hideCell;
-    hideCell.on = YES;
-    
+    if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+    {
+        hideCell.on = YES;
+    }
+    else if (pAppCmnUtil.appId == NSHARELIST_ID)
+    {
+        if (item.hidden == YES)
+        {
+            hideCell.on = YES;
+        }
+        else
+        {
+            hideCell.on = NO;
+        }
+    }
+    hideCell.onTintColor = [UIColor greenColor];
+    hideCell.tintColor = [UIColor redColor];
+     hideCell.backgroundColor =[UIColor redColor];
+     hideCell.layer.cornerRadius = hideCell.frame.size.height/2.0;
     hideCell.tag = row-1;
 }
 
@@ -1615,7 +1664,7 @@ editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
                     {
                         if (bEasyGroc)
                         {
-                            [self setHidelCellSwitch:cell rowU:row];
+                            [self setHidelCellSwitch:cell rowU:row itm:item];
                         }
                     }
                  }

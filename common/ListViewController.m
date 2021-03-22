@@ -12,6 +12,7 @@
 #import "LocalMasterList.h"
 #import "SeasonPickerViewController.h"
 #import "TemplListViewController.h"
+#import "sharing/Consts.h"
 
 
 
@@ -520,8 +521,17 @@
    
     
     NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pRecurring,pInventory,pScratchPad,nil];
-    self.navigationItem.rightBarButtonItems =barItems;
-    [self setButtonColors];
+    if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+    {
+        self.navigationItem.rightBarButtonItems =barItems;
+        [self setButtonColors];
+    }
+    else if (pAppCmnUtil.appId == NSHARELIST_ID)
+    {
+        self.navigationItem.rightBarButtonItem = pBarItem;
+    }
+    
+    
     if (reloadAfterSeasonPicked)
     {
         self.tableView.editing = YES;
