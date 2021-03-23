@@ -353,9 +353,16 @@ const NSInteger TEXTFIELD_TAG = 54325;
             MasterList *mitem =[mInvArr objectAtIndex:i];
             NSNumber *invLstRowNo = [NSNumber numberWithUnsignedInteger:mitem.rowno];
             [mInvMp setObject:mitem forKey:invLstRowNo];
-            
-            if (mitem.inventory)
-                continue;
+            if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+            {
+                if (mitem.inventory)
+                    continue;
+            }
+            else if (pAppCmnUtil.appId == NSHARELIST_ID)
+            {
+                if (!mitem.inventory)
+                    continue;
+            }
             bInvChanged = true;
             newItem.rowno = nRows;
             ++nRows;

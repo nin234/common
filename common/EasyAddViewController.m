@@ -12,10 +12,12 @@
 #import "MasterList.h"
 #import "LocalList.h"
 #import <MobileCoreServices/UTCoreTypes.h>
+#import "sharing/Consts.h"
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdlib.h>
 #include <sys/time.h>
+
 
 @interface EasyAddViewController ()
 
@@ -320,8 +322,17 @@
         NSNumber *invLstRowNo = [NSNumber numberWithUnsignedInteger:(NSUInteger)mitem.rowno];
         [mInvMp setObject:mitem forKey:invLstRowNo];
             
-        if (mitem.inventory)
-            continue;
+       
+        if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+        {
+            if (mitem.inventory)
+                continue;
+        }
+        else if (pAppCmnUtil.appId == NSHARELIST_ID)
+        {
+            if (!mitem.inventory)
+                continue;
+        }
         bInvChanged = true;
         newItem.rowno = nRows;
         ++nRows;
