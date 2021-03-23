@@ -556,7 +556,15 @@
     // Add any optional custom views of your own
     if (pAppCmnUtil.bEasyGroc == true)
     {
-        sectionHeaderView.textLabel.text = @"Create list from Planner";
+        if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+        {
+            sectionHeaderView.textLabel.text = @"Create list from Planner";
+        }
+        else if (pAppCmnUtil.appId == NSHARELIST_ID)
+        {
+            sectionHeaderView.textLabel.text = @"Create list from Templates";
+        }
+            
     }
     else
     {

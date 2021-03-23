@@ -9,6 +9,7 @@
 #import "TemplListViewController.h"
 #import "ComponentsViewController.h"
 #import "AppCmnUtil.h"
+#import "sharing/Consts.h"
 #import <StoreKit/StoreKit.h>
 
 const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
@@ -96,7 +97,19 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
    
     if (pAppCmnUtil.bEasyGroc)
     {
-        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:@"New Planner" message:@"Please enter name of store" delegate:self cancelButtonTitle:@"CANCEL" otherButtonTitles:@"OK", nil];
+        NSString *msg;
+        NSString *title;
+        if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+        {
+            msg = @"Please enter name of store";
+            title = @"New Planner";
+        }
+        else if  (pAppCmnUtil.appId == NSHARELIST_ID)
+        {
+            title = @"New List";
+            msg = @"Please enter name of Template list";
+        }
+        UIAlertView *pAvw = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"CANCEL" otherButtonTitles:@"OK", nil];
         pAvw.alertViewStyle = UIAlertViewStylePlainTextInput;
         [pAvw show];
     }
@@ -188,7 +201,18 @@ const NSInteger SELECTION_INDICATOR_TAG_3 = 53330;
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSString *title = @"Planner";
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    NSString *title;
+    if (pAppCmnUtil.appId == EASYGROCLIST_ID)
+    {
+        title = @"Planner";
+    }
+    else if (pAppCmnUtil.appId == NSHARELIST_ID)
+    {
+        title = @"Templates";
+    }
+    
     
    
     if (self.bShareTemplView)
