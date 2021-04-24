@@ -25,6 +25,7 @@
 @synthesize itemsMp;
 @synthesize share_id;
 @synthesize appId;
+@synthesize inapp;
 
 -(instancetype) init
 {
@@ -35,11 +36,29 @@
         itemsMp = nil;
         bEasyGroc = false;
         share_id =0;
+        inapp = nil;
+        
+        
+       
         return self;
 
     }
     
     return nil;
+    
+}
+
+-(void) setAppId:(int)aId
+{
+    appId = aId;
+    inapp = [InAppPurchase alloc];
+    [inapp setAppId:appId];
+    inapp = [inapp init];
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:inapp];
+}
+
+-(void ) startInAppPurchase
+{
     
 }
 
@@ -57,6 +76,16 @@
     
     return;
 }
+
+-(bool) canContinue:(UIViewController *) vwCntrl
+{
+    if ((share_id > 1000 || share_id < 2500) && share_id != 2352)
+    {
+        return true;
+    }
+    return [inapp canContinue:vwCntrl];
+}
+
 
 + (instancetype)sharedInstance
 {

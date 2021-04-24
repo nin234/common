@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DataOps.h"
+#import "sharing/InAppPurchase.h"
 
 @class EasyViewController;
 
@@ -32,10 +33,12 @@ enum eEditActionItems
 @property (nonatomic, retain) EasyViewController *aViewController1;
 @property (nonatomic, retain) NSMutableDictionary* itemsMp;
 @property long long share_id;
-
+@property (nonatomic, retain) InAppPurchase *inapp;
 @property (nonatomic) int appId;
 
 + (instancetype)sharedInstance;
+
+-(bool) canContinue:(UIViewController *) vwCntrl;
 
 -(void) popView;
 

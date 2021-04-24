@@ -19,7 +19,7 @@
 @synthesize navViewController;
 @synthesize dataSync;
 @synthesize appShrUtl;
-@synthesize inapp;
+
 @synthesize pShrMgr;
 @synthesize delegate;
 @synthesize productId;
@@ -33,17 +33,7 @@
 @synthesize progressVwCntrl;
 
 
--(void) setPurchsd:(NSString *)trid
-{
-    NSLog(@"Setting purchased to true");
-    [appShrUtl setPurchsdTokens:trid];
-    appShrUtl.purchased = true;
-    [delegate setPurchsed];
-    [inapp stop];
-    
-    
-    
-}
+
 
 -(instancetype) init
 {
@@ -53,14 +43,6 @@
         
         bNoICloudAlrt = false;
         bUpgradeAlert = false;
-        inapp = [[InAppPurchase alloc] init];
-        [inapp setProductId:productId];
-        [inapp setDelegate:self];
-        [[SKPaymentQueue defaultQueue] addTransactionObserver:inapp];
-        
-        
-        
-
         return self;
     }
     return  nil;
@@ -74,7 +56,6 @@
     appCmnUtil.bEasyGroc = false;
     
 }
-
 
 
 -(void) setDataSync:(DataOps *)dataSyn

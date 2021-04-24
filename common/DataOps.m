@@ -2843,6 +2843,7 @@
         return __easyManagedObjectModel;
     }
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"EasyGrocList" withExtension:@"momd"];
+    NSLog(@"Setting EasyGrocList.momd modelURL to %@", modelURL);
     __easyManagedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return __easyManagedObjectModel;
 }

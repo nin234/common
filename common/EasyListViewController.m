@@ -349,6 +349,13 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
     
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (![pAppCmnUtil canContinue:self])
+    {
+        NSLog(@"User needs to upgrade to continue");
+        return;
+    }
+    
     if (bShareView)
     {
         UITableViewCell *cell =
@@ -401,7 +408,7 @@ const NSInteger SELECTION_INDICATOR_TAG_2 = 53323;
         return;
     }
     
-    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+   
     if (list != nil && [list count] > indexPath.row)
     {
         ItemKey *itk = [list objectAtIndex:indexPath.row];

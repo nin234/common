@@ -218,13 +218,15 @@
     
     UIBarButtonItem *pBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(itemAdd) ];
    
-    UIImage *imageHelp = [UIImage imageNamed:@"ic_help_outline_18pt_2x"];
-       UIBarButtonItem *pHelpBtn = [[UIBarButtonItem alloc] initWithImage:imageHelp style:UIBarButtonItemStylePlain target:self action:@selector(showHelpScreen)];
+   
+    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    [infoButton addTarget:self action:@selector(showHelpScreen) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem* infoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    self.navigationItem.leftBarButtonItem = infoBarButtonItem;
+      
     
-       //NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pHelpBtn,nil];
        self.navigationItem.rightBarButtonItem =pBarItem;
-       self.navigationItem.leftBarButtonItem = pHelpBtn;
-    //[pAllItms.tableView reloadData];
+    
     
 }
 

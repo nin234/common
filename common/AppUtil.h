@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "DataOps.h"
 #import "sharing/AppShrUtil.h"
-#import "sharing/InAppPurchase.h"
+
 #import "sharing/ShareMgr.h"
 #import "sharing/ContactsViewController.h"
 #import <MessageUI/MFMailComposeViewController.h>
@@ -25,7 +25,7 @@
 
 @protocol AppUtilDelegate <NSObject>
 
--(void) setPurchsed;
+
 -(NSString *) getEmailFbMsg:(id)itm;
 -(NSString *) getShareMsg:(id)itm;
 -(NSString *) getItemName:(id)itm;
@@ -34,7 +34,7 @@
 
 @end
 
-@interface AppUtil : NSObject<UIActionSheetDelegate, InAppPurchaseDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, AppShrUtilDelegate, UIAlertViewDelegate>
+@interface AppUtil : NSObject<UIActionSheetDelegate, MFMailComposeViewControllerDelegate, ContactsViewControllerDelegate, AppShrUtilDelegate, UIAlertViewDelegate>
 {
     
      bool bUpgradeAlert;
@@ -46,7 +46,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *navViewController;
 @property (nonatomic, retain) DataOps *dataSync;
 @property (nonatomic, retain) AppShrUtil *appShrUtl;
-@property (nonatomic, retain) InAppPurchase *inapp;
+
 @property (nonatomic, retain) ShareMgr *pShrMgr;
 @property (nonatomic, weak) id<AppUtilDelegate> delegate;
 @property (nonatomic, retain) UINavigationController *mainVwNavCntrl;
@@ -74,5 +74,6 @@
 
 -(void) startDownLoadProgressVw;
 -(void) updateTotalTransferred:(long)transferred;
+
 
 @end

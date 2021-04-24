@@ -11,7 +11,7 @@
 @implementation AddressAnnotation
 @synthesize coordinate;
 
-- (NSString *)subtitle{
+- (NSString *)subtitle {
 	return nil;
 }
 
