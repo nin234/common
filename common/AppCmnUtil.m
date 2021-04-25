@@ -54,7 +54,7 @@
     inapp = [InAppPurchase alloc];
     [inapp setAppId:appId];
     inapp = [inapp init];
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:inapp];
+    
 }
 
 -(void ) startInAppPurchase
@@ -79,7 +79,7 @@
 
 -(bool) canContinue:(UIViewController *) vwCntrl
 {
-    if ((share_id > 1000 || share_id < 2500) && share_id != 2352)
+    if ((share_id > 1000 && share_id < 2500) && share_id != 2352 && share_id != 2354)
     {
         return true;
     }
