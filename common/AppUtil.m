@@ -31,6 +31,7 @@
 @synthesize mainVwNavCntrl;
 @synthesize aViewController2;
 @synthesize progressVwCntrl;
+@synthesize appId;
 
 
 
@@ -63,6 +64,13 @@
     dataSync = dataSyn;
     AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
   appCmnUtil.dataSync = dataSyn;
+}
+
+-(void) setAppId:(int)aId
+{
+    appId = aId;
+    AppCmnUtil *appCmnUtil = [AppCmnUtil sharedInstance];
+    appCmnUtil.appId = appId;
 }
 
 -(void) shareNow:(NSString *) shareStr

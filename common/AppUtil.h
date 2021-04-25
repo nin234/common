@@ -58,7 +58,7 @@
 @property (nonatomic, retain) MainViewController *aViewController2;
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) ProgressViewController *progressVwCntrl;
-
+@property (nonatomic) int appId;
 
 -(void) iCloudEmailCancel;
 - (NSString *) getAlbumDir: (NSString *) album_name;

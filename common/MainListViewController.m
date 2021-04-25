@@ -11,6 +11,7 @@
 #import "AlbumContentsViewController.h"
 #import <sys/stat.h>
 #import "AppUtil.h"
+#import "AppCmnUtil.h"
 
 const NSInteger SELECTION_INDICATOR_TAG_SH = 54321;
 const NSInteger TEXT_LABEL_TAG = 54322;
@@ -518,6 +519,14 @@ const NSInteger EDITING_HORIZONTAL_OFFSET = 35;
     printf("Row selected %ld\n", (long)indexPath.row);
     if (indexPath.row > [indexes count])
         return;
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    if (![pAppCmnUtil canContinue:self])
+    {
+        NSLog(@"User needs to upgrade to continue");
+        return;
+    }
+    
     
     if (bShareView)
     {
