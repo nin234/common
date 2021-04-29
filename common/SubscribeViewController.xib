@@ -49,6 +49,9 @@
                     <rect key="frame" x="239" y="558" width="120" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Privacy Policy"/>
+                    <connections>
+                        <action selector="privacy:" destination="-1" eventType="touchUpInside" id="eMl-H4-syX"/>
+                    </connections>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2pd-Gn-nCn">
                     <rect key="frame" x="20" y="440" width="358" height="128"/>
@@ -74,6 +77,9 @@
                     <rect key="frame" x="16" y="558" width="127" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Term of Use"/>
+                    <connections>
+                        <action selector="termsOfUse:" destination="-1" eventType="touchUpInside" id="PZV-bF-iym"/>
+                    </connections>
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
