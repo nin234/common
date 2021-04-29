@@ -8,6 +8,8 @@
 
 #import "MainViewController.h"
 #import "NotesViewController.h"
+#import "AppCmnUtil.h"
+#import "SubscribeViewController.h"
 
 @implementation MainViewController
 @synthesize pSearchBar;
@@ -222,7 +224,19 @@
     UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
     [infoButton addTarget:self action:@selector(showHelpScreen) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem* infoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
-    self.navigationItem.leftBarButtonItem = infoBarButtonItem;
+    
+    UIBarButtonItem *subBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"S" style:UIBarButtonItemStylePlain target:self action:@selector(showSubscribeScreen)];
+    
+    AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
+    
+    if (pAppCmnUtil.share_id > 1000 && pAppCmnUtil.share_id < 2500 && pAppCmnUtil.share_id != 2352)
+    {
+        self.navigationItem.leftBarButtonItem = infoBarButtonItem;
+    }
+    else
+    {
+        self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:infoBarButtonItem, subBarButtonItem, nil];
+    }
       
     
        self.navigationItem.rightBarButtonItem =pBarItem;
@@ -247,6 +261,14 @@
     notesViewController = [notesViewController initWithNibName:@"NotesViewController" bundle:nil];
     [notesViewController.notes setFont:[UIFont fontWithName:@"ArialMT" size:20]];
     [self.navigationController pushViewController:notesViewController animated:NO];
+}
+
+-(void) showSubscribeScreen
+{
+    NSLog(@"Showing subscribe screen");
+    
+    SubscribeViewController *subViewController = [[SubscribeViewController alloc] initWithNibName:@"SubscribeViewController" bundle:nil];
+    [self.navigationController pushViewController:subViewController animated:YES];
 }
 
 
