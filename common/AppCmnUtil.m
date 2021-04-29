@@ -10,6 +10,7 @@
 #import "common-Swift.h"
 #import "TemplListViewController.h"
 #import "EasyDisplayViewController.h"
+#import "SubscribeViewController.h"
 
 @implementation AppCmnUtil
 
@@ -83,9 +84,25 @@
     {
         return true;
     }
-    return [inapp canContinue:vwCntrl];
+    bool bCont = [inapp canContinue:vwCntrl];
+    if (bCont)
+        return true;
+    
+    SubscribeViewController *pSubView = [[SubscribeViewController alloc] initWithNibName:@"SubscribeViewController" bundle:nil];
+    
+    [self.navViewController pushViewController:pSubView animated:YES];
+    
+    return false;
 }
 
+-(void) buy
+{
+    [inapp buy];
+}
+-(void) restore
+{
+    [inapp restore];
+}
 
 + (instancetype)sharedInstance
 {

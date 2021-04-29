@@ -6,3 +6,4 @@
 #import "NotesViewController.h"
 #import "AppCmnUtil.h"
 #import "EasyAddViewController.h"
+#import "SubscribeViewController.h"

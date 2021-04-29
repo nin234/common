@@ -175,25 +175,27 @@ struct APPIDS {
 
         // Use it as required
         
-        let imageHelp = UIImage(named: "ic_help_outline_18pt_2x")
-        let pHelpBtn = UIBarButtonItem(image: imageHelp, style: .plain, target: self, action: #selector(self.showHelpScreen))
+        
         let imageAlexa = UIImage(named: "alexa_button")
         let pAlexaBtn = UIBarButtonItem(image: imageAlexa, style: .plain, target: self, action: #selector(showAlexaDialog))
         
+        let pSubscribeBtn = UIBarButtonItem(title: "S", style: .plain, target: self, action: #selector(self.showSubscribeScreen))
         //NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pHelpBtn,nil];
         navigationItem.rightBarButtonItem = pBarItem
+        
         if bShowAlexaBtn
         {
-            navigationItem.leftBarButtonItems = [infoBarButtonItem, pAlexaBtn]
+            navigationItem.leftBarButtonItems = [infoBarButtonItem, pAlexaBtn, pSubscribeBtn]
         }
         else
         {
-            navigationItem.leftBarButtonItem = infoBarButtonItem
+            navigationItem.leftBarButtonItems = [infoBarButtonItem, pSubscribeBtn]
         }
       //  navigationItem.leftBarButtonItem = pHelpBtn
         
         
     }
+    
     
     
     override public func didReceiveMemoryWarning()
@@ -242,6 +244,13 @@ struct APPIDS {
         alertController.addAction(ok)
         alertController.addAction(cxl)
         self.present(alertController, animated: true)
+    }
+    
+    @objc func showSubscribeScreen()
+    {
+        print("Showing subscribe screen")
+        let subViewController = SubscribeViewController(nibName: "SubscribeViewController", bundle: nil)
+        navigationController?.pushViewController(subViewController, animated: false)
     }
     
     @objc func showHelpScreen() {

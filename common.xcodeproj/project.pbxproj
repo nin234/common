@@ -83,6 +83,7 @@
 		DBD16B111C90549300052A03 /* DataOps.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B101C90549300052A03 /* DataOps.m */; };
 		DBD16B4F1C9A407900052A03 /* AppUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DBD16B4E1C9A407900052A03 /* AppUtil.m */; };
 		E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E838D7912579251B0066C94B /* BackGrndHelper.m */; };
+		E8B43B5D263A07A1000785EF /* SubscribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8B43B5C263A07A1000785EF /* SubscribeViewController.m */; };
 		E8C7F64625858897007C51FF /* ProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8C7F64525858897007C51FF /* ProgressViewController.m */; };
 		E8E8DFF625FCE3B500F93623 /* ListDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E8DFF425FCE3B500F93623 /* ListDecoder.m */; };
 		E8E8DFFD25FCE3D600F93623 /* ListTranslator.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E8DFFA25FCE3D600F93623 /* ListTranslator.m */; };
@@ -279,6 +280,9 @@
 		DBD16B4E1C9A407900052A03 /* AppUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppUtil.m; sourceTree = "<group>"; };
 		E838D7902579251B0066C94B /* BackGrndHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackGrndHelper.h; sourceTree = "<group>"; };
 		E838D7912579251B0066C94B /* BackGrndHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackGrndHelper.m; sourceTree = "<group>"; };
+		E8B43B5B263A0791000785EF /* SubscribeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubscribeViewController.h; sourceTree = "<group>"; };
+		E8B43B5C263A07A1000785EF /* SubscribeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubscribeViewController.m; sourceTree = "<group>"; };
+		E8B43B88263AFC10000785EF /* SubscribeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubscribeViewController.xib; sourceTree = "<group>"; };
 		E8C7F64425858897007C51FF /* ProgressViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressViewController.h; sourceTree = "<group>"; };
 		E8C7F64525858897007C51FF /* ProgressViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressViewController.m; sourceTree = "<group>"; };
 		E8E8DFF425FCE3B500F93623 /* ListDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListDecoder.m; sourceTree = "<group>"; };
@@ -459,6 +463,9 @@
 				DB00E4EE1C7BC9E300E898F7 /* SlideScrollView.m */,
 				3BDCB4FD204BF6C7005F8E0D /* SmartShareMgr.h */,
 				3BDCB4FC204BF6C6005F8E0D /* SmartShareMgr.m */,
+				E8B43B5B263A0791000785EF /* SubscribeViewController.h */,
+				E8B43B5C263A07A1000785EF /* SubscribeViewController.m */,
+				E8B43B88263AFC10000785EF /* SubscribeViewController.xib */,
 				DB00E4FA1C7BCC9E00E898F7 /* TapDetectingImageView.h */,
 				DB00E4F81C7BCC8300E898F7 /* TapDetectingImageView.m */,
 				3BF7F7621E74396300419F8D /* TemplListViewController.h */,
@@ -621,6 +628,7 @@
 				E838D7922579251B0066C94B /* BackGrndHelper.m in Sources */,
 				DB00E4BF1C7AA6B600E898F7 /* ThumbnailImageView.m in Sources */,
 				3B1033B21E8752370021538A /* ComponentsViewController.m in Sources */,
+				E8B43B5D263A07A1000785EF /* SubscribeViewController.m in Sources */,
 				DB00E5491C7DD6F300E898F7 /* MapViewController.m in Sources */,
 				3B8B3C5422A378AC00158715 /* EasyViewController.swift in Sources */,
 				3BB193751EDCA33B00EC1B58 /* SeasonPickerViewController.m in Sources */,
