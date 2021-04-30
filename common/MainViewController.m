@@ -225,7 +225,7 @@
     [infoButton addTarget:self action:@selector(showHelpScreen) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem* infoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
     
-    UIBarButtonItem *subBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"S" style:UIBarButtonItemStylePlain target:self action:@selector(showSubscribeScreen)];
+    UIBarButtonItem *subBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"B" style:UIBarButtonItemStylePlain target:self action:@selector(showSubscribeScreen)];
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     
