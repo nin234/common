@@ -229,7 +229,8 @@
     
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
     
-    if (pAppCmnUtil.share_id > 1000 && pAppCmnUtil.share_id < 2500 && pAppCmnUtil.share_id != 2352)
+    if (pAppCmnUtil.share_id > 1000 && pAppCmnUtil.share_id < 2500 && pAppCmnUtil.share_id != 2352
+        && pAppCmnUtil.share_id != 2354)
     {
         self.navigationItem.leftBarButtonItem = infoBarButtonItem;
     }

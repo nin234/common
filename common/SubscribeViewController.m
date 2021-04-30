@@ -23,7 +23,7 @@
     if (self)
     {
         AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-        [pAppCmnUtil.inapp start];
+        [pAppCmnUtil.inapp startProductRequest];
     }
     return self;
 }
@@ -35,14 +35,14 @@
     
     NSLog(@"Buying subscription");
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil buy];
+    [pAppCmnUtil.inapp buy:self];
     
 }
 - (IBAction)Restore:(id)sender {
     
     NSLog(@"Restoring subscription");
     AppCmnUtil *pAppCmnUtil = [AppCmnUtil sharedInstance];
-    [pAppCmnUtil restore];
+    [pAppCmnUtil.inapp restore:self];
 }
 
 

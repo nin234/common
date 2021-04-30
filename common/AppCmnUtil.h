@@ -42,8 +42,7 @@ enum eEditActionItems
 
 -(void) popView;
 
--(void) buy;
--(void) restore;
+
 
 -(void) showPicList:(NSString *)name pictName:(NSString *)picName imagePicker:(UIImagePickerController *) imagePick;
 

@@ -11,6 +11,7 @@
 #import "TemplListViewController.h"
 #import "EasyDisplayViewController.h"
 #import "SubscribeViewController.h"
+#import "sharing/SHKeychainItemWrapper.h"
 
 @implementation AppCmnUtil
 
@@ -38,7 +39,14 @@
         bEasyGroc = false;
         share_id =0;
         inapp = nil;
-        
+        SHKeychainItemWrapper * kchain = [[SHKeychainItemWrapper alloc] initWithIdentifier:@"SharingData" accessGroup:@"3JEQ693MKL.com.rekhaninan.frndlst"];
+                
+       NSString *share_id_str = [kchain objectForKey:(__bridge id)kSecValueData];
+
+        if (share_id_str != nil)
+            share_id = [share_id_str intValue];
+        else
+            share_id = 0;
         
        
         return self;
@@ -95,14 +103,7 @@
     return false;
 }
 
--(void) buy
-{
-    [inapp buy];
-}
--(void) restore
-{
-    [inapp restore];
-}
+
 
 + (instancetype)sharedInstance
 {
