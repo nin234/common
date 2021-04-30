@@ -176,20 +176,36 @@ struct APPIDS {
         // Use it as required
         
         
-        let imageAlexa = UIImage(named: "alexa_button")
-        let pAlexaBtn = UIBarButtonItem(image: imageAlexa, style: .plain, target: self, action: #selector(showAlexaDialog))
         
-        let pSubscribeBtn = UIBarButtonItem(title: "S", style: .plain, target: self, action: #selector(self.showSubscribeScreen))
+        let pAlexaBtn = UIBarButtonItem(title: "A", style: .plain, target: self, action: #selector(showAlexaDialog))
+        
+        let pSubscribeBtn = UIBarButtonItem(title: "B", style: .plain, target: self, action: #selector(self.showSubscribeScreen))
         //NSArray *barItems = [NSArray arrayWithObjects:pBarItem,pHelpBtn,nil];
         navigationItem.rightBarButtonItem = pBarItem
         
-        if bShowAlexaBtn
+        let pAppCmnUtil = AppCmnUtil.sharedInstance()
+        
+        if pAppCmnUtil!.share_id > 1000 && pAppCmnUtil!.share_id  < 2500 && pAppCmnUtil!.share_id != 2352 && pAppCmnUtil!.share_id != 2354
         {
-            navigationItem.leftBarButtonItems = [infoBarButtonItem, pAlexaBtn, pSubscribeBtn]
+            if bShowAlexaBtn
+            {
+                navigationItem.leftBarButtonItems = [infoBarButtonItem, pAlexaBtn]
+            }
+            else
+            {
+            navigationItem.leftBarButtonItems = [infoBarButtonItem]
+            }
         }
         else
         {
+            if bShowAlexaBtn
+            {
+                navigationItem.leftBarButtonItems = [infoBarButtonItem, pAlexaBtn, pSubscribeBtn]
+            }
+            else
+            {
             navigationItem.leftBarButtonItems = [infoBarButtonItem, pSubscribeBtn]
+            }
         }
       //  navigationItem.leftBarButtonItem = pHelpBtn
         
